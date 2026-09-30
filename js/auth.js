@@ -154,17 +154,48 @@
     const form = document.getElementById('signin-form');
     if (!form) return;
 
-    // Role selector pill buttons
+    // Form-styled role selection
+    const roleRadios = document.querySelectorAll('input[name="auth_role"]');
+    const roleCards = document.querySelectorAll('.form-role-card');
     const rolePills = document.querySelectorAll('.role-pill-btn');
     let selectedRole = 'customer';
+
+    function updateRoleSelection(role) {
+      selectedRole = role;
+      const roleInput = document.getElementById('signin-role');
+      if (roleInput) roleInput.value = role;
+
+      roleCards.forEach(card => {
+        const input = card.querySelector('input[type="radio"]');
+        if (input && input.value === role) {
+          card.style.borderColor = 'var(--accent)';
+          card.style.backgroundColor = '#fff7ed';
+          input.checked = true;
+        } else if (input) {
+          card.style.borderColor = '#cbd5e1';
+          card.style.backgroundColor = '#fff';
+        }
+      });
+    }
+
+    roleRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.checked) updateRoleSelection(radio.value);
+      });
+    });
+
+    roleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const input = card.querySelector('input[type="radio"]');
+        if (input) updateRoleSelection(input.value);
+      });
+    });
 
     rolePills.forEach(btn => {
       btn.addEventListener('click', () => {
         rolePills.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        selectedRole = btn.getAttribute('data-role');
-        const roleInput = document.getElementById('signin-role');
-        if (roleInput) roleInput.value = selectedRole;
+        updateRoleSelection(btn.getAttribute('data-role'));
       });
     });
 
@@ -316,17 +347,48 @@
       });
     }
 
-    // Role Selector Pill Buttons
+    // Form-styled role selection
+    const signupRoleRadios = document.querySelectorAll('input[name="signup_role_radio"]');
+    const signupRoleCards = document.querySelectorAll('.form-role-card');
     const rolePills = document.querySelectorAll('.role-pill-btn');
     let selectedRole = 'customer';
+
+    function updateSignupRoleSelection(role) {
+      selectedRole = role;
+      const roleInput = document.getElementById('signup-role');
+      if (roleInput) roleInput.value = role;
+
+      signupRoleCards.forEach(card => {
+        const input = card.querySelector('input[type="radio"]');
+        if (input && input.value === role) {
+          card.style.borderColor = 'var(--accent)';
+          card.style.backgroundColor = '#fff7ed';
+          input.checked = true;
+        } else if (input) {
+          card.style.borderColor = '#cbd5e1';
+          card.style.backgroundColor = '#fff';
+        }
+      });
+    }
+
+    signupRoleRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        if (radio.checked) updateSignupRoleSelection(radio.value);
+      });
+    });
+
+    signupRoleCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const input = card.querySelector('input[type="radio"]');
+        if (input) updateSignupRoleSelection(input.value);
+      });
+    });
 
     rolePills.forEach(btn => {
       btn.addEventListener('click', () => {
         rolePills.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        selectedRole = btn.getAttribute('data-role');
-        const roleInput = document.getElementById('signup-role');
-        if (roleInput) roleInput.value = selectedRole;
+        updateSignupRoleSelection(btn.getAttribute('data-role'));
       });
     });
 

@@ -1336,12 +1336,25 @@ button, input, select, textarea {
 .dashboard-sidebar-brand {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  font-size: 20px;
-  font-weight: 800;
-  padding-bottom: 24px;
+  padding-bottom: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.dashboard-sidebar-brand .brand-logo {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.dashboard-sidebar-brand .brand-logo-img {
+  max-width: 140px;
+  height: 38px;
+  object-fit: contain;
 }
 
 .dashboard-nav-list {
@@ -1538,10 +1551,13 @@ button, input, select, textarea {
 /* Modern Data Table */
 .data-table-wrapper {
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .data-table {
   width: 100%;
+  min-width: 680px;
   border-collapse: collapse;
   text-align: left;
   font-size: 14px;
@@ -1811,8 +1827,327 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   RESPONSIVE QUERIES
+   ENHANCED ANIMATIONS & MICRO-INTERACTIONS
    ========================================================================== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 131, 62, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(255, 131, 62, 0);
+  }
+}
+
+@keyframes floatBadge {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes shimmerBar {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.2s infinite;
+}
+
+.animate-float {
+  animation: floatBadge 3.2s ease-in-out infinite;
+}
+
+/* Scroll reveal classes */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card hover lifts */
+.feature-card,
+.service-card,
+.pricing-card,
+.kpi-card,
+.address-card,
+.dash-card {
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover,
+.service-card:hover,
+.pricing-card:hover,
+.address-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================================================
+   MOBILE SERVICES DROPDOWN
+   ========================================================================== */
+.mobile-dropdown {
+  width: 100%;
+}
+
+.mobile-dropdown-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--primary);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+}
+
+.mobile-dropdown-btn:hover {
+  background: rgba(11, 26, 48, 0.05);
+  color: var(--accent);
+}
+
+.mobile-dropdown-btn .dropdown-chevron {
+  transition: transform 0.25s ease;
+}
+
+.mobile-dropdown.open .mobile-dropdown-btn .dropdown-chevron {
+  transform: rotate(180deg);
+}
+
+.mobile-dropdown-menu {
+  display: none;
+  flex-direction: column;
+  padding-left: 14px;
+  margin-top: 4px;
+  gap: 4px;
+  border-left: 2px solid var(--accent);
+}
+
+.mobile-dropdown.open .mobile-dropdown-menu {
+  display: flex;
+  animation: fadeInUp 0.25s ease-out both;
+}
+
+.mobile-sublink {
+  display: block;
+  padding: 8px 12px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: var(--transition);
+}
+
+.mobile-sublink:hover {
+  color: var(--accent);
+  background: #f1f5f9;
+  padding-left: 16px;
+}
+
+/* ==========================================================================
+   DASHBOARD COLLAPSIBLE & RESPONSIVE STYLES
+   ========================================================================== */
+.sidebar-collapse-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: scale(1.04);
+}
+
+.sidebar-collapse-btn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.mobile-sidebar-toggle-btn {
+  display: inline-flex;
+  background: #f1f5f9;
+  border: 1px solid var(--border-color);
+  color: var(--primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-sm);
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
+  margin-right: 14px;
+  padding: 0;
+}
+
+.mobile-sidebar-toggle-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.dashboard-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 26, 48, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.dashboard-layout.sidebar-open .dashboard-overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Desktop Collapsed Sidebar state */
+.dashboard-layout.sidebar-collapsed {
+  grid-template-columns: 80px 1fr;
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-sidebar {
+  padding: 20px 8px;
+  align-items: center;
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-sidebar-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-sidebar-brand .brand-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-sidebar-brand .brand-logo-img {
+  max-width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.dashboard-layout.sidebar-collapsed .sidebar-collapse-btn {
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.dashboard-layout.sidebar-collapsed .sidebar-collapse-btn svg {
+  transform: rotate(180deg);
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-nav-item {
+  justify-content: center;
+  padding: 12px 0;
+  gap: 0;
+  width: 100%;
+}
+
+.dashboard-layout.sidebar-collapsed .dashboard-nav-item span,
+.dashboard-layout.sidebar-collapsed .dashboard-nav-item-text {
+  display: none !important;
+}
+
+.dashboard-layout.sidebar-collapsed .sidebar-user-footer .user-info-text,
+.dashboard-layout.sidebar-collapsed .sidebar-user-footer button {
+  display: none !important;
+}
+
+.dashboard-layout.sidebar-collapsed .sidebar-user-footer {
+  display: flex;
+  justify-content: center;
+  padding-top: 12px;
+  width: 100%;
+}
+
+/* Table Responsive Wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: #fff;
+}
+
+.table-responsive table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  margin-bottom: 0;
+}
+
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES (320px to 1440px+)
+   ========================================================================== */
+@media (min-width: 1440px) {
+  .dashboard-main {
+    max-width: 1800px;
+  }
+}
+
 @media (max-width: 1024px) {
   .hero-grid { grid-template-columns: 1fr; gap: 40px; }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -1821,18 +2156,152 @@ button, input, select, textarea {
   .footer-grid { grid-template-columns: 1fr 1fr; }
   .auth-page-wrapper { grid-template-columns: 1fr; }
   .auth-sidebar-hero { display: none; }
-  .dashboard-layout { grid-template-columns: 1fr; }
-  .dashboard-sidebar { display: none; }
+  
+  /* Dashboard tablet layout */
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+  
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    max-width: 85vw;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.3);
+  }
+  
+  .dashboard-layout.sidebar-open .dashboard-sidebar {
+    transform: translateX(0);
+  }
+  
+  .mobile-sidebar-toggle-btn {
+    display: inline-flex;
+  }
 }
 
 @media (max-width: 768px) {
-  .nav-menu, .nav-actions .btn-secondary { display: none; }
+  .nav-menu { display: none; }
   .hamburger-btn { display: block; }
+  
+  /* Requirement 6: Ensure text is visible for sign-in button on small screens */
+  .nav-actions .btn-secondary {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 7px 14px !important;
+    white-space: nowrap !important;
+    text-decoration: none !important;
+  }
+  
+  .nav-actions .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+  }
+  
+  .nav-actions .btn-primary {
+    font-size: 13px !important;
+    padding: 7px 14px !important;
+    white-space: nowrap !important;
+  }
+  
+  .nav-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .mobile-drawer .btn-outline {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary) !important;
+    border: 2px solid var(--primary) !important;
+    background: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 10px 16px !important;
+    text-decoration: none !important;
+  }
+  
+  .mobile-drawer .btn-outline:hover {
+    background: var(--primary) !important;
+    color: #ffffff !important;
+  }
+  
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .kpi-grid { grid-template-columns: 1fr; }
+  
   .tracking-stepper { flex-direction: column; gap: 20px; align-items: flex-start; }
   .tracking-stepper::before { top: 20px; bottom: 20px; left: 17px; width: 2px; height: auto; }
   .step-node { display: flex; align-items: center; gap: 16px; text-align: left; }
   .step-circle { margin: 0; }
+  
+  .dashboard-header {
+    padding: 14px 18px;
+    gap: 12px;
+  }
+  
+  .dashboard-body {
+    padding: 18px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding-inline: 14px;
+  }
+  
+  .hero-home, .hero-inner {
+    padding-block: 40px 28px;
+  }
+  
+  .hero-title {
+    font-size: 26px;
+    line-height: 1.25;
+  }
+  
+  .section-title {
+    font-size: 22px;
+  }
+  
+  .brand-logo-img {
+    height: 36px;
+    max-width: 130px;
+  }
+  
+  .form-role-group {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .auth-form-side {
+    padding: 24px 16px !important;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .dashboard-user-area {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+  
+  .role-switch-link {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
 }

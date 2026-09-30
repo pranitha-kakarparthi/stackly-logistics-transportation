@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalActionButtons();
   initGreetings();
   initContactForm();
+  initQuickTrackerTabs();
+  initDashboardControls();
+  initScrollAnimations();
 });
 
 /* ==========================================================================
@@ -58,23 +61,36 @@ function initMobileDrawer() {
   const overlay = document.querySelector('.mobile-nav-overlay');
   const closeBtn = document.querySelector('.drawer-close-btn');
 
-  if (!hamburger || !drawer || !overlay) return;
+  if (hamburger && drawer && overlay) {
+    const openDrawer = () => {
+      drawer.classList.add('open');
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
 
-  const openDrawer = () => {
-    drawer.classList.add('open');
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  };
+    const closeDrawer = () => {
+      drawer.classList.remove('open');
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+    };
 
-  const closeDrawer = () => {
-    drawer.classList.remove('open');
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  };
+    hamburger.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+  }
 
-  hamburger.addEventListener('click', openDrawer);
-  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
-  overlay.addEventListener('click', closeDrawer);
+  // Requirement 5: Mobile Services accordion dropdown menu
+  const dropdownBtns = document.querySelectorAll('.mobile-dropdown-btn');
+  dropdownBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const parent = btn.closest('.mobile-dropdown');
+      if (!parent) return;
+      const isOpen = parent.classList.toggle('open');
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
 }
 
 /* ==========================================================================
@@ -158,18 +174,27 @@ function initGlobalActionButtons() {
         targetBtn.classList.contains('password-toggle-btn') ||
         targetBtn.classList.contains('drawer-close-btn') ||
         targetBtn.classList.contains('hamburger-btn') ||
+        targetBtn.classList.contains('mobile-dropdown-btn') ||
+        targetBtn.closest('.mobile-dropdown-btn') ||
+        targetBtn.classList.contains('sidebar-collapse-btn') ||
+        targetBtn.id === 'sidebar-collapse-btn' ||
+        targetBtn.classList.contains('mobile-sidebar-toggle-btn') ||
+        targetBtn.id === 'mobile-sidebar-toggle-btn' ||
+        targetBtn.classList.contains('back-to-home-btn') ||
+        targetBtn.classList.contains('back-to-home-link') ||
         targetBtn.id === 'logout-btn' ||
         targetBtn.classList.contains('dashboard-nav-item') ||
         targetBtn.classList.contains('admin-toggle-status')) {
       return;
     }
 
-    // Do NOT redirect form submit buttons inside active non-contact forms
+    // Do NOT redirect form submit buttons inside active working forms
     if (targetBtn.type === 'submit' && (
       targetBtn.closest('#signin-form') || 
       targetBtn.closest('#signup-form') || 
       targetBtn.closest('#tracking-search-form') ||
-      targetBtn.closest('#customer-ticket-form')
+      targetBtn.closest('#customer-ticket-form') ||
+      targetBtn.closest('.tracker-form')
     )) {
       return;
     }
@@ -180,16 +205,31 @@ function initGlobalActionButtons() {
       return;
     }
 
-    // SPECIAL REQUIREMENT: In contact page every action button should redirect to 404 page.
-    if (isContactPage) {
-      if (targetBtn.classList.contains('btn') || targetBtn.tagName.toLowerCase() === 'button') {
-        e.preventDefault();
-        window.location.href = notFoundUrl;
-        return;
-      }
+    // Customer waybill lookup button in dashboard has dedicated handler
+    if (targetBtn.id === 'cust-waybill-btn') {
+      return;
     }
 
-    // SPECIAL REQUIREMENT: In footer section other than quick links every action button should get redirected to the 404 page.
+    // SPECIAL REQUIREMENT 3: "In footer section redirect the contact information to 404 page."
+    if (targetBtn.closest('.footer-contact-item') || targetBtn.classList.contains('footer-contact-link')) {
+      e.preventDefault();
+      window.location.href = notFoundUrl;
+      return;
+    }
+
+    // SPECIAL REQUIREMENT: "In every page redirect every action button to 404 page."
+    if (targetBtn.classList.contains('btn') || targetBtn.tagName.toLowerCase() === 'button') {
+      // Allow top-level site navigation actions in header (Sign In / Sign Up)
+      if (targetBtn.closest('.nav-actions') || targetBtn.closest('.mobile-drawer')) {
+        return;
+      }
+
+      e.preventDefault();
+      window.location.href = notFoundUrl;
+      return;
+    }
+
+    // SPECIAL REQUIREMENT: In footer section other than quick links every action button/link should get redirected to the 404 page.
     const inFooter = targetBtn.closest('.site-footer');
     if (inFooter) {
       const inQuickLinks = targetBtn.closest('.footer-col-quicklinks');
@@ -228,12 +268,6 @@ function initGlobalActionButtons() {
       
       // If it's not in allowed quick links (e.g. social icons, external, terms, etc.), redirect to 404
       if (!isAllowed) {
-        e.preventDefault();
-        window.location.href = notFoundUrl;
-      }
-    } else if (targetBtn.tagName.toLowerCase() === 'button') {
-      // General action buttons without internal handlers
-      if (targetBtn.classList.contains('btn') && !targetBtn.getAttribute('data-keep')) {
         e.preventDefault();
         window.location.href = notFoundUrl;
       }
@@ -351,3 +385,175 @@ function initContactForm() {
     transmitBtn.addEventListener('click', handleTransmitMessage);
   }
 }
+
+/* ==========================================================================
+   9. QUICK WAYBILL TRACKING TABS CLICK ACTION (HOME PAGE)
+   Requirement: "In Home page 'Quick Waybill Tracking' section add click action to 'Road Freight', 'Customs Bill'."
+   ========================================================================== */
+function initQuickTrackerTabs() {
+  const tabs = document.querySelectorAll('.tracker-tab-btn');
+  if (!tabs.length) return;
+
+  const labelEl = document.getElementById('hero-tracker-label');
+  const inputEl = document.getElementById('hero-tracker-input');
+  const demoCodeEl = document.getElementById('hero-tracker-demo-code');
+  const demoRouteEl = document.getElementById('hero-tracker-demo-route');
+
+  const configs = {
+    'air-ocean': {
+      label: 'Air Waybill (AWB) / Ocean Container Number',
+      placeholder: 'e.g. STK-88219',
+      value: '',
+      demoCode: '#STK-88219',
+      demoRoute: '(Frankfurt → Salem Hub)'
+    },
+    'road-freight': {
+      label: 'Road Haulage Consignment / E-Way Bill Number',
+      placeholder: 'e.g. RDF-99412 or TN-30-HAUL',
+      value: '',
+      demoCode: '#RDF-99412',
+      demoRoute: '(Salem Central Hub → Bangalore Tech Park)'
+    },
+    'customs-bill': {
+      label: 'Customs Bill of Entry (BOE) / IGM Filing Reference',
+      placeholder: 'e.g. CBE-55210 or INMAA-1092',
+      value: '',
+      demoCode: '#CBE-55210',
+      demoRoute: '(Chennai Port Maritime Customs Desk)'
+    }
+  };
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (e) => {
+      e.preventDefault();
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+
+      const text = tab.textContent.trim().toLowerCase();
+      let mode = tab.getAttribute('data-mode');
+      if (!mode) {
+        if (text.includes('road')) mode = 'road-freight';
+        else if (text.includes('customs')) mode = 'customs-bill';
+        else mode = 'air-ocean';
+      }
+
+      const cfg = configs[mode] || configs['air-ocean'];
+      if (labelEl) labelEl.textContent = cfg.label;
+      if (inputEl) {
+        inputEl.placeholder = cfg.placeholder;
+        // REQUIREMENT: Make "Road Freight", "Customs Bill" search box empty by default
+        inputEl.value = '';
+        inputEl.focus();
+      }
+      if (demoCodeEl) demoCodeEl.textContent = cfg.demoCode;
+      if (demoRouteEl) demoRouteEl.textContent = cfg.demoRoute;
+    });
+  });
+}
+
+/* ==========================================================================
+   11. DASHBOARD COLLAPSIBLE SIDEBAR & RESPONSIVE DRAWER CONTROLS
+   ========================================================================== */
+function initDashboardControls() {
+  const layout = document.getElementById('dashboard-layout') || document.querySelector('.dashboard-layout');
+  const collapseBtn = document.getElementById('sidebar-collapse-btn');
+  const mobileToggleBtn = document.getElementById('mobile-sidebar-toggle-btn');
+  const overlay = document.getElementById('dashboard-overlay');
+  const sidebar = document.getElementById('dashboard-sidebar') || document.querySelector('.dashboard-sidebar');
+
+  if (!layout) return;
+
+  const toggleCollapse = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const isCollapsed = layout.classList.toggle('sidebar-collapsed');
+    if (collapseBtn) {
+      collapseBtn.setAttribute('title', isCollapsed ? 'Expand sidebar' : 'Collapse sidebar');
+      collapseBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    }
+    try {
+      localStorage.setItem('stackly_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+    } catch (err) {}
+  };
+
+  // 1. Collapse button inside sidebar
+  if (collapseBtn) {
+    collapseBtn.addEventListener('click', toggleCollapse);
+
+    // Restore preference on desktop
+    try {
+      if (window.innerWidth > 1024 && localStorage.getItem('stackly_sidebar_collapsed') === 'true') {
+        layout.classList.add('sidebar-collapsed');
+      }
+    } catch (err) {}
+  }
+
+  // 2. Header toggle button (handles desktop collapse & mobile offcanvas)
+  if (mobileToggleBtn) {
+    mobileToggleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (window.innerWidth > 1024) {
+        toggleCollapse();
+      } else {
+        layout.classList.toggle('sidebar-open');
+      }
+    });
+  }
+
+  // 3. Close on overlay click
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      layout.classList.remove('sidebar-open');
+    });
+  }
+
+  // 4. Auto-close sidebar on mobile when nav link is clicked
+  if (sidebar) {
+    const navItems = sidebar.querySelectorAll('.dashboard-nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          layout.classList.remove('sidebar-open');
+        }
+      });
+    });
+  }
+}
+
+/* ==========================================================================
+   12. INTERSECTION OBSERVER SCROLL ANIMATIONS
+   ========================================================================== */
+function initScrollAnimations() {
+  const targets = document.querySelectorAll(
+    '.reveal-on-scroll, .feature-card, .service-card, .stat-card, .pricing-card, .kpi-card, .dash-card, .timeline-event-item'
+  );
+
+  if (!targets.length) return;
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '0px 0px -40px 0px',
+      threshold: 0.1
+    });
+
+    targets.forEach(target => {
+      if (!target.classList.contains('reveal-on-scroll')) {
+        target.classList.add('reveal-on-scroll');
+      }
+      observer.observe(target);
+    });
+  } else {
+    targets.forEach(target => target.classList.add('in-view'));
+  }
+}
+
