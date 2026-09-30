@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Dashboard - Tracking &amp; Orders | Stackly Logistics</title>
+  <meta name="description" content="Stackly Customer Control Hub. Track active freight waybills, inspect delivery telemetry, download digital proof of delivery, and manage orders.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .dash-section {
+      margin-bottom: 28px;
+    }
+    .dash-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .dash-section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-badge-role {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: #e0f2fe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .address-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: var(--transition);
+    }
+    .address-card:hover {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+    .timeline-event-item {
+      display: flex;
+      gap: 14px;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+    .timeline-event-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+    .role-switch-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      background: #f1f5f9;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #cbd5e1;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .role-switch-link:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Customer Tracking Center...</div>
+  </div>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="#customer-overview" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Client Overview
+          </a>
+          <a href="#customer-live-tracking" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Live GPS Tracking
+          </a>
+          <a href="#customer-order-details" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            Order Details
+          </a>
+          <a href="#customer-tracker-tool" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            Waybill Lookup
+          </a>
+          <a href="#customer-addresses" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Delivery Consignees
+          </a>
+          <a href="#customer-support" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Support Desk
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <div class="user-avatar-badge" id="cust-avatar-pill">CU</div>
+          <div>
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="cust-name-pill">Valued Customer</div>
+            <div style="color:#94a3b8; font-size:12px;">Customer Account</div>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn btn-outline btn-full btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.25);">
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <!-- Sticky Header -->
+      <header class="dashboard-header">
+        <div class="dashboard-greeting">
+          <h1 id="dash-greeting-text">Welcome to Your Freight Control Center</h1>
+          <p id="dash-session-status">Active Session &bull; Stackly Salem Client Node &bull; Live Telemetry Connected</p>
+        </div>
+
+        <div class="dashboard-user-area">
+          <!-- Role Switcher Button to easily preview both dashboards -->
+          <a href="admin-dashboard.html" class="role-switch-link" title="Switch to Admin Operations Dashboard">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            Switch to Admin View
+          </a>
+          <span class="dash-badge-role">Customer Role</span>
+          <div class="user-avatar-badge" id="dash-user-avatar">CU</div>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: CUSTOMER WELCOME & RECOVERY CONTROLS -->
+        <section class="dash-section" id="customer-overview">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <!-- Functional Go Back Button as requested -->
+              <button class="btn-back" data-action="go-back">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Go Back
+              </button>
+              <div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">Account Ref: #STK-CUST-7729</strong>
+                <span style="color:#64748b; font-size:12px;">Consignee Tier: Enterprise Platinum &bull; Dispatch Hub: Salem Regional Hub (TN)</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Download Monthly Statement</a>
+              <a href="../404.html" class="btn btn-primary btn-sm">+ Book New Shipment</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: CUSTOMER SHIPMENT TELEMETRY KPIS -->
+        <section class="dash-section" id="customer-kpis">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Active In-Transit</h4>
+                <div class="kpi-number">2 <span style="font-size:14px; font-weight:500; color:#64748b;">Consignments</span></div>
+                <div class="kpi-trend positive">&bull; Next Arrival in 36 Hours</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Total Delivered</h4>
+                <div class="kpi-number">14 <span style="font-size:14px; font-weight:500; color:#64748b;">Orders</span></div>
+                <div class="kpi-trend positive">&check; 100% On-Time SLA Record</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Total Freight Weight</h4>
+                <div class="kpi-number">420.5 <span style="font-size:14px; font-weight:500; color:#64748b;">KG</span></div>
+                <div class="kpi-trend positive">&uarr; Priority Air Cargo</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Eco Carbon Credits</h4>
+                <div class="kpi-number">850 <span style="font-size:14px; font-weight:500; color:#64748b;">Points</span></div>
+                <div class="kpi-trend positive">&hearts; 0.84 Tons CO2 Offset</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: LIVE TRACKING INFORMATION & TELEMETRY PROGRESS -->
+        <section class="dash-section" id="customer-live-tracking">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Live Tracking Information &bull; Waybill #STK-88219</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Frankfurt Cargo City South (FRA) &rarr; Stackly Salem Central Terminal (SXV)</p>
+              </div>
+              <span class="status-badge status-in-transit">&bull; In Flight Transit &bull; ETA 36 Hours</span>
+            </div>
+
+            <!-- Interactive 5-Step Visual Stepper -->
+            <div class="tracking-stepper">
+              <div class="step-node completed">
+                <div class="step-circle">&check;</div>
+                <div class="step-title">Order Picked Up</div>
+                <div class="step-time">Frankfurt &bull; Sep 28, 08:30</div>
+              </div>
+              <div class="step-node completed">
+                <div class="step-circle">&check;</div>
+                <div class="step-title">Export Customs</div>
+                <div class="step-time">FRA Cargo &bull; Sep 29, 14:15</div>
+              </div>
+              <div class="step-node active">
+                <div class="step-circle">3</div>
+                <div class="step-title">Air Freight Transit</div>
+                <div class="step-time">En Route to Chennai &bull; Live</div>
+              </div>
+              <div class="step-node">
+                <div class="step-circle">4</div>
+                <div class="step-title">Salem Hub Dispatch</div>
+                <div class="step-time">MMR Complex &bull; Oct 02 Expected</div>
+              </div>
+              <div class="step-node">
+                <div class="step-circle">5</div>
+                <div class="step-title">Doorstep Delivery</div>
+                <div class="step-time">Salem Facility &bull; Oct 03</div>
+              </div>
+            </div>
+
+            <!-- Telemetry Diagnostic Metrics -->
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; background:#f8fafc; padding:18px; border-radius:var(--radius-md); border:1px solid #e2e8f0; font-size:13px; margin-top:24px;">
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Carrier &amp; Flight</span>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-top:2px;">Lufthansa Cargo LH-842</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Cargo Cold Telemetry</span>
+                <strong style="color:#059669; font-size:14px; display:block; margin-top:2px;">Steady at 4.2&deg;C (Pharma Standard)</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Consignment Dimensions</span>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-top:2px;">3 Standard Euro Pallets (420.5 KG)</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Underwriting Protection</span>
+                <strong style="color:#2563eb; font-size:14px; display:block; margin-top:2px;">Tier 1 All-Risk Cargo Insured</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: DETAILED ORDER DETAILS & WAYBILL HISTORY TABLE -->
+        <section class="dash-section" id="customer-order-details">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Customer Order Details &amp; Historic Waybills</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Complete record of your international consignments, bills of lading, and signed deliveries.</p>
+              </div>
+              <a href="../404.html" class="btn btn-outline btn-sm">Export CSV</a>
+            </div>
+
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Waybill Ref</th>
+                    <th>Origin Terminal</th>
+                    <th>Destination Port</th>
+                    <th>Service Mode</th>
+                    <th>Cargo Weight</th>
+                    <th>Status</th>
+                    <th>Documents</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>#STK-88219</strong></td>
+                    <td>Frankfurt Cargo City, Germany</td>
+                    <td>Salem Hub Terminal, TN</td>
+                    <td>Priority Air Express</td>
+                    <td>420.5 KG</td>
+                    <td><span class="status-badge status-in-transit">&bull; In Transit</span></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Air Waybill</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-77104</strong></td>
+                    <td>Shanghai Ocean Port, China</td>
+                    <td>Chennai Marine Terminal, TN</td>
+                    <td>FCL Ocean Freight</td>
+                    <td>18,400.0 KG</td>
+                    <td><span class="status-badge status-customs">&bull; Customs Clearance</span></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Bill of Lading</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-44912</strong></td>
+                    <td>Salem Central Hub, TN</td>
+                    <td>Electronic City, Bangalore, KA</td>
+                    <td>Interstate Express Road</td>
+                    <td>1,250.0 KG</td>
+                    <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Signed e-POD</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-33821</strong></td>
+                    <td>Dubai Logistics City (DWC), UAE</td>
+                    <td>Salem Central Hub, TN</td>
+                    <td>Air Freight Express</td>
+                    <td>680.0 KG</td>
+                    <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Customs Receipt</a></td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-19402</strong></td>
+                    <td>Mumbai Domestic Hub, MH</td>
+                    <td>Salem Central Hub, TN</td>
+                    <td>Express Road Haulage</td>
+                    <td>950.0 KG</td>
+                    <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Consignment Note</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: INTERACTIVE WAYBILL SEARCH & TELEMETRY TOOL -->
+        <section class="dash-section" id="customer-tracker-tool">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:6px;">Instant Waybill Search &amp; Route Telemetry</h2>
+            <p style="font-size:13px; color:#64748b; margin-bottom:18px;">
+              Enter any of your active or archived Stackly waybill codes to inspect telemetry checkpoints.
+            </p>
+            <div style="display:flex; gap:12px; max-width:600px; margin-bottom:16px;">
+              <input type="text" id="cust-waybill-input" class="form-input" placeholder="e.g. STK-88219 or STK-77104" value="STK-88219">
+              <button type="button" id="cust-waybill-btn" class="btn btn-primary" style="white-space:nowrap;">Inspect Waybill</button>
+            </div>
+
+            <!-- Result Box -->
+            <div id="cust-waybill-result" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <strong style="color:var(--primary); font-size:15px;" id="wb-res-title">Waybill #STK-88219 Verified</strong>
+                  <div style="font-size:12px; color:#475569; margin-top:2px;" id="wb-res-desc">
+                    Frankfurt to Salem Regional Hub &bull; 420.5 KG Cold-Chain Pharma Cargo
+                  </div>
+                </div>
+                <span class="status-badge status-in-transit" id="wb-res-badge">&bull; In Flight Transit</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: VERIFIED DELIVERY ADDRESSES & CONSIGNEES -->
+        <section class="dash-section" id="customer-addresses">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Saved Delivery Addresses &amp; Consignee Directory</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Pre-approved delivery addresses for automated gate-pass dispatch.</p>
+              </div>
+              <a href="../404.html" class="btn btn-outline btn-sm">+ Add New Address</a>
+            </div>
+
+            <div class="grid-3">
+              <div class="address-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-delivered" style="font-size:11px;">Primary Plant</span>
+                  <span style="font-size:12px; color:#94a3b8;">Salem Node</span>
+                </div>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">Salem Manufacturing Facility</strong>
+                <p style="font-size:13px; color:#64748b; line-height:1.5;">MMR Complex Area, Chinna Thirupathi, Salem, TN 636008</p>
+                <div style="font-size:12px; color:#475569; margin-top:8px;">
+                  <strong>Recipient:</strong> R. Soundarajan (+91 9876543210)
+                </div>
+              </div>
+
+              <div class="address-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-in-transit" style="font-size:11px;">Tech Depot</span>
+                  <span style="font-size:12px; color:#94a3b8;">Bangalore Node</span>
+                </div>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">Bangalore Innovation Center</strong>
+                <p style="font-size:13px; color:#64748b; line-height:1.5;">Plot 44, Electronic City Phase II, Bangalore, KA 560100</p>
+                <div style="font-size:12px; color:#475569; margin-top:8px;">
+                  <strong>Recipient:</strong> K. Mahesh (+91 9841234567)
+                </div>
+              </div>
+
+              <div class="address-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-pending" style="font-size:11px;">Coastal Hub</span>
+                  <span style="font-size:12px; color:#94a3b8;">Chennai Node</span>
+                </div>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">Chennai Port Container Depot</strong>
+                <p style="font-size:13px; color:#64748b; line-height:1.5;">Harbor Freight Road, Royapuram, Chennai, TN 600013</p>
+                <div style="font-size:12px; color:#475569; margin-top:8px;">
+                  <strong>Recipient:</strong> P. Anbarasan (+91 9789012345)
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: LIVE SHIPPING ALERTS & CUSTOMS CLEARANCE NOTICES -->
+        <section class="dash-section" id="customer-alerts">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:14px;">Live Shipment Notifications &amp; Event Stream</h2>
+            <div>
+              <div class="timeline-event-item">
+                <div class="timeline-dot"></div>
+                <div>
+                  <strong style="color:var(--primary); display:block;">Flight Departure Confirmed (#STK-88219)</strong>
+                  <p style="color:#64748b; margin-top:2px;">Cargo flight LH-842 departed Frankfurt Airport Cargo Port. Scheduled ETA at Chennai Hub: Oct 01, 23:45 IST.</p>
+                  <span style="font-size:11px; color:#94a3b8;">15 minutes ago &bull; GPS Telemetry Satellite Link</span>
+                </div>
+              </div>
+
+              <div class="timeline-event-item">
+                <div class="timeline-dot" style="background:#059669;"></div>
+                <div>
+                  <strong style="color:var(--primary); display:block;">Customs Electronic Clearance Pre-Approved (#STK-77104)</strong>
+                  <p style="color:#64748b; margin-top:2px;">AEO Green-Channel documentation filed and verified by Chennai Sea Port Customs Authority.</p>
+                  <span style="font-size:11px; color:#94a3b8;">1 hour ago &bull; Stackly EDI Customs Engine</span>
+                </div>
+              </div>
+
+              <div class="timeline-event-item">
+                <div class="timeline-dot" style="background:#2563eb;"></div>
+                <div>
+                  <strong style="color:var(--primary); display:block;">Signed Electronic POD Archived (#STK-44912)</strong>
+                  <p style="color:#64748b; margin-top:2px;">Consignment safely delivered to Bangalore Tech Park. Signed by Receiving Officer S. Varma.</p>
+                  <span style="font-size:11px; color:#94a3b8;">Yesterday &bull; Mobile Driver Scanner</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8: DEDICATED CUSTOMER LOGISTICS SUPPORT DESK -->
+        <section class="dash-section" id="customer-support">
+          <div class="grid-2">
+            <div class="dashboard-panel">
+              <h2 class="panel-title" style="margin-bottom:10px;">Assigned Logistics Dispatch Officer</h2>
+              <p style="font-size:13px; color:#64748b; margin-bottom:16px;">
+                Direct point of contact for custom clearances, route modifications, and demurrage queries.
+              </p>
+              <div style="display:flex; align-items:center; gap:14px; background:#f8fafc; padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:16px;">
+                <div style="width:48px; height:48px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700;">SJ</div>
+                <div>
+                  <strong style="color:var(--primary); font-size:15px; display:block;">Sarah Jenkins</strong>
+                  <span style="color:#64748b; font-size:12px;">Senior Dispatch Controller &bull; Stackly Salem Regional Hub</span>
+                </div>
+              </div>
+              <div style="font-size:13px; color:#475569; display:flex; flex-direction:column; gap:6px;">
+                <div><strong>Direct Phone:</strong> +91 9876543210 (Ext. 402)</div>
+                <div><strong>Direct Email:</strong> support@thestackly.com</div>
+                <div><strong>Working Hours:</strong> 24/7 Continuous Operations Coverage</div>
+              </div>
+            </div>
+
+            <div class="dashboard-panel">
+              <h2 class="panel-title" style="margin-bottom:10px;">Quick Support Inquiry Ticket</h2>
+              <form id="cust-ticket-form" novalidate>
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:12px;">Related Waybill Number</label>
+                  <input type="text" class="form-input" style="padding:8px 12px; font-size:13px;" value="#STK-88219">
+                </div>
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:12px;">Inquiry Reason</label>
+                  <select class="form-select" style="padding:8px 12px; font-size:13px;">
+                    <option>ETA Confirmation &amp; Doorstep Delivery</option>
+                    <option>Cold Chain Telemetry Log Request</option>
+                    <option>Customs Duty &amp; Invoice Billing</option>
+                    <option>Consignee Address Change</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label class="form-label" style="font-size:12px;">Message</label>
+                  <textarea class="form-textarea" rows="2" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-full">
+                  Submit Priority Dispatch Ticket
+                </button>
+                <div id="cust-ticket-alert" class="alert alert-success" style="display:none; margin-top:8px; font-size:12px;">
+                  &check; Ticket submitted! Dispatch agent Sarah Jenkins will update your dashboard shortly.
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.StacklyAuth ? window.StacklyAuth.getCurrentUser() : null;
+      if (!user) {
+        window.location.href = 'sign-in.html';
+        return;
+      }
+
+      // Update greeting and avatar
+      const greetingEl = document.getElementById('dash-greeting-text');
+      const avatarEl = document.getElementById('dash-user-avatar');
+      const avatarPill = document.getElementById('cust-avatar-pill');
+      const namePill = document.getElementById('cust-name-pill');
+
+      const hour = new Date().getHours();
+      let timeOfDay = 'Good morning';
+      if (hour >= 12 && hour < 17) timeOfDay = 'Good afternoon';
+      else if (hour >= 17 && hour < 21) timeOfDay = 'Good evening';
+      else if (hour >= 21 || hour < 5) timeOfDay = 'Good night';
+
+      if (greetingEl) greetingEl.textContent = `${timeOfDay}, ${user.fullName || user.username}!`;
+      if (namePill) namePill.textContent = user.fullName || user.username;
+      
+      const initials = (user.firstName ? user.firstName[0] : user.username[0] || 'C') + 
+                       (user.lastName ? user.lastName[0] : 'U');
+      if (avatarEl) avatarEl.textContent = initials.toUpperCase();
+      if (avatarPill) avatarPill.textContent = initials.toUpperCase();
+
+      // Waybill quick lookup listener
+      const wbBtn = document.getElementById('cust-waybill-btn');
+      const wbInput = document.getElementById('cust-waybill-input');
+      const wbTitle = document.getElementById('wb-res-title');
+      const wbDesc = document.getElementById('wb-res-desc');
+      const wbBadge = document.getElementById('wb-res-badge');
+
+      if (wbBtn && wbInput) {
+        wbBtn.addEventListener('click', () => {
+          const code = wbInput.value.trim().toUpperCase();
+          if (code.includes('77104')) {
+            wbTitle.textContent = `Waybill #${code} Verified`;
+            wbDesc.textContent = 'Shanghai Ocean Port to Chennai Marine Terminal • 18,400 KG Ocean FCL';
+            wbBadge.className = 'status-badge status-customs';
+            wbBadge.innerHTML = '&bull; Customs Clearance';
+          } else if (code.includes('44912')) {
+            wbTitle.textContent = `Waybill #${code} Verified`;
+            wbDesc.textContent = 'Salem Central Hub to Bangalore Tech Park • 1,250 KG Express Road';
+            wbBadge.className = 'status-badge status-delivered';
+            wbBadge.innerHTML = '&check; Delivered &amp; Signed';
+          } else {
+            wbTitle.textContent = `Waybill #${code || 'STK-88219'} Verified`;
+            wbDesc.textContent = 'Frankfurt Airport to Salem Regional Hub • 420.5 KG Air Priority';
+            wbBadge.className = 'status-badge status-in-transit';
+            wbBadge.innerHTML = '&bull; In Flight Transit';
+          }
+        });
+      }
+
+      // Ticket form handler
+      const ticketForm = document.getElementById('cust-ticket-form');
+      const ticketAlert = document.getElementById('cust-ticket-alert');
+      if (ticketForm) {
+        ticketForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (ticketAlert) {
+            ticketAlert.style.display = 'block';
+            setTimeout(() => { ticketAlert.style.display = 'none'; }, 4000);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

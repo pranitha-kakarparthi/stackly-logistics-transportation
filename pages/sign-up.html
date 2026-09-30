@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - Stackly Logistics &amp; Transportation Portal</title>
+  <meta name="description" content="Register for Stackly Global Logistics. Gain instant access to live waybill tracking, air & ocean charter dispatch, and Salem terminal logistics.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body style="background-color: #fff;">
+  <!-- Pure CSS Full Viewport Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Preparing Registration Terminal...</div>
+  </div>
+
+  <!-- AUTH WRAPPER (NO NAVBAR AS REQUIRED) -->
+  <div class="auth-page-wrapper">
+    <!-- Left Hero Banner -->
+    <div class="auth-sidebar-hero">
+      <div class="auth-header-minimal">
+        <a href="../index.html" class="brand-logo" style="color:#fff;">
+          <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+        </a>
+        <!-- Functional Go Back Button as requested -->
+        <button class="btn-back" data-action="go-back" style="background:rgba(255,255,255,0.12); color:#fff; border-color:rgba(255,255,255,0.2);">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Go Back
+        </button>
+      </div>
+
+      <div class="auth-hero-content">
+        <h2>Join <span>5,000+</span> Shippers &amp; Fleet Operators Worldwide</h2>
+        <p>
+          Whether shipping time-critical cold-chain pharmaceuticals or commanding regional intermodal dispatch, Stackly equips your enterprise with end-to-end logistics visibility.
+        </p>
+
+        <div class="auth-features-list">
+          <div class="auth-feature-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Live telemetry with sub-minute sensor sync across 45 ports</span>
+          </div>
+          <div class="auth-feature-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Automated commercial invoicing &amp; export declaration filing</span>
+          </div>
+          <div class="auth-feature-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Priority cross-dock bay access at Salem Central Terminal</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-testimonial-pill">
+        <p style="font-style:italic; margin-bottom:6px;">"Stackly cut our freight transit dwell by 38% within the first quarter."</p>
+        <span style="color:#ff833e; font-weight:700;">&bull; Supply Chain Head, Southland Industrial</span>
+      </div>
+    </div>
+
+    <!-- Right Sign Up Form -->
+    <div class="auth-form-side" style="padding-block:40px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <span style="font-size:13px; color:#64748b;">Already have an account? <a href="sign-in.html" style="color:var(--accent); font-weight:700;">Sign In</a></span>
+        <button class="btn-back" data-action="go-back">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Go Back
+        </button>
+      </div>
+
+      <h1 class="auth-form-title">Create Your Account</h1>
+      <p class="auth-form-subtitle">Choose your operational role and register to access the logistics dashboard.</p>
+
+      <!-- Success Alert Banner -->
+      <div id="signup-success-alert" class="alert alert-success" style="display:none;" role="alert">
+        &check; Account created successfully! Redirecting you to Sign In...
+      </div>
+
+      <!-- Role Selector -->
+      <div class="form-group" style="margin-bottom:14px;">
+        <label class="form-label">Register As / Account Role <span class="required-star">*</span></label>
+        <div class="role-pill-selector">
+          <button type="button" class="role-pill-btn active" data-role="customer">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            Customer (Cargo Shipper)
+          </button>
+          <button type="button" class="role-pill-btn" data-role="admin">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Admin (Logistics Ops)
+          </button>
+        </div>
+      </div>
+
+      <!-- Sign Up Form (Strict Validation) -->
+      <form id="signup-form" novalidate>
+        <input type="hidden" id="signup-role" value="customer">
+
+        <!-- Name Row -->
+        <div class="grid-2" style="gap:14px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="signup-firstname">First Name <span class="required-star">*</span></label>
+            <input type="text" id="signup-firstname" class="form-input" placeholder="e.g. David" required>
+            <div id="signup-firstname-error" class="form-error-msg" role="alert"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="signup-lastname">Last Name <span class="required-star">*</span></label>
+            <input type="text" id="signup-lastname" class="form-input" placeholder="e.g. Vance" required>
+            <div id="signup-lastname-error" class="form-error-msg" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Username & Email -->
+        <div class="grid-2" style="gap:14px; margin-bottom:14px;">
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="signup-username">Username <span class="optional-tag">(Optional)</span></label>
+            <input type="text" id="signup-username" class="form-input" placeholder="e.g. david_vance">
+            <div id="signup-username-error" class="form-error-msg" role="alert"></div>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label class="form-label" for="signup-email">Work Email <span class="required-star">*</span></label>
+            <input type="email" id="signup-email" class="form-input" placeholder="david@company.com" required>
+            <div id="signup-email-error" class="form-error-msg" role="alert"></div>
+          </div>
+        </div>
+
+        <!-- Phone with Country Code -->
+        <div class="form-group">
+          <label class="form-label" for="signup-phone">Mobile / Contact Number <span class="required-star">*</span></label>
+          <div class="phone-input-group">
+            <select class="form-select" id="signup-countrycode" aria-label="Select Country Code">
+              <option value="+91" selected>India (+91)</option>
+              <option value="+1">USA / Canada (+1)</option>
+              <option value="+44">UK (+44)</option>
+              <option value="+971">UAE (+971)</option>
+              <option value="+49">Germany (+49)</option>
+              <option value="+65">Singapore (+65)</option>
+            </select>
+            <input type="tel" id="signup-phone" class="form-input" placeholder="9876543210" required>
+          </div>
+          <div id="signup-phone-error" class="form-error-msg" role="alert"></div>
+        </div>
+
+        <!-- Password & Strength Meter -->
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Create Password <span class="required-star">*</span></label>
+          <div class="input-wrapper">
+            <input type="password" id="signup-password" class="form-input" placeholder="Min. 8 characters with mixed case, number & symbol" required autocomplete="new-password">
+            <button type="button" class="password-toggle-btn" id="toggle-signup-password-btn" aria-label="Toggle password visibility">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </button>
+          </div>
+          <div class="password-strength-container">
+            <div class="strength-bar-track">
+              <div class="strength-bar-fill" id="password-strength-fill"></div>
+            </div>
+            <div class="strength-text" id="password-strength-text">Password strength indicator</div>
+          </div>
+          <div id="signup-password-error" class="form-error-msg" role="alert"></div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label class="form-label" for="signup-confirmpassword">Confirm Password <span class="required-star">*</span></label>
+          <input type="password" id="signup-confirmpassword" class="form-input" placeholder="Re-type your password" required autocomplete="new-password">
+          <div id="signup-confirmpassword-error" class="form-error-msg" role="alert"></div>
+        </div>
+
+        <!-- Address -->
+        <div class="form-group">
+          <label class="form-label" for="signup-address">Shipping / Office Address <span class="optional-tag">(Optional)</span></label>
+          <input type="text" id="signup-address" class="form-input" placeholder="e.g. MMR Complex, Chinna Thirupathi, Salem, TN">
+          <div id="signup-address-error" class="form-error-msg" role="alert"></div>
+        </div>
+
+        <!-- Terms and Conditions Checkbox (Mandatory, Links to 404) -->
+        <label class="checkbox-group" for="signup-terms">
+          <input type="checkbox" id="signup-terms" required>
+          <span>I agree to the <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Terms of Use</a> and <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Privacy Policy</a>.</span>
+        </label>
+        <div id="signup-terms-error" class="form-error-msg" style="margin-top:-10px; margin-bottom:14px;" role="alert"></div>
+
+        <!-- Newsletter Opt-in Checkbox (Optional, Link to 404) -->
+        <label class="checkbox-group" for="signup-newsletter">
+          <input type="checkbox" id="signup-newsletter">
+          <span>I would like to receive freight alerts, updates, and schedule announcements. <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Read More</a></span>
+        </label>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary btn-full btn-lg">
+          Complete Registration &rarr;
+        </button>
+      </form>
+
+      <div class="auth-divider">Or sign up with enterprise federated login</div>
+
+      <!-- Social Register (Redirects to 404 as requested) -->
+      <div class="social-login-grid">
+        <a href="../404.html" class="social-btn">Google</a>
+        <a href="../404.html" class="social-btn">Microsoft</a>
+        <a href="../404.html" class="social-btn">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

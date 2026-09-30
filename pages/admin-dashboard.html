@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Fleet &amp; Logistics Management | Stackly Logistics</title>
+  <meta name="description" content="Stackly Administrator Command Desk. Oversee global fleet telematics, manage central Salem terminal warehousing, authorize customs dispatch, and monitor operations.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .dash-section {
+      margin-bottom: 28px;
+    }
+    .dash-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .dash-section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .dash-badge-role-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      background: #fee2e2;
+      color: #b91c1c;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .fleet-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      transition: var(--transition);
+    }
+    .fleet-card:hover {
+      border-color: var(--accent);
+      background: #fff;
+      box-shadow: var(--shadow-sm);
+    }
+    .alert-feed-item {
+      display: flex;
+      gap: 12px;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 13px;
+    }
+    .alert-feed-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .role-switch-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      background: #f1f5f9;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #cbd5e1;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .role-switch-link:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+    .progress-bar-wrap {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .driver-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: #fff;
+      padding: 4px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Operations Command Desk...</div>
+  </div>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="#admin-overview" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            Command Center
+          </a>
+          <a href="#admin-dispatch-control" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            Dispatch Operations
+          </a>
+          <a href="#admin-fleet-roster" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+            Fleet Telematics
+          </a>
+          <a href="#admin-warehouse-capacity" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            Salem Warehouse
+          </a>
+          <a href="#admin-customs-compliance" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            Customs Clearance
+          </a>
+          <a href="#admin-incident-feed" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            Alerts &amp; Incidents
+          </a>
+          <a href="#admin-driver-roster" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            Driver Roster
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+          <div class="user-avatar-badge" style="background:#b91c1c;" id="adm-avatar-pill">AD</div>
+          <div>
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="adm-name-pill">Operations Controller</div>
+            <div style="color:#94a3b8; font-size:12px;">Admin Authority</div>
+          </div>
+        </div>
+        <button id="logout-btn" class="btn btn-outline btn-full btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.25);">
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <!-- Sticky Header -->
+      <header class="dashboard-header">
+        <div class="dashboard-greeting">
+          <h1 id="dash-greeting-text">Logistics Central Command &amp; Dispatch Desk</h1>
+          <p id="dash-session-status">Salem Operations Hub &bull; Fleet Telematics: 142 Units Online &bull; Live Sync</p>
+        </div>
+
+        <div class="dashboard-user-area">
+          <!-- Role Switcher Button to easily preview Customer Dashboard -->
+          <a href="customer-dashboard.html" class="role-switch-link" title="Switch to Customer Tracking Dashboard">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            Switch to Customer View
+          </a>
+          <span class="dash-badge-role-admin">Admin Role</span>
+          <div class="user-avatar-badge" style="background:#b91c1c;" id="dash-user-avatar">AD</div>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: ADMIN COMMAND CENTER OVERVIEW & CONTROLS -->
+        <section class="dash-section" id="admin-overview">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <!-- Functional Go Back Button as requested -->
+              <button class="btn-back" data-action="go-back">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Go Back
+              </button>
+              <div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">Station: Stackly Central Terminal Salem (SXV-01)</strong>
+                <span style="color:#64748b; font-size:12px;">Active Shift: Global Dispatch Rotation &bull; Telemetry Gate Status: Green All Convoys</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Generate Customs Manifest</a>
+              <a href="../404.html" class="btn btn-primary btn-sm">+ Dispatch Convoy</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: GLOBAL LOGISTICS & FLEET KPIS -->
+        <section class="dash-section" id="admin-kpis">
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Active Fleet Units</h4>
+                <div class="kpi-number">142 <span style="font-size:14px; font-weight:500; color:#64748b;">/ 150</span></div>
+                <div class="kpi-trend positive">&uarr; 94.2% Fleet Utilization</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Cargo In-Transit</h4>
+                <div class="kpi-number">1,420 <span style="font-size:14px; font-weight:500; color:#64748b;">TEUs</span></div>
+                <div class="kpi-trend positive">&uarr; +14.8% vs Last Month</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>On-Time SLA Delivery</h4>
+                <div class="kpi-number">99.1%</div>
+                <div class="kpi-trend positive">&check; Global Industry Leader</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-info">
+                <h4>Monthly Volume</h4>
+                <div class="kpi-number">18,450 <span style="font-size:14px; font-weight:500; color:#64748b;">Tons</span></div>
+                <div class="kpi-trend positive">&uarr; Salem Hub Record</div>
+              </div>
+              <div class="kpi-icon">
+                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: CENTRAL FREIGHT DISPATCH & OPERATIONS CONTROL TABLE -->
+        <section class="dash-section" id="admin-dispatch-control">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Central Freight Dispatch Operations Console</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">
+                  Active intermodal routes across Salem Hub, Chennai Sea Port, Frankfurt, Dubai, and Singapore.
+                </p>
+              </div>
+              <span class="status-badge status-in-transit" style="font-size:11px;">Real-Time GPS Synchronization</span>
+            </div>
+
+            <div class="data-table-wrapper">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Waybill Ref</th>
+                    <th>Origin Point</th>
+                    <th>Destination Port</th>
+                    <th>Freight Mode</th>
+                    <th>Carrier / Fleet Unit</th>
+                    <th>Gross Cargo</th>
+                    <th>Operations Status</th>
+                    <th>Admin Dispatch Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>#STK-88219</strong></td>
+                    <td>Frankfurt Cargo City, DE</td>
+                    <td>Salem Central Hub, TN</td>
+                    <td>Air Freight Priority</td>
+                    <td>Lufthansa Cargo LH-842</td>
+                    <td>420.5 KG (Cold Chain)</td>
+                    <td><span class="status-badge status-in-transit" id="status-adm-88219">&bull; In Flight Transit</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm admin-toggle-status" data-target="status-adm-88219" data-next="Salem Gate Out">
+                        Authorize Gate Out
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-77104</strong></td>
+                    <td>Shanghai Port, CN</td>
+                    <td>Chennai Marine Terminal, TN</td>
+                    <td>Ocean FCL 40ft High Cube</td>
+                    <td>Maersk Mc-Kinney Moller</td>
+                    <td>18,400.0 KG (Electronics)</td>
+                    <td><span class="status-badge status-customs" id="status-adm-77104">&bull; Customs Clearance</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm admin-toggle-status" data-target="status-adm-77104" data-next="Customs Released">
+                        Clear Customs
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-65912</strong></td>
+                    <td>Dubai Logistics City (DWC), UAE</td>
+                    <td>Salem Central Hub, TN</td>
+                    <td>Air Cargo Express</td>
+                    <td>Emirates SkyCargo EK-402</td>
+                    <td>890.0 KG (Auto Parts)</td>
+                    <td><span class="status-badge status-pending" id="status-adm-65912">&bull; Awaiting Salem Dispatch</span></td>
+                    <td>
+                      <button class="btn btn-primary btn-sm admin-toggle-status" data-target="status-adm-65912" data-next="In Transit (Truck TN-54)">
+                        Dispatch Now
+                      </button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>#STK-55301</strong></td>
+                    <td>Salem Regional Hub, TN</td>
+                    <td>Bangalore Tech Park, KA</td>
+                    <td>Heavy Highway Haulage</td>
+                    <td>Truck #TN-54-A-9921</td>
+                    <td>3,100.0 KG (Machinery)</td>
+                    <td><span class="status-badge status-delivered" id="status-adm-55301">&check; Delivered &amp; Signed</span></td>
+                    <td>
+                      <button class="btn btn-outline btn-sm" disabled style="opacity:0.6;">Archived e-POD</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 4: MULTI-MODAL FLEET TELEMATICS & VEHICLE ROSTER -->
+        <section class="dash-section" id="admin-fleet-roster">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Multi-Modal Fleet Telematics &amp; Active Vehicle Roster</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Live GPS coordinates, fuel levels, and maintenance status across ground, air, and marine fleet.</p>
+              </div>
+              <a href="../404.html" class="btn btn-outline btn-sm">+ Register Vehicle</a>
+            </div>
+
+            <div class="grid-2">
+              <div class="fleet-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-delivered" style="font-size:11px;">Active On Highway</span>
+                  <span style="font-size:12px; color:#94a3b8;">Highway Corridor</span>
+                </div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">Ashok Leyland 16-Wheel Heavy Haulage (#TN-54-A-8819)</strong>
+                <p style="font-size:13px; color:#64748b; margin-top:4px;">
+                  Assigned Driver: <strong>M. Selvam</strong> &bull; Route: Salem Central Hub &rarr; Hosur &rarr; Bangalore
+                </p>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:#475569;">
+                  <span>GPS: 12.9716&deg; N, 77.5946&deg; E</span>
+                  <span>Fuel: 78% &bull; Odometer: 142,390 KM</span>
+                </div>
+              </div>
+
+              <div class="fleet-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-in-transit" style="font-size:11px;">Cold Chain Active</span>
+                  <span style="font-size:12px; color:#94a3b8;">Reefer Unit</span>
+                </div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">BharatBenz Temperature-Controlled Reefer (#TN-54-C-4421)</strong>
+                <p style="font-size:13px; color:#64748b; margin-top:4px;">
+                  Assigned Driver: <strong>V. Karthikeyan</strong> &bull; Temp: <strong>3.8&deg;C Steady</strong> &bull; Pharma Consignment
+                </p>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:#475569;">
+                  <span>GPS: 11.6643&deg; N, 78.1460&deg; E</span>
+                  <span>Fuel: 92% &bull; Sensor Battery: 99%</span>
+                </div>
+              </div>
+
+              <div class="fleet-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-in-transit" style="font-size:11px;">Air Priority</span>
+                  <span style="font-size:12px; color:#94a3b8;">Charter Flight</span>
+                </div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">Boeing 777-200F Air Cargo Charter (#STK-AIR-99)</strong>
+                <p style="font-size:13px; color:#64748b; margin-top:4px;">
+                  Partner: Lufthansa Cargo &bull; Route: Frankfurt Main (FRA) &rarr; Chennai Airport Cargo (MAA)
+                </p>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:#475569;">
+                  <span>Altitude: 34,000 FT</span>
+                  <span>Payload: 84.5 Tons &bull; ETA: 04h 20m</span>
+                </div>
+              </div>
+
+              <div class="fleet-card">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                  <span class="status-badge status-customs" style="font-size:11px;">Ocean Liner</span>
+                  <span style="font-size:12px; color:#94a3b8;">Maritime Freight</span>
+                </div>
+                <strong style="color:var(--primary); font-size:15px; display:block;">Maersk High-Cube Marine Consignment (#MSK-99218)</strong>
+                <p style="font-size:13px; color:#64748b; margin-top:4px;">
+                  Carrier: Maersk Line &bull; Route: Shanghai Harbor &rarr; Singapore &rarr; Chennai Sea Port
+                </p>
+                <div style="display:flex; justify-content:space-between; margin-top:10px; font-size:12px; color:#475569;">
+                  <span>Vessel Speed: 18.4 Knots</span>
+                  <span>Capacity: 28 TEUs In-Stack &bull; Berth Confirmed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 5: SALEM CENTRAL HUB TERMINAL CAPACITY & WAREHOUSING -->
+        <section class="dash-section" id="admin-warehouse-capacity">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:6px;">Salem Central Logistics Terminal Capacity</h2>
+            <p style="font-size:13px; color:#64748b; margin-bottom:18px;">
+              Live telematics and occupancy data for Stackly MMR Complex, Chinna Thirupathi Warehouse &amp; Cold Storage.
+            </p>
+
+            <div class="grid-2">
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Cold-Chain Pharmaceutical Storage (2&deg;C - 8&deg;C)</span>
+                  <span style="color:#2563eb;">82% (4,100 / 5,000 cu.m)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#2563eb; width:82%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Compliant with WHO Good Distribution Practices</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">General Dry Goods Bulk Storage</span>
+                  <span style="color:#059669;">67% (13,400 / 20,000 pallets)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#059669; width:67%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Automated high-bay narrow aisle racking</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Express Cross-Dock Staging Bays</span>
+                  <span style="color:#ff5e15;">91% (29 / 32 Active Docks)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#ff5e15; width:91%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Turnaround average: 42 minutes per 40ft container</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Hazardous Cargo Containment Bay</span>
+                  <span style="color:#7c3aed;">35% (350 / 1,000 cu.m)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#7c3aed; width:35%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Explosion-proof climate ventilation &bull; Class 3 Flammable</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 6: INTERNATIONAL CUSTOMS & REGULATORY COMPLIANCE -->
+        <section class="dash-section" id="admin-customs-compliance">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Customs Clearance &amp; Regulatory Compliance Desk</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Automated Green-Channel clearing via ICEGATE EDI portal at Chennai Port &amp; Salem ICD.</p>
+              </div>
+              <a href="../404.html" class="btn btn-outline btn-sm">Audit Log</a>
+            </div>
+
+            <div class="grid-3">
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">AEO Tier-2 Certified</strong>
+                <p style="font-size:13px; color:#64748b;">Stackly holds Authorized Economic Operator accreditation, ensuring minimal physical inspection delays.</p>
+                <span class="status-badge status-delivered" style="margin-top:8px;">Valid through 2028</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">ICEGATE EDI Real-Time Link</strong>
+                <p style="font-size:13px; color:#64748b;">Bills of Entry and Shipping Bills automatically transmitted to Indian Customs Central Servers.</p>
+                <span class="status-badge status-delivered" style="margin-top:8px;">System Online (0.12s ping)</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">Phytosanitary &amp; Plant Quarantine</strong>
+                <p style="font-size:13px; color:#64748b;">Salem inland quarantine inspection clearance protocols for agricultural and spice cargo shipments.</p>
+                <span class="status-badge status-in-transit" style="margin-top:8px;">3 Consignments Approved</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 7: REAL-TIME CENTRAL DISPATCH ALERT FEED -->
+        <section class="dash-section" id="admin-incident-feed">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:14px;">Real-Time Central Dispatch Alert Feed</h2>
+            <div>
+              <div class="alert-feed-item">
+                <span style="color:#ff5e15; font-weight:800; font-size:12px; background:#fff7ed; padding:2px 8px; border-radius:4px; height:fit-content;">[DISPATCH]</span>
+                <div>
+                  <strong style="color:var(--primary);">Fleet Convoy TN-54 Departing Stackly Salem Hub towards Coimbatore</strong>
+                  <p style="color:#64748b; margin-top:2px;">4 Heavy Haulage trucks carrying textile manufacturing machinery cleared loading gate #06 at 14:10 IST.</p>
+                  <span style="font-size:11px; color:#94a3b8;">10 minutes ago &bull; Gate Operator R. Selvan</span>
+                </div>
+              </div>
+
+              <div class="alert-feed-item">
+                <span style="color:#059669; font-weight:800; font-size:12px; background:#ecfdf5; padding:2px 8px; border-radius:4px; height:fit-content;">[CUSTOMS]</span>
+                <div>
+                  <strong style="color:var(--primary);">Shipment #STK-77104 Green Channel Cleared at Chennai Port</strong>
+                  <p style="color:#64748b; margin-top:2px;">Customs assessment complete with zero demurrage penalty. Transshipment convoy ready to dispatch to Salem.</p>
+                  <span style="font-size:11px; color:#94a3b8;">45 minutes ago &bull; Electronic Data Interchange Notice</span>
+                </div>
+              </div>
+
+              <div class="alert-feed-item">
+                <span style="color:#2563eb; font-weight:800; font-size:12px; background:#eff6ff; padding:2px 8px; border-radius:4px; height:fit-content;">[TELEMETRY]</span>
+                <div>
+                  <strong style="color:var(--primary);">Cold Chain Sensor Alert: Reefer #TN-54-C-4421 Normal</strong>
+                  <p style="color:#64748b; margin-top:2px;">Temperature sensor telemetry verified at 3.8&deg;C across all 12 zones inside pharmaceutical trailer.</p>
+                  <span style="font-size:11px; color:#94a3b8;">1 hour ago &bull; Automated IoT Sensor Array</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 8: DRIVER ROSTER & PERSONNEL SHIFT MANAGEMENT -->
+        <section class="dash-section" id="admin-driver-roster">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Driver Roster &amp; Shift Management Console</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Salem Central Terminal active driver schedule, license validity, and safety scorecards.</p>
+              </div>
+              <a href="../404.html" class="btn btn-outline btn-sm">+ Assign Shift</a>
+            </div>
+
+            <div class="grid-4" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+              <div style="background:#f8fafc; padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                  <strong style="color:var(--primary); font-size:14px;">M. Selvam</strong>
+                  <span class="status-badge status-delivered" style="font-size:10px;">On Route</span>
+                </div>
+                <div style="font-size:12px; color:#64748b;">Vehicle: Ashok Leyland #8819</div>
+                <div style="font-size:12px; color:#475569; margin-top:4px;">Route: Salem &rarr; Bangalore</div>
+                <div style="margin-top:8px; font-size:11px; color:#059669; font-weight:700;">Safety Score: 99.4%</div>
+              </div>
+
+              <div style="background:#f8fafc; padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                  <strong style="color:var(--primary); font-size:14px;">V. Karthikeyan</strong>
+                  <span class="status-badge status-in-transit" style="font-size:10px;">Reefer Unit</span>
+                </div>
+                <div style="font-size:12px; color:#64748b;">Vehicle: BharatBenz #4421</div>
+                <div style="font-size:12px; color:#475569; margin-top:4px;">Route: Salem Cold Bay</div>
+                <div style="margin-top:8px; font-size:11px; color:#059669; font-weight:700;">HAZMAT &amp; Pharma Certified</div>
+              </div>
+
+              <div style="background:#f8fafc; padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                  <strong style="color:var(--primary); font-size:14px;">P. Jayachandran</strong>
+                  <span class="status-badge status-pending" style="font-size:10px;">Terminal Bay</span>
+                </div>
+                <div style="font-size:12px; color:#64748b;">Vehicle: Shunting Tug #04</div>
+                <div style="font-size:12px; color:#475569; margin-top:4px;">Location: Salem Cross-Dock</div>
+                <div style="margin-top:8px; font-size:11px; color:#2563eb; font-weight:700;">Shift: 14:00 - 22:00</div>
+              </div>
+
+              <div style="background:#f8fafc; padding:14px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                  <strong style="color:var(--primary); font-size:14px;">S. Murugesan</strong>
+                  <span class="status-badge status-delivered" style="font-size:10px;">Available</span>
+                </div>
+                <div style="font-size:12px; color:#64748b;">Vehicle: Standby Trailer #12</div>
+                <div style="font-size:12px; color:#475569; margin-top:4px;">Location: Driver Rest Quarters</div>
+                <div style="margin-top:8px; font-size:11px; color:#059669; font-weight:700;">Ready for Night Dispatch</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.StacklyAuth ? window.StacklyAuth.getCurrentUser() : null;
+      if (!user) {
+        window.location.href = 'sign-in.html';
+        return;
+      }
+
+      // Update greeting and avatar
+      const greetingEl = document.getElementById('dash-greeting-text');
+      const avatarEl = document.getElementById('dash-user-avatar');
+      const avatarPill = document.getElementById('adm-avatar-pill');
+      const namePill = document.getElementById('adm-name-pill');
+
+      const hour = new Date().getHours();
+      let timeOfDay = 'Good morning';
+      if (hour >= 12 && hour < 17) timeOfDay = 'Good afternoon';
+      else if (hour >= 17 && hour < 21) timeOfDay = 'Good evening';
+      else if (hour >= 21 || hour < 5) timeOfDay = 'Good night';
+
+      if (greetingEl) greetingEl.textContent = `${timeOfDay}, Commander ${user.fullName || user.username}!`;
+      if (namePill) namePill.textContent = user.fullName || user.username;
+      
+      const initials = (user.firstName ? user.firstName[0] : user.username[0] || 'A') + 
+                       (user.lastName ? user.lastName[0] : 'D');
+      if (avatarEl) avatarEl.textContent = initials.toUpperCase();
+      if (avatarPill) avatarPill.textContent = initials.toUpperCase();
+
+      // Interactive status toggling for admin
+      const toggleBtns = document.querySelectorAll('.admin-toggle-status');
+      toggleBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const nextText = btn.getAttribute('data-next') || 'Delivered';
+          const badge = document.getElementById(targetId);
+          if (badge) {
+            badge.className = 'status-badge status-delivered';
+            badge.innerHTML = `&check; ${nextText}`;
+            btn.textContent = 'Completed';
+            btn.disabled = true;
+            btn.style.opacity = '0.6';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

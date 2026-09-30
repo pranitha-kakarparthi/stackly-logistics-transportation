@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operations Dashboard - Stackly Logistics &amp; Transportation</title>
+  <meta name="description" content="Role-specific logistics management control desk. Shippers track live waybills while administrators supervise fleet dispatch and Salem warehouse capacity.">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <!-- Pure CSS Full Viewport Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Operations Dashboard...</div>
+  </div>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+        </div>
+
+        <nav class="dashboard-nav-list" id="dashboard-sidebar-nav">
+          <!-- Dynamic Role-Specific Navigation Buttons Injected by dashboard.js -->
+        </nav>
+      </div>
+
+      <div>
+        <div style="padding:14px; background:rgba(255,255,255,0.06); border-radius:8px; margin-bottom:14px; font-size:12px; color:#cbd5e1;">
+          <strong style="display:block; color:#fff; margin-bottom:2px;">Stackly Salem Terminal Desk</strong>
+          <span>MMR Complex, Chinna Thirupathi</span>
+        </div>
+        <button class="btn-back" data-action="go-back" style="width:100%; justify-content:center; margin-bottom:10px; background:rgba(255,255,255,0.1); color:#fff; border-color:rgba(255,255,255,0.2);">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Go Back
+        </button>
+        <a href="../index.html" class="dashboard-nav-item" style="color:#94a3b8;">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Back to Website
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="dashboard-main">
+      <!-- Top Sticky Bar -->
+      <header class="dashboard-header">
+        <div class="dashboard-greeting">
+          <h1 id="dash-greeting-text">Welcome to Stackly Hub</h1>
+          <p id="dash-session-status">Active Session &bull; Initializing...</p>
+        </div>
+
+        <div class="dashboard-user-area">
+          <!-- Additional Go Back Button in Topbar -->
+          <button class="btn-back" data-action="go-back">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            Go Back
+          </button>
+          <span id="dash-user-role" class="role-badge">ROLE</span>
+          <div style="text-align:right;">
+            <strong id="dash-user-name" style="display:block; font-size:14px; color:var(--primary);">User Name</strong>
+            <span style="font-size:12px; color:#64748b;">Salem Node Verified</span>
+          </div>
+          <div class="user-avatar-badge" id="dash-user-avatar">U</div>
+          <button id="logout-btn" class="btn btn-outline btn-sm" style="margin-left:8px;" aria-label="Sign out of current account">
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Dynamic Body -->
+      <main class="dashboard-body" id="role-dashboard-container">
+        <!-- Rendered dynamically by js/dashboard.js based on role (Customer vs Admin) -->
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/dashboard.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = window.StacklyAuth ? window.StacklyAuth.getCurrentUser() : null;
+      if (user) {
+        if (user.role === 'admin') {
+          window.location.replace('admin-dashboard.html');
+        } else {
+          window.location.replace('customer-dashboard.html');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
