@@ -28,7 +28,15 @@
       <nav class="nav-menu">
         <a href="../index.html" class="nav-link">Home</a>
         <a href="about.html" class="nav-link">About Us</a>
-        <a href="services.html" class="nav-link active">Services</a>
+        <div class="nav-dropdown">
+          <a href="services.html" class="nav-link active dropdown-toggle" role="button" aria-expanded="false">Services &#9662;</a>
+          <div class="dropdown-menu">
+            <a href="air-freight.html" class="dropdown-item">Air Freight Cargo</a>
+            <a href="ocean-freight.html" class="dropdown-item">Ocean Container Line</a>
+            <a href="road-transport.html" class="dropdown-item">Road Transportation</a>
+            <a href="warehousing-cold-chain.html" class="dropdown-item">Warehousing &amp; Cold Chain</a>
+          </div>
+        </div>
         <a href="tracking.html" class="nav-link">Tracking</a>
         <a href="pricing.html" class="nav-link">Pricing</a>
         <a href="contact.html" class="nav-link">Contact</a>
@@ -55,7 +63,6 @@
     <div class="mobile-links">
       <a href="../index.html" class="mobile-link">Home</a>
       <a href="about.html" class="mobile-link">About Us</a>
-      <!-- Services Mobile Dropdown Menu -->
       <div class="mobile-dropdown">
         <button class="mobile-dropdown-btn" type="button" aria-expanded="false">
           <span>Services</span>
@@ -64,11 +71,10 @@
           </svg>
         </button>
         <div class="mobile-dropdown-menu">
-          <a href="services.html" class="mobile-sublink">All Services Overview</a>
-          <a href="services.html#air-freight" class="mobile-sublink">Air Freight Cargo</a>
-          <a href="services.html#ocean-freight" class="mobile-sublink">Ocean Container Line</a>
-          <a href="services.html#road-freight" class="mobile-sublink">Road Transportation</a>
-          <a href="services.html#warehousing" class="mobile-sublink">Warehousing &amp; Cold Chain</a>
+          <a href="air-freight.html" class="mobile-sublink">Air Freight Cargo</a>
+          <a href="ocean-freight.html" class="mobile-sublink">Ocean Container Line</a>
+          <a href="road-transport.html" class="mobile-sublink">Road Transportation</a>
+          <a href="warehousing-cold-chain.html" class="mobile-sublink">Warehousing &amp; Cold Chain</a>
         </div>
       </div>
       <a href="tracking.html" class="mobile-link">Live Tracking</a>
@@ -82,98 +88,130 @@
   </aside>
 
   <main id="main-content">
-    <!-- SECTION 1: HERO WITH GO BACK BUTTON -->
+    <!-- SECTION 1: HERO -->
     <section class="hero-subpage">
       <div class="container">
         <div class="subpage-nav-bar">
-          <!-- Functional Go Back Button as requested -->
-          <button class="btn-back" data-action="go-back">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Go Back
-          </button>
           <div class="breadcrumb">
             <a href="../index.html">Home</a> &gt; <span>Our Services</span>
           </div>
         </div>
         <h1 style="font-size:clamp(30px, 4vw, 44px); font-weight:800; margin-bottom:8px;">End-to-End Freight Services</h1>
         <p style="color:#cbd5e1; max-width:620px; margin:0 auto;">
-          Comprehensive air, maritime, roadway, and warehouse logistics designed for zero-delay operations.
+          Comprehensive air, maritime, roadway, and warehouse logistics designed for zero-delay industrial operations.
         </p>
       </div>
     </section>
 
+    <!-- SECTION 1B: INTERACTIVE SERVICE FILTER TABS -->
+    <div class="service-filter-wrapper">
+      <div class="container">
+        <div class="service-filter-bar">
+          <button type="button" class="service-filter-btn active" data-filter="all">All Services (6)</button>
+          <button type="button" class="service-filter-btn" data-filter="air-freight">Air Freight</button>
+          <button type="button" class="service-filter-btn" data-filter="ocean-freight">Ocean Cargo</button>
+          <button type="button" class="service-filter-btn" data-filter="road-freight">Road Haulage</button>
+          <button type="button" class="service-filter-btn" data-filter="warehousing">Warehousing</button>
+          <button type="button" class="service-filter-btn" data-filter="cold-chain">Pharma Cold Chain</button>
+          <button type="button" class="service-filter-btn" data-filter="customs">Customs Clearance</button>
+          <a href="#rate-calculator" class="service-filter-btn" style="background:#0b1a30; color:#fff; border-color:#0b1a30; text-decoration:none;">&dollar; Rate Estimator</a>
+        </div>
+      </div>
+    </div>
+
     <!-- SECTION 2: 6 CORE FREIGHT MODES OVERVIEW -->
-    <section class="section">
+    <section class="section" id="services-overview">
       <div class="container">
         <div class="section-title-wrap">
           <div class="section-tag">Multimodal Capabilities</div>
           <h2 class="section-title">Engineered For Global Cargo Demands</h2>
-          <p class="section-subtitle">Flexible shipping modes customized to your payload size, urgency, and destination.</p>
+          <p class="section-subtitle">Click any freight mode below to view full technical specifications and operating parameters.</p>
         </div>
 
         <div class="grid-3">
-          <div class="service-card">
+          <div class="service-card" data-service="air-freight">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg></div>
             <h3 class="service-title">Air Freight Priority</h3>
             <p class="service-desc">Dedicated charter and scheduled air cargo connecting Indian manufacturing nodes to Europe, the Americas, and the Far East.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Air Freight Specs</button>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="air-freight">Air Freight Specs &rarr;</button>
+              <a href="#air-freight" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
 
-          <div class="service-card">
+          <div class="service-card" data-service="ocean-freight">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></div>
             <h3 class="service-title">Ocean Container Shipping</h3>
             <p class="service-desc">Full Container Load (FCL) and Less than Container Load (LCL) consolidation with guaranteed maritime carrier space allocation.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Ocean Shipping Specs</button>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="ocean-freight">Ocean Shipping Specs &rarr;</button>
+              <a href="#ocean-freight" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
 
-          <div class="service-card">
+          <div class="service-card" data-service="road-freight">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg></div>
             <h3 class="service-title">Interstate Road Haulage</h3>
             <p class="service-desc">Modern GPS-tracked fleets operating along high-capacity freight corridors with dual-driver shifts for non-stop transit.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Road Haulage Specs</button>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="road-freight">Road Haulage Specs &rarr;</button>
+              <a href="#road-freight" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
 
-          <div class="service-card">
+          <div class="service-card" data-service="warehousing">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
             <h3 class="service-title">Cross-Dock Warehousing</h3>
             <p class="service-desc">High-velocity consolidation and deconsolidation at our Salem terminal, minimizing dwell time and storage overhead.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Warehousing Specs</button>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="warehousing">Warehousing Specs &rarr;</button>
+              <a href="#warehousing" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
 
-          <div class="service-card">
+          <div class="service-card" data-service="cold-chain">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
             <h3 class="service-title">Pharma Cold Chain</h3>
-            <p class="service-desc">Validated cryogenic and refrigerated transport (-20&deg;C to +8&deg;C) with continuous IoT telemetry and NIST-calibrated sensors.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Cold Chain Specs</button>
+            <p class="service-desc">Validated cryogenic and refrigerated transport (-80&deg;C to +25&deg;C) with continuous IoT telemetry and NIST-calibrated sensors.</p>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="cold-chain">Cold Chain Specs &rarr;</button>
+              <a href="#cold-chain" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
 
-          <div class="service-card">
+          <div class="service-card" data-service="customs">
             <div class="service-icon"><svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
             <h3 class="service-title">Customs Brokerage</h3>
             <p class="service-desc">Pre-clearance documentation, tariff classification, bonded warehousing, and trade compliance guidance at key border checkpoints.</p>
-            <button class="btn btn-accent btn-sm btn-action-404">Customs Specs</button>
+            <div style="margin-top:auto; display:flex; gap:8px;">
+              <button type="button" class="btn btn-accent btn-sm specs-modal-btn" data-spec="customs">Customs Specs &rarr;</button>
+              <a href="#customs" class="btn btn-outline btn-sm" style="font-size:12px; padding:6px 12px; text-decoration:none;">Details</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- SECTION 3: DEEP DIVE AIR FREIGHT PRIORITY -->
-    <section class="section" style="background-color: var(--bg-alt);">
+    <section class="section" id="air-freight" style="background-color: var(--bg-alt);">
       <div class="container">
         <div class="grid-2" style="align-items:center;">
           <div>
             <div class="section-tag">Air Cargo Specialization</div>
             <h2 class="section-title">Global Air Charters with Guaranteed Landing Slots</h2>
             <p style="color:#475569; margin-bottom:16px;">
-              Stackly manages dedicated scheduled capacity on leading commercial cargo carriers as well as ad-hoc Boeing 777F and Airbus A330-200F full-charters.
+              Stackly manages dedicated scheduled capacity on leading commercial cargo carriers as well as ad-hoc Boeing 777F and Airbus A330-200F full-charters connecting Frankfurt, Dubai, and Singapore.
             </p>
-            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:20px;">
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
               <li>&check; Guaranteed 24-hour tarmac turnaround in Frankfurt &amp; Dubai</li>
               <li>&check; Pre-flight customs electronic manifesting (e-AWB compliant)</li>
               <li>&check; Real-time altitude and cabin pressure data logging</li>
+              <li>&check; Temperature-sensitive ULD container provisioning</li>
             </ul>
-            <!-- Action button redirecting to 404 -->
-            <button class="btn btn-primary btn-action-404">Request Air Charter Schedule</button>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="air-freight">Air Fleet Specifications &rarr;</button>
+              <a href="#rate-calculator" class="btn btn-secondary calc-jump-btn" data-mode-preset="air">Calculate Air Freight Rate</a>
+            </div>
           </div>
           <div>
             <img src="https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80" alt="Air cargo aircraft loading" style="border-radius:12px; box-shadow:var(--shadow-xl); width:100%; height:360px; object-fit:cover;" loading="lazy">
@@ -183,7 +221,7 @@
     </section>
 
     <!-- SECTION 4: DEEP DIVE OCEAN CONTAINER LINES -->
-    <section class="section">
+    <section class="section" id="ocean-freight">
       <div class="container">
         <div class="grid-2" style="align-items:center;">
           <div>
@@ -195,20 +233,23 @@
             <p style="color:#475569; margin-bottom:16px;">
               Connecting South India’s industrial manufacturing footprint to European, North American, and East Asian maritime trade corridors via weekly fixed-day sailings.
             </p>
-            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:20px;">
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
               <li>&check; Direct container berthing contracts at Chennai and Tuticorin</li>
               <li>&check; Integrated rail &amp; road drayage to Stackly Salem Hub</li>
               <li>&check; Reefer container telemetry with active power monitoring</li>
+              <li>&check; FCL and LCL groupage deconsolidation under customs bond</li>
             </ul>
-            <!-- Action button redirecting to 404 -->
-            <button class="btn btn-secondary btn-action-404">View Ocean Sailing Schedules</button>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="ocean-freight">Container Dimensions &amp; Specs &rarr;</button>
+              <a href="#rate-calculator" class="btn btn-secondary calc-jump-btn" data-mode-preset="ocean">Calculate Ocean Tariff</a>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- SECTION 5: DEEP DIVE ROAD TRANSPORT -->
-    <section class="section" style="background-color: var(--bg-alt);">
+    <section class="section" id="road-freight" style="background-color: var(--bg-alt);">
       <div class="container">
         <div class="grid-2" style="align-items:center;">
           <div>
@@ -217,13 +258,16 @@
             <p style="color:#475569; margin-bottom:16px;">
               Our fleet of over 140 multi-axle trailers, low-bed transporters, and enclosed container haulers provide clockwork connectivity between production hubs and maritime gateways.
             </p>
-            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:20px;">
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
               <li>&check; Dual-driver continuous highway shifts for expedited transit</li>
               <li>&check; Satellite-linked cabin panic beacons and route tamper alarms</li>
               <li>&check; Direct gate integration into Salem Central Terminal docks</li>
+              <li>&check; Real-time geofenced GPS telemetry with ETA predictions</li>
             </ul>
-            <!-- Action button redirecting to 404 -->
-            <button class="btn btn-primary btn-action-404">Book Road Haulage Fleet</button>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="road-freight">Road Fleet Specifications &rarr;</button>
+              <a href="#rate-calculator" class="btn btn-secondary calc-jump-btn" data-mode-preset="road">Calculate Haulage Rate</a>
+            </div>
           </div>
           <div>
             <img src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=800&q=80" alt="Heavy road haulage truck" style="border-radius:12px; box-shadow:var(--shadow-xl); width:100%; height:360px; object-fit:cover;" loading="lazy">
@@ -232,8 +276,203 @@
       </div>
     </section>
 
+    <!-- SECTION 5B: DEEP DIVE CROSS-DOCK WAREHOUSING -->
+    <section class="section" id="warehousing">
+      <div class="container">
+        <div class="grid-2" style="align-items:center;">
+          <div>
+            <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=800&q=80" alt="Salem terminal warehouse interior" style="border-radius:12px; box-shadow:var(--shadow-xl); width:100%; height:360px; object-fit:cover;" loading="lazy">
+          </div>
+          <div>
+            <div class="section-tag">Cross-Dock Operations</div>
+            <h2 class="section-title">Salem Central Terminal Cross-Dock Warehousing</h2>
+            <p style="color:#475569; margin-bottom:16px;">
+              Our flagship hub at MMR Complex, Chinna Thirupathi, Salem spans 185,000 sq.ft of high-velocity transit floor engineered for under 15-minute cross-dock turnover, minimizing dwell charges and storage overhead.
+            </p>
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
+              <li>&check; 28 automated hydraulic rapid-dock levelers with weather-sealed shelters</li>
+              <li>&check; Very Narrow Aisle (VNA) selective pallet racking with wire-guided turret trucks</li>
+              <li>&check; SAP-integrated Stackly WMS with 99.98% inventory cycle count accuracy</li>
+              <li>&check; 35,000 sq.ft segregated customs-bonded staging floor with 24/7 CCTV</li>
+            </ul>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="warehousing">Warehousing Specs &rarr;</button>
+              <a href="#rate-calculator" class="btn btn-secondary calc-jump-btn" data-mode-preset="road">Warehousing Freight Tariff</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5C: DEEP DIVE PHARMA COLD CHAIN -->
+    <section class="section" id="cold-chain" style="background-color: var(--bg-alt);">
+      <div class="container">
+        <div class="grid-2" style="align-items:center;">
+          <div>
+            <div class="section-tag">Temperature-Controlled Logistics</div>
+            <h2 class="section-title">Pharma Cryogenic &amp; Perishables Cold Chain</h2>
+            <p style="color:#475569; margin-bottom:16px;">
+              Certified ultra-low temperature storage and active multi-temp reefer transit from -80&deg;C cryogenic biologicals to +15&deg;C controlled room temperature (CRT), safeguarded by continuous IoT telemetry.
+            </p>
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
+              <li>&check; WHO-GDP and US FDA 21 CFR Part 11 compliant digital logging matrix</li>
+              <li>&check; Dual-circuit Carrier Vector 1950 multi-temp units with generator backups</li>
+              <li>&check; NIST-traceable calibrated wireless temperature and humidity logging every 60s</li>
+              <li>&check; Blast pre-cooling staging chambers at Salem Cold Terminal</li>
+            </ul>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="cold-chain">Cold Chain Specs &rarr;</button>
+              <a href="#rate-calculator" class="btn btn-secondary calc-jump-btn" data-mode-preset="cold">Cold Chain Rate Estimator</a>
+            </div>
+          </div>
+          <div>
+            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80" alt="Pharma cold chain laboratory and cold storage" style="border-radius:12px; box-shadow:var(--shadow-xl); width:100%; height:360px; object-fit:cover;" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5D: DEEP DIVE CUSTOMS BROKERAGE -->
+    <section class="section" id="customs">
+      <div class="container">
+        <div class="grid-2" style="align-items:center;">
+          <div>
+            <div class="section-tag">Customs &amp; Compliance</div>
+            <h2 class="section-title">AEO-Certified Customs Brokerage &amp; Port Clearance</h2>
+            <p style="color:#475569; margin-bottom:16px;">
+              Authorized Economic Operator (AEO-Tier 2) customs liaisons operating around the clock at Chennai Sea Port, Air Cargo Complex, and Bangalore ICD to guarantee fast-track green-channel clearance.
+            </p>
+            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:24px;">
+              <li>&check; Under 4-hour RMS green-channel release on validated cargo</li>
+              <li>&check; EDI direct electronic filing of Bill of Entry &amp; Shipping Bills</li>
+              <li>&check; Bonded warehouse storage under Section 49 / 65 MOOWR schemes</li>
+              <li>&check; Complete tariff classification and duty optimization audits</li>
+            </ul>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="btn btn-primary specs-modal-btn" data-spec="customs">Customs Clearance Protocols &rarr;</button>
+              <a href="contact.html" class="btn btn-secondary" style="text-decoration:none;">Consult Customs Liaison</a>
+            </div>
+          </div>
+          <div>
+            <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=800&q=80" alt="Customs documentation review" style="border-radius:12px; box-shadow:var(--shadow-xl); width:100%; height:360px; object-fit:cover;" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5D: INTERACTIVE FREIGHT RATE & TRANSIT ESTIMATOR -->
+    <section class="section" id="rate-calculator">
+      <div class="container" style="max-width:960px;">
+        <div class="section-title-wrap">
+          <div class="section-tag">Rate Estimator</div>
+          <h2 class="section-title">Instant Multimodal Freight Rate &amp; Transit Estimator</h2>
+          <p class="section-subtitle">Calculate real-time indicative freight costs, transit windows, and fuel indices across our active trade corridors.</p>
+        </div>
+
+        <div class="freight-calc-card">
+          <form id="freight-calc-form">
+            <div class="calc-grid">
+              <div class="form-group">
+                <label class="form-label" for="calc-mode">Freight Transport Mode <span class="required-star">*</span></label>
+                <select id="calc-mode" class="form-select" required>
+                  <option value="air" selected>Air Freight Priority Charter</option>
+                  <option value="ocean">Ocean Container Line (FCL/LCL)</option>
+                  <option value="road">Interstate Highway Haulage</option>
+                  <option value="cold">Pharma Cryogenic Cold Chain</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-origin">Origin Station / Gateway <span class="required-star">*</span></label>
+                <select id="calc-origin" class="form-select" required>
+                  <option value="salem" selected>Salem Central Terminal (HQ)</option>
+                  <option value="chennai">Chennai Port / Air Cargo Complex</option>
+                  <option value="frankfurt">Frankfurt Airport Node (FRA)</option>
+                  <option value="singapore">Singapore Transshipment Port</option>
+                  <option value="dubai">Dubai Logistics City (DWC)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-destination">Destination Station <span class="required-star">*</span></label>
+                <select id="calc-destination" class="form-select" required>
+                  <option value="frankfurt" selected>Frankfurt Airport Node (FRA)</option>
+                  <option value="dubai">Dubai Logistics City (DWC)</option>
+                  <option value="singapore">Singapore Transshipment Port</option>
+                  <option value="chicago">Chicago O'Hare Gateway (ORD)</option>
+                  <option value="salem">Salem Central Terminal (HQ)</option>
+                  <option value="bangalore">Bangalore Tech Industrial Park</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-weight">Consignment Weight (kg) <span class="required-star">*</span></label>
+                <input type="number" id="calc-weight" class="form-input" min="10" max="100000" value="850" placeholder="e.g. 850" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="calc-commodity">Cargo Classification</label>
+                <select id="calc-commodity" class="form-select">
+                  <option value="standard">Standard Industrial Payload</option>
+                  <option value="pharma">Temperature-Sensitive Pharma (GDP)</option>
+                  <option value="electronics">High-Value Tech / Electronics</option>
+                  <option value="heavy">Heavy Machinery / Over-Dimensional</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+              <button type="submit" id="calc-submit-btn" class="btn btn-primary btn-lg" style="min-width:240px;">
+                Calculate Freight Tariff &rarr;
+              </button>
+              <span style="font-size:12px; color:#64748b;">All estimates reflect official Stackly Salem rate cards and fuel telemetry.</span>
+            </div>
+          </form>
+
+          <!-- Dynamic Output Card -->
+          <div id="calc-results-box" class="calc-results-box">
+            <div class="calc-results-header">
+              <div>
+                <span style="font-size:12px; text-transform:uppercase; letter-spacing:1px; color:#ff833e; font-weight:700;">Verified Route Quote</span>
+                <h3 id="res-route-title" style="font-size:18px; margin-top:2px;">Salem Central Terminal &rarr; Frankfurt Airport Node</h3>
+              </div>
+              <div style="text-align:right;">
+                <span style="font-size:11px; color:#cbd5e1;">Transit Window SLA:</span>
+                <strong id="res-transit-sla" style="display:block; font-size:15px; color:#38bdf8;">24 - 48 Hours Express</strong>
+              </div>
+            </div>
+
+            <div class="calc-stat-row">
+              <div class="calc-stat-item">
+                <span>Base Linehaul Rate:</span>
+                <strong id="res-base-rate">&dollar;1,700.00</strong>
+              </div>
+              <div class="calc-stat-item">
+                <span>Fuel &amp; Security Index:</span>
+                <strong id="res-fuel-rate">&dollar;255.00</strong>
+              </div>
+              <div class="calc-stat-item">
+                <span>Terminal Handling:</span>
+                <strong id="res-terminal-rate">&dollar;120.00</strong>
+              </div>
+              <div class="calc-stat-item">
+                <span>Total Indicative Tariff:</span>
+                <strong id="res-total-tariff" style="color:#22c55e; font-size:22px;">&dollar;2,075.00</strong>
+                <span id="res-inr-tariff" style="display:block; color:#cbd5e1; font-size:11px;">(&#8377;1,72,225 INR)</span>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.15); padding-top:14px; flex-wrap:wrap; gap:10px;">
+              <span style="font-size:12px; color:#cbd5e1;">Rate locked for 7 days with Stackly Dispatch priority code #STK-EST-26</span>
+              <a href="contact.html" class="btn btn-accent btn-sm" style="text-decoration:none;">Lock In This Freight Booking &rarr;</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- SECTION 6: 4-STEP PRECISION WORKFLOW -->
-    <section class="section">
+    <section class="section" style="background-color: var(--bg-alt);">
       <div class="container">
         <div class="section-title-wrap">
           <div class="section-tag">How It Works</div>
@@ -267,7 +506,7 @@
     </section>
 
     <!-- SECTION 7: INDUSTRY VERTICALS -->
-    <section class="section" style="background-color: var(--bg-alt);">
+    <section class="section">
       <div class="container">
         <div class="section-title-wrap">
           <div class="section-tag">Industry Solutions</div>
@@ -296,49 +535,104 @@
       </div>
     </section>
 
-    <!-- SECTION 8: FREIGHT FAQ -->
-    <section class="section">
-      <div class="container" style="max-width:800px;">
+    <!-- SECTION 8: INTERACTIVE FREIGHT FAQ ACCORDION -->
+    <section class="section" style="background-color: var(--bg-alt);">
+      <div class="container" style="max-width:840px;">
         <div class="section-title-wrap">
           <div class="section-tag">Frequently Asked Questions</div>
           <h2 class="section-title">Common Freight Questions</h2>
           <p class="section-subtitle">Answers regarding transit SLAs, customs documentation, and container bookings.</p>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
-            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">What types of cargo can be handled at the Salem Terminal?</h3>
-            <p style="font-size:14px; color:#64748b;">Our Salem hub handles industrial machinery, consumer electronics, textiles, perishable food, and temperature-controlled pharmaceuticals.</p>
+        <div class="faq-accordion-container">
+          <div class="faq-accordion-item open">
+            <button type="button" class="faq-accordion-header" aria-expanded="true">
+              <span>What types of cargo can be handled at the Salem Terminal?</span>
+              <svg class="faq-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-accordion-body">
+              Our central Salem hub at MMR Complex, Chinna Thirupathi handles heavy machinery, electronics, automotive components, retail apparel, dry containerized goods, and temperature-controlled biological pharmaceuticals from -80&deg;C to +25&deg;C.
+            </div>
           </div>
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
-            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">How do shippers track consignments in real-time?</h3>
-            <p style="font-size:14px; color:#64748b;">Customers log in to the Stackly Customer Dashboard or enter their waybill number (e.g. STK-88219) on our tracking page to see live telemetry updates.</p>
+
+          <div class="faq-accordion-item">
+            <button type="button" class="faq-accordion-header" aria-expanded="false">
+              <span>How do shippers track consignments in real-time?</span>
+              <svg class="faq-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-accordion-body">
+              Shippers can track any active consignment via our online Tracking portal or customer dashboard by entering their assigned Waybill number (e.g. STK-88219). Our system integrates GPS, barometric altitude, and container door sensor feeds synchronized every 60 seconds.
+            </div>
           </div>
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
-            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Are international shipments insured against loss or damage?</h3>
-            <p style="font-size:14px; color:#64748b;">Yes, Stackly provides Tier 1 marine and transit cargo insurance coverage backed by globally rated underwriters.</p>
+
+          <div class="faq-accordion-item">
+            <button type="button" class="faq-accordion-header" aria-expanded="false">
+              <span>Are international shipments insured against loss or damage?</span>
+              <svg class="faq-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-accordion-body">
+              Yes. All consignments handled under Stackly bills of lading are protected by comprehensive Tier 1 Institute Cargo Clauses (A) all-risk insurance coverage, including general average, maritime perils, and temperature excursions during multi-modal transit.
+            </div>
+          </div>
+
+          <div class="faq-accordion-item">
+            <button type="button" class="faq-accordion-header" aria-expanded="false">
+              <span>What is the standard clearance turnaround for customs brokerage?</span>
+              <svg class="faq-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="faq-accordion-body">
+              With our AEO-Tier 2 accreditation, pre-filed electronic bills of entry under the green-channel RMS process clear customs within 4 hours of flight landing or container vessel dock berthing at Chennai Sea Port and Air Cargo complexes.
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 9: CTA -->
+    <!-- SECTION 9: CTA BANNER -->
     <section class="section section-dark" style="text-align:center;">
       <div class="container" style="max-width:750px;">
         <h2 class="section-title">Need a Custom Multimodal Logistics Strategy?</h2>
         <p class="section-subtitle" style="margin-bottom:28px;">
-          Our freight planning team in Salem is on call to structure your dedicated transport pipeline.
+          Our freight planning team in Salem is on call 24/7 to structure your dedicated transport pipeline.
         </p>
         <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
-          <a href="../404.html" class="btn btn-primary btn-lg btn-action-404">Speak with Freight Specialist</a>
-          <!-- Action button redirecting to 404 -->
-          <button class="btn btn-outline btn-lg btn-action-404" style="color:#fff; border-color:rgba(255,255,255,0.4);">
-            Download Route Pricing Matrix
-          </button>
+          <a href="contact.html" class="btn btn-primary btn-lg">Speak with Freight Specialist &rarr;</a>
+          <a href="#rate-calculator" class="btn btn-outline btn-lg" style="color:#fff; border-color:rgba(255,255,255,0.4);">
+            Instant Freight Rate Estimator
+          </a>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- Technical Specifications Modal -->
+  <div id="services-specs-modal" class="specs-modal" role="dialog" aria-modal="true" aria-labelledby="specs-modal-title">
+    <div class="specs-modal-backdrop" id="specs-modal-backdrop"></div>
+    <div class="specs-modal-dialog">
+      <button type="button" class="specs-modal-close" id="specs-modal-close" aria-label="Close modal">&times;</button>
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+        <span class="status-pill-badge" id="modal-spec-badge" style="background:#ecfdf5; color:#059669;">Verified Port Specs</span>
+        <span style="font-size:12px; color:#64748b;">Stackly Technical Directory</span>
+      </div>
+      <h3 id="specs-modal-title" style="font-size:22px; font-weight:800; color:#0b1a30; margin-bottom:8px;">
+        Service Technical Specifications
+      </h3>
+      <p id="specs-modal-desc" style="font-size:14px; color:#64748b; margin-bottom:18px;">
+        Detailed equipment capacities, transit thresholds, and operating guidelines.
+      </p>
+
+      <table class="specs-table">
+        <tbody id="specs-table-body">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:16px; border-top:1px solid #e2e8f0; flex-wrap:wrap; gap:10px;">
+        <button type="button" class="btn btn-primary btn-sm" id="modal-calc-btn">Estimate Tariff for this Mode &rarr;</button>
+        <button type="button" class="btn btn-outline btn-sm specs-modal-close">Close Specifications</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Full-Width Footer -->
   <footer class="site-footer">
@@ -348,7 +642,7 @@
           <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
         </a>
         <p style="color:#94a3b8; font-size:14px; line-height:1.6; margin-bottom:16px;">
-          Multimodal cargo freight, air charter, and supply chain solutions.
+          Multimodal cargo freight, air charter, and supply chain solutions connecting Salem to world markets.
         </p>
         <div class="footer-social-icons">
           <a href="../404.html" class="social-icon-btn" aria-label="Facebook"><svg fill="currentColor" viewBox="0 0 24 24" width="16" height="16"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>

@@ -237,15 +237,69 @@
       const roleVal = selectedRole || 'customer';
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      let effectiveEmail = emailVal;
-      let effectivePass = passVal;
+      let isValid = true;
+      let firstInvalid = null;
 
-      if (!emailVal || !emailRegex.test(emailVal)) {
-        effectiveEmail = roleVal === 'admin' ? 'admin@stackly.com' : 'customer@stackly.com';
+      const emailError = document.getElementById('signin-email-error');
+      const passError = document.getElementById('signin-password-error');
+
+      // 1. Email Validation
+      if (!emailVal) {
+        if (emailInput) emailInput.classList.add('is-invalid');
+        if (emailError) {
+          emailError.textContent = 'Please enter your email address.';
+          emailError.classList.add('show');
+        }
+        isValid = false;
+        if (!firstInvalid && emailInput) firstInvalid = emailInput;
+      } else if (!emailRegex.test(emailVal)) {
+        if (emailInput) emailInput.classList.add('is-invalid');
+        if (emailError) {
+          emailError.textContent = 'Please enter a valid email address.';
+          emailError.classList.add('show');
+        }
+        isValid = false;
+        if (!firstInvalid && emailInput) firstInvalid = emailInput;
+      } else {
+        if (emailInput) emailInput.classList.remove('is-invalid');
+        if (emailError) {
+          emailError.textContent = '';
+          emailError.classList.remove('show');
+        }
       }
-      if (!passVal || passVal.length < 4) {
-        effectivePass = 'Stackly@123';
+
+      // 2. Password Validation
+      if (!passVal) {
+        if (passInput) passInput.classList.add('is-invalid');
+        if (passError) {
+          passError.textContent = 'Please enter your account password.';
+          passError.classList.add('show');
+        }
+        isValid = false;
+        if (!firstInvalid && passInput) firstInvalid = passInput;
+      } else if (passVal.length < 4) {
+        if (passInput) passInput.classList.add('is-invalid');
+        if (passError) {
+          passError.textContent = 'Password must be at least 4 characters.';
+          passError.classList.add('show');
+        }
+        isValid = false;
+        if (!firstInvalid && passInput) firstInvalid = passInput;
+      } else {
+        if (passInput) passInput.classList.remove('is-invalid');
+        if (passError) {
+          passError.textContent = '';
+          passError.classList.remove('show');
+        }
       }
+
+      if (!isValid) {
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      const effectiveEmail = emailVal;
+      const effectivePass = passVal;
 
       // Lookup user in localStorage or auto-create account
       const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');

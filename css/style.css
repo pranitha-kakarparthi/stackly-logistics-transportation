@@ -45,7 +45,8 @@
   --radius-full: 9999px;
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.3s ease-in-out;
+  --transition-spring: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* CSS Reset & Base */
@@ -344,11 +345,28 @@ button, input, select, textarea {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  transition: var(--transition);
+  transition: color 0.3s ease-in-out, transform 0.2s ease;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  transition: width 0.3s ease-in-out, left 0.3s ease-in-out;
 }
 
 .nav-link:hover {
   color: var(--accent);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  left: 0;
 }
 
 .nav-link.active {
@@ -356,11 +374,8 @@ button, input, select, textarea {
 }
 
 .nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
   left: 0;
-  right: 0;
+  width: 100%;
   height: 3px;
   background: var(--accent);
   border-radius: var(--radius-full);
@@ -384,15 +399,18 @@ button, input, select, textarea {
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
-  transition: var(--transition);
-  z-index: 100;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  display: block;
 }
 
 .nav-dropdown:hover .dropdown-menu,
-.nav-dropdown:focus-within .dropdown-menu {
+.nav-dropdown:focus-within .dropdown-menu,
+.nav-dropdown.open .dropdown-menu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .dropdown-item {
@@ -520,10 +538,15 @@ button, input, select, textarea {
   padding: 11px 22px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border: 1px solid transparent;
   text-align: center;
   white-space: nowrap;
+  user-select: none;
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98) !important;
 }
 
 /* Go Back Button Component */
@@ -539,24 +562,25 @@ button, input, select, textarea {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: var(--transition);
+  transition: all 0.3s ease-in-out;
   text-decoration: none;
 }
 
 .btn-back:hover {
   background-color: #e2e8f0;
   color: var(--accent);
-  transform: translateX(-3px);
+  transform: translateX(-3px) scale(1.02);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-back svg {
   width: 16px;
   height: 16px;
-  transition: transform 0.2s ease;
+  transition: transform 0.25s ease;
 }
 
 .btn-back:hover svg {
-  transform: translateX(-2px);
+  transform: translateX(-3px);
 }
 
 /* Variant 1: Primary - Conversion focused Accent Orange */
@@ -568,8 +592,8 @@ button, input, select, textarea {
 
 .btn-primary:hover {
   background: linear-gradient(135deg, #e04b06 0%, #ff7326 100%);
-  box-shadow: 0 6px 18px rgba(255, 94, 21, 0.45);
-  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(255, 94, 21, 0.45);
+  transform: translateY(-2px) scale(1.025);
 }
 
 /* Variant 2: Secondary - Deep Industrial Navy */
@@ -580,8 +604,8 @@ button, input, select, textarea {
 
 .btn-secondary:hover {
   background-color: var(--primary-light);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 8px 20px rgba(11, 26, 48, 0.35);
 }
 
 /* Variant 3: Outline - Bordered clean */
@@ -595,6 +619,8 @@ button, input, select, textarea {
   border-color: var(--accent);
   color: var(--accent);
   background-color: var(--accent-light);
+  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
 }
 
 /* Variant 4: Ghost / Accent Light */
@@ -606,6 +632,8 @@ button, input, select, textarea {
 .btn-accent:hover {
   background-color: #ffe0d4;
   color: var(--accent-hover);
+  transform: translateY(-2px) scale(1.025);
+  box-shadow: 0 6px 16px rgba(255, 94, 21, 0.15);
 }
 
 .btn-sm {
@@ -765,9 +793,10 @@ button, input, select, textarea {
 
 .subpage-nav-bar {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 18px;
+  text-align: left;
 }
 
 .breadcrumb {
@@ -1879,11 +1908,80 @@ button, input, select, textarea {
   animation: floatBadge 3.2s ease-in-out infinite;
 }
 
-/* Scroll reveal classes */
+/* ==========================================================================
+   PAGE LOAD: HERO STAGGERED FADE-IN & SLIDE-UP ANIMATIONS
+   ========================================================================== */
+@keyframes heroFadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-animate-1 {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  opacity: 0;
+}
+
+.hero-animate-2 {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+  opacity: 0;
+}
+
+.hero-animate-3 {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards;
+  opacity: 0;
+}
+
+.hero-animate-4 {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  opacity: 0;
+}
+
+/* Automatic staggered hero loading across all pages */
+.hero-home .hero-tag,
+.hero-subpage .subpage-nav-bar {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  opacity: 0;
+}
+
+.hero-home .hero-title,
+.hero-subpage h1 {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+  opacity: 0;
+}
+
+.hero-home .hero-desc,
+.hero-subpage p {
+  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards;
+  opacity: 0;
+}
+
+.hero-home .hero-actions,
+.hero-home .hero-cta-group,
+.hero-home .hero-trust-badges,
+.hero-home .hero-tracker-card {
+  animation: heroFadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  opacity: 0;
+}
+
+.hero-home .hero-visual-card,
+.hero-home .hero-image-wrap {
+  animation: heroFadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  opacity: 0;
+}
+
+/* ==========================================================================
+   SCROLL ENGAGEMENT: SCROLL-DRIVEN & REVEAL ANIMATIONS
+   ========================================================================== */
 .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -1892,22 +1990,141 @@ button, input, select, textarea {
   transform: translateY(0);
 }
 
-/* Card hover lifts */
+/* Modern CSS Scroll-Driven Animations via Baseline view() */
+@supports ((animation-timeline: view()) and (animation-range: entry)) {
+  .reveal-on-scroll {
+    animation: scrollFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-timeline: view();
+    animation-range: entry 8% entry 38%;
+  }
+
+  .parallax-subtle {
+    animation: parallaxScroll linear both;
+    animation-timeline: view();
+    animation-range: entry 0% exit 100%;
+  }
+}
+
+@keyframes scrollFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes parallaxScroll {
+  from {
+    transform: translateY(18px);
+  }
+  to {
+    transform: translateY(-18px);
+  }
+}
+
+/* ==========================================================================
+   MICRO-INTERACTIONS & INTERACTIVE HOVER STATES
+   ========================================================================== */
+a,
+button,
+input,
+select,
+textarea,
+.btn,
+.social-icon-btn,
+.tracker-tab-btn,
+.service-tab-btn,
+.filter-btn,
+.feature-card,
+.service-card,
+.pricing-card,
+.kpi-card,
+.dash-card,
+.status-badge,
+.role-badge,
+.mobile-link,
+.dropdown-item {
+  transition: all 0.3s ease-in-out;
+}
+
+/* Card hover elevations */
 .feature-card,
 .service-card,
 .pricing-card,
 .kpi-card,
 .address-card,
 .dash-card {
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease-in-out;
 }
 
 .feature-card:hover,
 .service-card:hover,
 .pricing-card:hover,
 .address-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+  border-color: #cbd5e1;
+}
+
+.social-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-light);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.3s ease-in-out;
+}
+
+.social-icon-btn:hover {
+  background-color: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  transform: translateY(-3px) scale(1.12);
+  box-shadow: 0 4px 14px rgba(255, 94, 21, 0.4);
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  transition: all 0.3s ease-in-out;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 94, 21, 0.15);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-animate-1,
+  .hero-animate-2,
+  .hero-animate-3,
+  .hero-animate-4,
+  .hero-home .hero-tag,
+  .hero-subpage .subpage-nav-bar,
+  .hero-home .hero-title,
+  .hero-subpage h1,
+  .hero-home .hero-desc,
+  .hero-subpage p,
+  .hero-home .hero-actions,
+  .hero-home .hero-tracker-card,
+  .hero-home .hero-visual-card,
+  .reveal-on-scroll,
+  .parallax-subtle {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* ==========================================================================
@@ -2305,3 +2522,283 @@ button, input, select, textarea {
     padding: 5px 10px;
   }
 }
+
+/* ==========================================================================
+   SERVICES PAGE ENHANCED FUNCTIONALITY & INTERACTION STYLES
+   ========================================================================== */
+.service-filter-wrapper {
+  background: #f8fafc;
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+  position: sticky;
+  top: 72px;
+  z-index: 95;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.service-filter-bar {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.service-filter-btn {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  background: #ffffff;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.service-filter-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.service-filter-btn.active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 4px 10px rgba(255, 94, 21, 0.25);
+}
+
+/* Section Highlight Pulse on Hash Navigation */
+@keyframes sectionPulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 94, 21, 0.4);
+    background-color: rgba(255, 94, 21, 0.06);
+  }
+  50% {
+    box-shadow: 0 0 0 16px rgba(255, 94, 21, 0);
+    background-color: rgba(255, 94, 21, 0.08);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 94, 21, 0);
+    background-color: transparent;
+  }
+}
+
+.section-highlight-pulse {
+  animation: sectionPulseGlow 1.8s ease-out;
+  border-radius: var(--radius-lg);
+}
+
+/* Freight Rate & Transit Estimator Calculator */
+.freight-calc-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-lg);
+}
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.calc-results-box {
+  background: linear-gradient(135deg, #0b1a30 0%, #17283c 100%);
+  color: #ffffff;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  margin-top: 24px;
+  display: none;
+  animation: fadeInUp 0.35s ease-out both;
+}
+
+.calc-results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.calc-stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.calc-stat-item strong {
+  display: block;
+  font-size: 20px;
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.calc-stat-item span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* FAQ Interactive Accordion */
+.faq-accordion-item {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.faq-accordion-item.open {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.faq-accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.faq-accordion-header:hover {
+  color: var(--accent);
+}
+
+.faq-chevron {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.faq-accordion-item.open .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+
+.faq-accordion-body {
+  display: none;
+  padding: 0 22px 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.faq-accordion-item.open .faq-accordion-body {
+  display: block;
+  animation: fadeIn 0.25s ease-out;
+}
+
+/* Technical Specifications Modal */
+.specs-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.specs-modal.open {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.specs-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 26, 48, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.specs-modal-dialog {
+  position: relative;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  max-width: 680px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-xl);
+  z-index: 10;
+  padding: 32px;
+  animation: modalScaleUp 0.25s ease-out;
+}
+
+@keyframes modalScaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.specs-modal-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: #f1f5f9;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.specs-modal-close:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.specs-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+  font-size: 14px;
+}
+
+.specs-table th, .specs-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.specs-table th {
+  background: #f8fafc;
+  color: #0b1a30;
+  font-weight: 700;
+  width: 35%;
+}
+
+.specs-table td {
+  color: #334155;
+}
+

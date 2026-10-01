@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live Cargo Tracking &amp; Telemetry - Stackly Logistics</title>
-  <meta name="description" content="Track your international air waybill, maritime container, or domestic freight in real-time. Sub-minute telemetry sync direct to Salem operations.">
+  <title>Live Cargo Tracking &amp; Global Telemetry - Stackly Logistics</title>
+  <meta name="description" content="Track your international air waybill, maritime container, or domestic freight in real-time. Sub-minute multi-constellation satellite sync direct to Salem operations command.">
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -19,7 +19,7 @@
     <div class="loader-text">Connecting Satellite Telemetry...</div>
   </div>
 
-  <!-- Header (Pre-navbar removed as requested) -->
+  <!-- Header -->
   <header class="site-header">
     <div class="container nav-wrapper">
       <a href="../index.html" class="brand-logo" aria-label="Stackly Homepage">
@@ -29,12 +29,12 @@
         <a href="../index.html" class="nav-link">Home</a>
         <a href="about.html" class="nav-link">About Us</a>
         <div class="nav-dropdown">
-          <a href="services.html" class="nav-link">Services &#9662;</a>
+          <a href="services.html" class="nav-link dropdown-toggle" role="button" aria-expanded="false">Services &#9662;</a>
           <div class="dropdown-menu">
-            <a href="services.html" class="dropdown-item">Air Freight Cargo</a>
-            <a href="services.html" class="dropdown-item">Ocean Container Line</a>
-            <a href="services.html" class="dropdown-item">Road Transportation</a>
-            <a href="services.html" class="dropdown-item">Warehousing &amp; Cold Chain</a>
+            <a href="air-freight.html" class="dropdown-item">Air Freight Cargo</a>
+            <a href="ocean-freight.html" class="dropdown-item">Ocean Container Line</a>
+            <a href="road-transport.html" class="dropdown-item">Road Transportation</a>
+            <a href="warehousing-cold-chain.html" class="dropdown-item">Warehousing &amp; Cold Chain</a>
           </div>
         </div>
         <a href="tracking.html" class="nav-link active">Tracking</a>
@@ -63,7 +63,6 @@
     <div class="mobile-links">
       <a href="../index.html" class="mobile-link">Home</a>
       <a href="about.html" class="mobile-link">About Us</a>
-      <!-- Services Mobile Dropdown Menu -->
       <div class="mobile-dropdown">
         <button class="mobile-dropdown-btn" type="button" aria-expanded="false">
           <span>Services</span>
@@ -72,11 +71,10 @@
           </svg>
         </button>
         <div class="mobile-dropdown-menu">
-          <a href="services.html" class="mobile-sublink">All Services Overview</a>
-          <a href="services.html#air-freight" class="mobile-sublink">Air Freight Cargo</a>
-          <a href="services.html#ocean-freight" class="mobile-sublink">Ocean Container Line</a>
-          <a href="services.html#road-freight" class="mobile-sublink">Road Transportation</a>
-          <a href="services.html#warehousing" class="mobile-sublink">Warehousing &amp; Cold Chain</a>
+          <a href="air-freight.html" class="mobile-sublink">Air Freight Cargo</a>
+          <a href="ocean-freight.html" class="mobile-sublink">Ocean Container Line</a>
+          <a href="road-transport.html" class="mobile-sublink">Road Transportation</a>
+          <a href="warehousing-cold-chain.html" class="mobile-sublink">Warehousing &amp; Cold Chain</a>
         </div>
       </div>
       <a href="tracking.html" class="mobile-link active">Live Tracking</a>
@@ -90,226 +88,363 @@
   </aside>
 
   <main id="main-content">
-    <!-- SECTION 1: HERO WITH GO BACK BUTTON -->
+    <!-- SECTION 1: HERO WITH BREADCRUMB & STAGGERED PAGE LOAD ANIMATIONS -->
     <section class="hero-subpage">
       <div class="container">
-        <div class="subpage-nav-bar">
-          <!-- Functional Go Back Button as requested -->
-          <button class="btn-back" data-action="go-back">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            Go Back
-          </button>
+        <div class="subpage-nav-bar hero-animate-1">
           <div class="breadcrumb">
-            <a href="../index.html">Home</a> &gt; <span>Live Tracking</span>
+            <a href="../index.html">Home</a> &gt; <span>Live Cargo Tracking</span>
           </div>
         </div>
-        <h1 style="font-size:clamp(30px, 4vw, 44px); font-weight:800; margin-bottom:8px;">Live Cargo Telemetry</h1>
-        <p style="color:#cbd5e1; max-width:620px; margin:0 auto;">
-          Real-time global tracking with sub-minute sensor sync across vessels, aircraft, and haulage trucks.
+        <h1 class="hero-animate-2" style="font-size:clamp(30px, 4.2vw, 48px); font-weight:900; margin-bottom:12px; letter-spacing:-0.5px;">
+          Global Multi-Modal Cargo Telemetry
+        </h1>
+        <p class="hero-animate-3" style="color:#cbd5e1; max-width:680px; margin:0 auto 28px; font-size:16px; line-height:1.6;">
+          Real-time global tracking powered by sub-minute satellite telemetry, sensor-level cold chain monitoring, and optical milestone verification direct to Salem Central Hub.
         </p>
+
+        <!-- Staggered Hero Metric Badges -->
+        <div class="hero-animate-4" style="display:flex; justify-content:center; flex-wrap:wrap; gap:16px; margin-top:10px;">
+          <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:9999px; padding:8px 18px; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
+            <span style="width:8px; height:8px; background:#10b981; border-radius:50%; display:inline-block; box-shadow:0 0 8px #10b981;"></span>
+            <span>14,850+ Active Shipments</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:9999px; padding:8px 18px; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
+            <span style="color:#ff833e;">&#9889;</span>
+            <span>45s Constellation Ping Rate</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:9999px; padding:8px 18px; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
+            <span style="color:#38bdf8;">&#127758;</span>
+            <span>100% Zero-Dark-Zone Corridors</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:9999px; padding:8px 18px; display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600;">
+            <span style="color:#a855f7;">&#128274;</span>
+            <span>Tamper Seal Verification</span>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- SECTION 2: TRACKER TOOL LOOKUP -->
-    <section class="section">
-      <div class="container" style="max-width:960px;">
-        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:28px; box-shadow:var(--shadow-md); margin-bottom:32px;">
-          <h2 style="font-size:20px; font-weight:800; color:#0b1a30; margin-bottom:6px;">Enter Waybill or Container Number</h2>
-          <p style="font-size:13px; color:#64748b; margin-bottom:16px;">Test with demo waybill: <strong style="color:var(--accent);">STK-88219</strong>, <strong style="color:var(--accent);">STK-90432</strong>, or <strong style="color:var(--accent);">STK-77150</strong></p>
+    <!-- SECTION 2: TRACK & TRACE SEARCH CONSOLE -->
+    <section class="section reveal-on-scroll" style="padding-top:40px; padding-bottom:40px;">
+      <div class="container" style="max-width:980px;">
+        <div style="background:#fff; border:1px solid #e2e8f0; border-radius:16px; padding:32px; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+            <div>
+              <span class="role-badge admin" style="margin-bottom:6px;">Multi-Constellation Sync</span>
+              <h2 style="font-size:22px; font-weight:800; color:#0b1a30; margin-bottom:4px;">Global Waybill &amp; Container Locator</h2>
+              <p style="font-size:14px; color:#64748b;">Query any international Master Air Waybill (MAWB), ocean bill of lading, or domestic consignment.</p>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span style="font-size:12px; color:#64748b; font-weight:600;">Protocol:</span>
+              <span style="background:#ecfdf5; color:#059669; border:1px solid #a7f3d0; border-radius:6px; padding:3px 8px; font-size:12px; font-weight:700;">GPS / Iridium / Inmarsat</span>
+            </div>
+          </div>
           
-          <form id="tracking-search-form" style="display:flex; gap:10px; flex-wrap:wrap;">
-            <input type="text" id="tracking-input" class="form-input" style="flex:1; min-width:240px;" value="" placeholder="Enter waybill ID (e.g. STK-88219)" required>
-            <button type="submit" class="btn btn-primary">Locate Cargo Now &rarr;</button>
+          <form id="tracking-search-form" style="display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;">
+            <input type="text" id="tracking-input" class="form-input" style="flex:1; min-width:280px; height:50px; font-size:15px; font-weight:500;" value="" placeholder="Enter Waybill, Container, or E-Way Bill (e.g. STK-88219)" required>
+            <button type="submit" id="tracking-submit-btn" class="btn btn-primary" style="height:50px; padding-inline:28px; font-size:15px; font-weight:700;">Locate Cargo Now &rarr;</button>
           </form>
+          <div id="tracking-input-error" class="form-error-msg" role="alert" style="margin-top:8px;"></div>
+
+          <!-- Quick Query Preset Chips -->
+          <div style="margin-top:18px; padding-top:16px; border-top:1px solid #f1f5f9; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <span style="font-size:12px; color:#94a3b8; font-weight:600; text-transform:uppercase;">Quick Presets:</span>
+            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="STK-88219" style="font-size:12px; padding:4px 10px; border-radius:6px;">Air: STK-88219</button>
+            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="MSCU-992144" style="font-size:12px; padding:4px 10px; border-radius:6px;">Ocean: MSCU-992144</button>
+            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="RDF-44109" style="font-size:12px; padding:4px 10px; border-radius:6px;">Road: RDF-44109</button>
+            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="CBE-55210" style="font-size:12px; padding:4px 10px; border-radius:6px;">Customs: CBE-55210</button>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 3: LIVE STEPPER RESULT -->
-    <section class="section" style="padding-top:0;">
-      <div class="container" style="max-width:960px;">
-        <div class="dashboard-panel" id="tracking-result-box">
-          <div class="panel-header">
-            <div>
-              <span class="role-badge admin" style="margin-bottom:6px; display:inline-block;">Air &amp; Road Multimodal</span>
-              <h3 class="panel-title" id="shipment-id-title">Shipment #STK-88219 &bull; Frankfurt &rarr; Stackly Salem Terminal</h3>
-              <p style="font-size:13px; color:#64748b; margin-top:2px;">Consigned to: Vance Global Dynamics &bull; Est. Delivery: Oct 03, 2026</p>
+    <!-- SECTION 3: LIVE FLIGHT RADAR & AIR CORRIDOR TELEMETRY (IMAGE 1: flight-radar-ops.webp) -->
+    <section class="section reveal-on-scroll" style="background-color: var(--bg-alt);">
+      <div class="container">
+        <div class="grid-2" style="align-items:center; gap:48px;">
+          <div>
+            <div class="section-tag">Air Operations Telemetry</div>
+            <h2 class="section-title">Live Flight Path &amp; Air Corridor Monitoring</h2>
+            <p style="color:#475569; font-size:15px; line-height:1.7; margin-bottom:20px;">
+              All air freight consignments connect directly with our global flight dispatch centers. Real-time automatic dependent surveillance-broadcast (ADS-B) radar feeds capture cruising altitude, ground speed, waypoint passing, and weather reroutes with zero delay.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:24px;">
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <div style="background:var(--accent-light); color:var(--accent); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;">&check;</div>
+                <div>
+                  <strong style="color:#0b1a30; font-size:14px; display:block;">Pre-Flight Manifest EDI Sync</strong>
+                  <span style="color:#64748b; font-size:13px;">Direct e-AWB transmission to ICEGATE customs and destination airport cargo terminals before wheels-up.</span>
+                </div>
+              </div>
+              <div style="display:flex; gap:12px; align-items:flex-start;">
+                <div style="background:var(--accent-light); color:var(--accent); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0;">&check;</div>
+                <div>
+                  <strong style="color:#0b1a30; font-size:14px; display:block;">Real-Time Altitude &amp; Tarmac Handover</strong>
+                  <span style="color:#64748b; font-size:13px;">Instant confirmation when high-value containers touch down and clear into secure tarmac dollies.</span>
+                </div>
+              </div>
             </div>
-            <span class="status-badge status-in-transit" id="shipment-status-badge">&bull; In Transit (En Route)</span>
+            <a href="../404.html" class="btn btn-secondary btn-action-404">View Live Air Corridors &rarr;</a>
           </div>
-
-          <!-- Stepper Visual -->
-          <div class="tracking-stepper">
-            <div class="step-node completed">
-              <div class="step-circle">&check;</div>
-              <div>
-                <div class="step-title">Order Picked Up</div>
-                <div class="step-time">FRA Cargo Hub &bull; Sep 28</div>
+          <div>
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-xl); border:1px solid #e2e8f0; background:#0b1a30;">
+              <img src="../assets/images/tracking/flight-radar-ops.webp" alt="Global flight operations telemetry screen showing live air routes" style="width:100%; height:360px; object-fit:cover; display:block;" loading="lazy">
+              <div style="position:absolute; bottom:16px; left:16px; right:16px; background:rgba(11,26,48,0.85); backdrop-filter:blur(8px); padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); display:flex; justify-content:space-between; align-items:center; color:#fff;">
+                <div>
+                  <div style="font-size:12px; color:#94a3b8; text-transform:uppercase; font-weight:700;">Live Carrier Telemetry</div>
+                  <div style="font-size:14px; font-weight:700; color:#fff;">FRA Cargo Flight FL-772 &bull; On Schedule</div>
+                </div>
+                <span class="status-badge status-in-transit">&bull; Active Radar</span>
               </div>
-            </div>
-            <div class="step-node completed">
-              <div class="step-circle">&check;</div>
-              <div>
-                <div class="step-title">Customs Cleared</div>
-                <div class="step-time">Frankfurt Port &bull; Sep 29</div>
-              </div>
-            </div>
-            <div class="step-node active">
-              <div class="step-circle">3</div>
-              <div>
-                <div class="step-title">Flight En Route</div>
-                <div class="step-time">FL-772 &bull; In Air</div>
-              </div>
-            </div>
-            <div class="step-node">
-              <div class="step-circle">4</div>
-              <div>
-                <div class="step-title">Salem Terminal Bay</div>
-                <div class="step-time">MMR Complex &bull; Expected Oct 02</div>
-              </div>
-            </div>
-            <div class="step-node">
-              <div class="step-circle">5</div>
-              <div>
-                <div class="step-title">Final Signed POD</div>
-                <div class="step-time">Salem Delivery &bull; Oct 03</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SECTION 4: TECHNICAL SENSOR READINGS -->
-          <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; background:#f8fafc; padding:20px; border-radius:8px; border:1px solid #e2e8f0; margin-top:24px; font-size:13px;">
-            <div>
-              <span style="color:#64748b; display:block;">Weight &amp; Dimensions</span>
-              <strong style="color:#0f172a;">420.5 KG (3 Pallets)</strong>
-            </div>
-            <div>
-              <span style="color:#64748b; display:block;">Sensor Temperature</span>
-              <strong style="color:#059669;">4.2&deg;C (Target: 2-8&deg;C)</strong>
-            </div>
-            <div>
-              <span style="color:#64748b; display:block;">Carrier Flight</span>
-              <strong style="color:#0f172a;">Lufthansa Cargo FL-772</strong>
-            </div>
-            <div>
-              <span style="color:#64748b; display:block;">Transit Insurance</span>
-              <strong style="color:#2563eb;">Tier 1 Full Coverage</strong>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 5: GLOBAL TRANSSHIPMENT HUBS -->
-    <section class="section" style="background-color: var(--bg-alt);">
+    <!-- SECTION 4: HARDWARE-GRADE IOT BEACONS & SENSOR TELEMETRY (IMAGE 2: container-tamper-seal.webp) -->
+    <section class="section reveal-on-scroll">
       <div class="container">
         <div class="section-title-wrap">
-          <div class="section-tag">Gateway Network</div>
-          <h2 class="section-title">Major Logistics Hubs &amp; Transshipment Nodes</h2>
-          <p class="section-subtitle">Dedicated operational presence ensuring zero dwell at international junctions.</p>
+          <div class="section-tag">Cargo Integrity</div>
+          <h2 class="section-title">Military-Spec IoT Container Beacons &amp; Tamper Seals</h2>
+          <p class="section-subtitle">Multi-sensor telemetry monitors environment, door seals, and physical impact continuously.</p>
+        </div>
+
+        <div class="grid-2" style="align-items:center; gap:48px;">
+          <div>
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-xl); border:1px solid #e2e8f0;">
+              <img src="../assets/images/tracking/container-tamper-seal.webp" alt="Smart IoT container tamper seal and maritime telemetry sensor" style="width:100%; height:360px; object-fit:cover; display:block;" loading="lazy">
+              <div style="position:absolute; top:16px; left:16px; background:rgba(255,94,21,0.9); color:#fff; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700;">
+                ISO 17712 High Security Seal
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="grid-2" style="gap:16px;">
+              <div class="feature-card" style="padding:18px;">
+                <div style="font-size:24px; margin-bottom:8px;">&#127777;</div>
+                <h4 style="font-size:15px; font-weight:700; color:#0b1a30; margin-bottom:4px;">Thermal Integrity</h4>
+                <p style="font-size:13px; color:#64748b;">Sub-degree logging across -25&deg;C to +25&deg;C with automatic breach alarms for sensitive pharmaceuticals.</p>
+              </div>
+              <div class="feature-card" style="padding:18px;">
+                <div style="font-size:24px; margin-bottom:8px;">&#128274;</div>
+                <h4 style="font-size:15px; font-weight:700; color:#0b1a30; margin-bottom:4px;">Optical Seal Breach</h4>
+                <p style="font-size:13px; color:#64748b;">Light and magnetic lock sensors trigger an encrypted alarm if doors open outside authorized geofenced zones.</p>
+              </div>
+              <div class="feature-card" style="padding:18px;">
+                <div style="font-size:24px; margin-bottom:8px;">&#128267;</div>
+                <h4 style="font-size:15px; font-weight:700; color:#0b1a30; margin-bottom:4px;">3-Axis Impact Sensor</h4>
+                <p style="font-size:13px; color:#64748b;">Tri-axial accelerometers record physical G-force shock and tilt angles during ocean passage or rail transshipment.</p>
+              </div>
+              <div class="feature-card" style="padding:18px;">
+                <div style="font-size:24px; margin-bottom:8px;">&#128167;</div>
+                <h4 style="font-size:15px; font-weight:700; color:#0b1a30; margin-bottom:4px;">Atmospheric Sensing</h4>
+                <p style="font-size:13px; color:#64748b;">Continuous relative humidity and barometric air pressure tracking to prevent condensation damage.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: SALEM HUB SCANNING & CROSS-DOCK MILESTONES (IMAGE 3: cargo-scanning.webp) -->
+    <section class="section reveal-on-scroll" style="background-color: var(--bg-alt);">
+      <div class="container">
+        <div class="grid-2" style="align-items:center; gap:48px;">
+          <div>
+            <div class="section-tag">Hub Verification</div>
+            <h2 class="section-title">Optical Handheld Scanning at Salem Central Cross-Dock</h2>
+            <p style="color:#475569; font-size:15px; line-height:1.7; margin-bottom:20px;">
+              At every touchpoint across our MMR Complex, Chinna Thirupathi facility, certified freight technicians scan high-density 2D Datamatrix and GS1-128 barcodes using ruggedized optical terminals.
+            </p>
+            <div style="background:#fff; border-radius:12px; border:1px solid #e2e8f0; padding:20px; box-shadow:var(--shadow-sm); margin-bottom:20px;">
+              <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:13px; font-weight:700; color:#0b1a30;">
+                <span>Cross-Dock Inbound Scanning Speed</span>
+                <span style="color:#059669;">99.98% First-Pass Read</span>
+              </div>
+              <div style="width:100%; height:8px; background:#e2e8f0; border-radius:4px; overflow:hidden;">
+                <div style="width:99.9%; height:100%; background:var(--accent-gradient);"></div>
+              </div>
+              <p style="font-size:12px; color:#64748b; margin-top:8px;">Average scan-to-cloud sync latency: <strong>420 milliseconds</strong> direct to client dashboard.</p>
+            </div>
+            <a href="../404.html" class="btn btn-primary btn-action-404">View Hub Operations Guide &rarr;</a>
+          </div>
+          <div>
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-xl); border:1px solid #e2e8f0;">
+              <img src="../assets/images/tracking/cargo-scanning.webp" alt="Warehouse logistics terminal technician scanning cargo barcode" style="width:100%; height:360px; object-fit:cover; display:block;" loading="lazy">
+              <div style="position:absolute; bottom:16px; left:16px; right:16px; background:rgba(255,255,255,0.92); backdrop-filter:blur(6px); padding:12px 16px; border-radius:8px; border:1px solid #e2e8f0; font-size:13px; color:#0f172a;">
+                <strong style="color:#0b1a30; display:block;">Salem MMR Cross-Dock Terminal 4</strong>
+                <span>Instant weight, dimensional cube, and customs status recorded on intake.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: SATELLITE NETWORK HIGHLIGHTS (IMAGE 4: satellite-telemetry.webp) -->
+    <section class="section reveal-on-scroll">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div class="section-tag">Zero Dark Zones</div>
+          <h2 class="section-title">Deep-Sea &amp; Transcontinental Satellite Constellation</h2>
+          <p class="section-subtitle">Multi-orbit Inmarsat, Iridium, and LEO satellite uplinks ensure uninterrupted telemetry across international oceans.</p>
+        </div>
+
+        <div class="grid-2" style="align-items:center; gap:48px;">
+          <div>
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-xl); border:1px solid #e2e8f0;">
+              <img src="../assets/images/tracking/satellite-telemetry.webp" alt="High-gain satellite dish ground station tracking orbital telemetry" style="width:100%; height:360px; object-fit:cover; display:block;" loading="lazy">
+              <div style="position:absolute; bottom:16px; left:16px; background:rgba(11,26,48,0.9); color:#fff; padding:8px 14px; border-radius:6px; font-size:12px; font-weight:600;">
+                Dual Uplink: Inmarsat-C &amp; Starlink Aero
+              </div>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div class="feature-card">
+                <h3 style="font-size:17px; font-weight:700; color:#0b1a30; margin-bottom:6px;">High Seas Maritime Beacons</h3>
+                <p style="font-size:14px; color:#475569;">When vessels leave terrestrial cellular range, our satellite transceivers switch seamlessly without losing a single coordinate packet.</p>
+              </div>
+              <div class="feature-card">
+                <h3 style="font-size:17px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Automated Geofence Crossing Triggers</h3>
+                <p style="font-size:14px; color:#475569;">When cargo crosses designated marine EEZ boundaries or enters territorial waters, clearance manifests are automatically dispatched.</p>
+              </div>
+              <div class="feature-card">
+                <h3 style="font-size:17px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Solar-Powered Autonomous Transmitters</h3>
+                <p style="font-size:14px; color:#475569;">Built-in 5-year ultra-low-power battery backup with integrated solar harvesting prevents dead-battery telemetry gaps.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: INTERSTATE HIGHWAY TELEMATICS (IMAGE 5: fleet-haulage-route.webp) -->
+    <section class="section reveal-on-scroll" style="background-color: var(--bg-alt);">
+      <div class="container">
+        <div class="grid-2" style="align-items:center; gap:48px;">
+          <div>
+            <div class="section-tag">Highway Telematics</div>
+            <h2 class="section-title">Interstate Fleet Telematics &amp; Predictive ETA</h2>
+            <p style="color:#475569; font-size:15px; line-height:1.7; margin-bottom:20px;">
+              Our highway logistics fleet operating along major national corridors (NH44, NH544, Golden Quadrilateral) is equipped with CAN-bus vehicle telematics, dual-facing safety cameras, and dynamic traffic avoidance algorithms.
+            </p>
+            <div class="grid-2" style="gap:14px; margin-bottom:24px;">
+              <div style="background:#fff; padding:14px; border-radius:8px; border:1px solid #e2e8f0;">
+                <div style="font-size:18px; font-weight:800; color:var(--primary);">60-Sec</div>
+                <div style="font-size:12px; color:#64748b;">GPS Telematics Refresh</div>
+              </div>
+              <div style="background:#fff; padding:14px; border-radius:8px; border:1px solid #e2e8f0;">
+                <div style="font-size:18px; font-weight:800; color:var(--accent);">AI Reroute</div>
+                <div style="font-size:12px; color:#64748b;">Congestion Avoidance</div>
+              </div>
+              <div style="background:#fff; padding:14px; border-radius:8px; border:1px solid #e2e8f0;">
+                <div style="font-size:18px; font-weight:800; color:#059669;">E-POD</div>
+                <div style="font-size:12px; color:#64748b;">Signed Digital Receipt</div>
+              </div>
+              <div style="background:#fff; padding:14px; border-radius:8px; border:1px solid #e2e8f0;">
+                <div style="font-size:18px; font-weight:800; color:#2563eb;">24/7 Desk</div>
+                <div style="font-size:12px; color:#64748b;">Salem Control Liaison</div>
+              </div>
+            </div>
+            <a href="../404.html" class="btn btn-secondary btn-action-404">Explore Fleet Telematics &rarr;</a>
+          </div>
+          <div>
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-xl); border:1px solid #e2e8f0;">
+              <img src="../assets/images/tracking/fleet-haulage-route.webp" alt="Heavy duty freight truck hauling cargo along highway route" style="width:100%; height:360px; object-fit:cover; display:block;" loading="lazy">
+              <div style="position:absolute; bottom:16px; left:16px; right:16px; background:rgba(11,26,48,0.85); backdrop-filter:blur(8px); padding:12px 16px; border-radius:8px; border:1px solid rgba(255,255,255,0.15); display:flex; justify-content:space-between; align-items:center; color:#fff;">
+                <div>
+                  <div style="font-size:12px; color:#94a3b8; text-transform:uppercase; font-weight:700;">Haulage Unit</div>
+                  <div style="font-size:14px; font-weight:700; color:#fff;">TN-30-HAUL-882 &bull; En Route Salem MMR</div>
+                </div>
+                <span class="status-badge status-in-transit">&bull; Active GPS</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 8: AUTOMATED NOTIFICATIONS & WEBHOOK DISPATCH -->
+    <section class="section reveal-on-scroll">
+      <div class="container">
+        <div class="section-title-wrap">
+          <div class="section-tag">Instant Alerts</div>
+          <h2 class="section-title">Multi-Channel Telemetry Pushes &amp; Webhooks</h2>
+          <p class="section-subtitle">Get event-driven updates delivered straight to your devices, enterprise ERP, or operations channels.</p>
         </div>
 
         <div class="grid-4">
           <div class="feature-card">
-            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Salem Central Hub</h4>
-            <p style="font-size:13px; color:#64748b;">MMR Complex, Chinna Thirupathi. Cross-docking and intermodal dispatch authority.</p>
+            <div style="font-size:26px; margin-bottom:10px;">&#128231;</div>
+            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Milestone Emails</h4>
+            <p style="font-size:13px; color:#64748b;">Instant PDF proof-of-delivery, customs inspection approvals, and carrier bills sent directly to your inbox.</p>
           </div>
           <div class="feature-card">
-            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Chennai Seaport Gate</h4>
-            <p style="font-size:13px; color:#64748b;">Direct vessel berthing slots and customs clearance liaison office.</p>
+            <div style="font-size:26px; margin-bottom:10px;">&#128241;</div>
+            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">SMS &amp; WhatsApp Alerts</h4>
+            <p style="font-size:13px; color:#64748b;">Automated dispatch notices containing live driver contacts, security OTPs, and real-time arrival windows.</p>
           </div>
           <div class="feature-card">
-            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Frankfurt CargoCity</h4>
-            <p style="font-size:13px; color:#64748b;">European air freight consolidation terminal with 24-hour tarmac handling.</p>
+            <div style="font-size:26px; margin-bottom:10px;">&#9881;</div>
+            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">REST API Webhooks</h4>
+            <p style="font-size:13px; color:#64748b;">JSON payload streams fired directly to your SAP, Oracle, or custom WMS backend whenever a waypoint triggers.</p>
           </div>
           <div class="feature-card">
-            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Dubai Logistics City</h4>
-            <p style="font-size:13px; color:#64748b;">Middle Eastern regional redistribution center and cold-chain staging facility.</p>
+            <div style="font-size:26px; margin-bottom:10px;">&#128276;</div>
+            <h4 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Exception Alarms</h4>
+            <p style="font-size:13px; color:#64748b;">Proactive alerts for temperature anomalies, unexpected customs holds, or weather detours before they cause delays.</p>
           </div>
+        </div>
+
+        <div style="text-align:center; margin-top:32px;">
+          <a href="../404.html" class="btn btn-primary btn-action-404">Configure Notification Rules &rarr;</a>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 6: SATELLITE NETWORK HIGHLIGHTS -->
-    <section class="section">
-      <div class="container">
+    <!-- SECTION 9: TECHNICAL TELEMETRY FAQS -->
+    <section class="section reveal-on-scroll" style="background-color: var(--bg-alt);">
+      <div class="container" style="max-width:860px;">
         <div class="section-title-wrap">
-          <div class="section-tag">Telemetry Standards</div>
-          <h2 class="section-title">Zero Dark Zones Across International Corridors</h2>
-          <p class="section-subtitle">Our satellite beacons maintain uninterrupted telemetry even in high seas.</p>
+          <div class="section-tag">Technical FAQs</div>
+          <h2 class="section-title">Frequently Asked Telemetry Questions</h2>
+          <p class="section-subtitle">Common questions regarding sensor pings, data retention, and custom ERP integration.</p>
         </div>
 
-        <div class="grid-3">
-          <div class="feature-card">
-            <h3 style="font-size:18px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Sub-Minute Ping Intervals</h3>
-            <p style="font-size:14px; color:#475569;">GPS beacons transmit latitude, speed, and heading coordinates continuously to our Salem command center.</p>
-          </div>
-          <div class="feature-card">
-            <h3 style="font-size:18px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Tamper Alert Sensor</h3>
-            <p style="font-size:14px; color:#475569;">Instant geo-fence break and container door breach signals trigger automatic emergency protocol alerts.</p>
-          </div>
-          <div class="feature-card">
-            <h3 style="font-size:18px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Customer Portal Sync</h3>
-            <p style="font-size:14px; color:#475569;">All waypoint updates seamlessly populate your role dashboard and send automated SMS notifications.</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 7: AUTOMATED TELEMETRY NOTIFICATIONS -->
-    <section class="section" style="background-color: var(--bg-alt);">
-      <div class="container">
-        <div class="grid-2" style="align-items:center;">
-          <div>
-            <div class="section-tag">Automated Notifications</div>
-            <h2 class="section-title">Real-Time Event Pushes Directly to Your Devices</h2>
-            <p style="color:#475569; margin-bottom:16px;">
-              Configure SMS alerts, email status summaries, or direct webhook endpoints to stay updated without manually checking waybill numbers.
-            </p>
-            <ul style="display:flex; flex-direction:column; gap:10px; color:#0f172a; font-size:14px; margin-bottom:20px;">
-              <li>&check; Instant notification when customs clears at port</li>
-              <li>&check; Out-for-delivery SMS with driver contact and ETA</li>
-              <li>&check; Digital proof of delivery signed photo delivered to email</li>
-            </ul>
-            <a href="../404.html" class="btn btn-primary btn-action-404">Configure Telemetry in Dashboard</a>
-          </div>
-          <div>
-            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=80" alt="Real time tracking analytics dashboard" style="border-radius:12px; width:100%; height:320px; object-fit:cover;" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SECTION 8: TRACKING FAQS -->
-    <section class="section">
-      <div class="container" style="max-width:800px;">
-        <div class="section-title-wrap">
-          <div class="section-tag">Tracking FAQs</div>
-          <h2 class="section-title">Frequently Asked Tracking Questions</h2>
-        </div>
         <div style="display:flex; flex-direction:column; gap:16px;">
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
-            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">How frequently does satellite telemetry update?</h3>
-            <p style="font-size:14px; color:#64748b;">Highway haulage updates every 60 seconds; air cargo updates at tarmac waypoints; ocean vessels update via Inmarsat satellite pings every 20 minutes.</p>
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:22px; box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">How frequently does satellite telemetry update across transit modes?</h3>
+            <p style="font-size:14px; color:#64748b; line-height:1.6;">Interstate road freight updates every 60 seconds over cellular LTE/GPS. Air cargo updates at departure, cruising waypoints, and tarmac arrival. Maritime containers update every 20 minutes via dual Inmarsat-C satellite beams when out at sea.</p>
           </div>
-          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
-            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:6px;">Can I share live tracking links with my end customer?</h3>
-            <p style="font-size:14px; color:#64748b;">Yes, from the Customer Dashboard you can generate a secure, tokenized tracking link that displays the live stepper and ETA.</p>
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:22px; box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Can I share live tracking links with my end customers?</h3>
+            <p style="font-size:14px; color:#64748b; line-height:1.6;">Yes. From your Customer Dashboard you can generate an encrypted, tokenized tracking URL with customized client branding, live milestone stepper, and signed e-POD photos.</p>
+          </div>
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:22px; box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">How does cold chain temperature monitoring maintain compliance?</h3>
+            <p style="font-size:14px; color:#64748b; line-height:1.6;">Every cold-chain container features calibrated NIST-traceable temperature probes logging readings every 5 minutes. If temperatures deviate by &plusmn;0.5&deg;C from pre-set thresholds, immediate SMS and email alerts are sent to our Salem operations desk and reefer technicians.</p>
+          </div>
+          <div style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:22px; box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:700; color:#0b1a30; margin-bottom:8px;">Is historical telemetry data archived for customs audits?</h3>
+            <p style="font-size:14px; color:#64748b; line-height:1.6;">Yes, complete GPS tracks, sensor readings, and customs electronic clearance stamps are encrypted and archived for 7 years to meet ISO 9001 and ICEGATE regulatory standards.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 9: CTA -->
-    <section class="section section-dark" style="text-align:center;">
-      <div class="container" style="max-width:750px;">
-        <h2 class="section-title">Need Real-Time Freight Management for Your Business?</h2>
-        <p class="section-subtitle" style="margin-bottom:28px;">
-          Log in to our customer dashboard to view consolidated reports, manage multiple waybills, and print digital bills of lading.
+    <!-- SECTION 10: CALL TO ACTION -->
+    <section class="section section-dark reveal-on-scroll" style="text-align:center;">
+      <div class="container" style="max-width:780px;">
+        <h2 class="section-title">Ready for Intelligent Cargo Telemetry?</h2>
+        <p class="section-subtitle" style="margin-bottom:30px;">
+          Connect your supply chain with Stackly's sub-minute multi-modal tracking infrastructure. Manage all your consignments from one consolidated dashboard.
         </p>
-        <div style="display:flex; justify-content:center; gap:14px; flex-wrap:wrap;">
-          <a href="../404.html" class="btn btn-primary btn-lg btn-action-404">Sign In to Customer Desk</a>
-          <!-- Action button redirecting to 404 -->
+        <div style="display:flex; justify-content:center; gap:16px; flex-wrap:wrap;">
+          <a href="../404.html" class="btn btn-primary btn-lg btn-action-404">Open Customer Desk &rarr;</a>
           <button class="btn btn-outline btn-lg btn-action-404" style="color:#fff; border-color:rgba(255,255,255,0.4);">
             Download Telemetry API Specs
           </button>
@@ -388,18 +523,15 @@
   <script src="../js/main.js"></script>
   <script src="../js/auth.js"></script>
   <script>
-    document.getElementById('tracking-search-form')?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const code = document.getElementById('tracking-input').value.trim();
-      const titleEl = document.getElementById('shipment-id-title');
-      const badgeEl = document.getElementById('shipment-status-badge');
-      if (titleEl) {
-        titleEl.textContent = `Shipment #${code.toUpperCase()} • Live Telemetry Active`;
-      }
-      if (badgeEl) {
-        badgeEl.textContent = '• Location Synchronized';
-      }
-      document.getElementById('tracking-result-box')?.scrollIntoView({ behavior: 'smooth' });
+    // Quick preset click handler to populate input
+    document.querySelectorAll('.tracking-sample-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById('tracking-input');
+        if (input) {
+          input.value = btn.getAttribute('data-code');
+          input.focus();
+        }
+      });
     });
   </script>
 </body>

@@ -7,14 +7,17 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initStickyNavbar();
   initMobileDrawer();
+  initDesktopDropdown();
   initActiveNavHighlight();
   initGoBackButton();
   initGlobalActionButtons();
   initGreetings();
   initContactForm();
   initQuickTrackerTabs();
+  initTrackingLocateForms();
   initDashboardControls();
   initScrollAnimations();
+  initServicesPage();
 });
 
 /* ==========================================================================
@@ -91,6 +94,102 @@ function initMobileDrawer() {
       btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   });
+
+  // Mobile sublinks anchor handling and drawer auto-close
+  const mobileSublinks = document.querySelectorAll('.mobile-sublink');
+  mobileSublinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      if (drawer) drawer.classList.remove('open');
+      if (overlay) overlay.classList.remove('open');
+      document.body.style.overflow = '';
+
+      const href = link.getAttribute('href');
+      if (href && href.includes('#')) {
+        const isServicesPage = window.location.pathname.includes('services.html');
+        if (isServicesPage) {
+          const hash = href.split('#')[1];
+          if (hash && document.getElementById(hash)) {
+            e.preventDefault();
+            if (typeof scrollToAnchor === 'function') {
+              scrollToAnchor(hash, true);
+            }
+          }
+        }
+      }
+    });
+  });
+}
+
+/* ==========================================================================
+   3B. DESKTOP SERVICES DROPDOWN MENU
+   Requirement: "When clicked on services the drop down menu for services is missing make sure the options are visible all the time through drop down menu."
+   ========================================================================== */
+function initDesktopDropdown() {
+  const dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(dd => {
+    const toggleLink = dd.querySelector('.nav-link, .dropdown-toggle');
+    if (toggleLink) {
+      toggleLink.addEventListener('click', (e) => {
+        const wasOpen = dd.classList.contains('open');
+        if (!wasOpen) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Close other dropdowns if any exist
+          dropdowns.forEach(other => {
+            if (other !== dd) {
+              other.classList.remove('open');
+              const otherToggle = other.querySelector('.nav-link, .dropdown-toggle');
+              if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          dd.classList.add('open');
+          toggleLink.setAttribute('aria-expanded', 'true');
+        } else {
+          // If already open, clicking takes you directly to the services page
+          const targetUrl = toggleLink.getAttribute('href');
+          if (targetUrl && targetUrl !== '#' && !targetUrl.startsWith('javascript:')) {
+            window.location.href = targetUrl;
+          }
+        }
+      });
+    }
+
+    // Close dropdown when a dropdown item is clicked and handle same-page anchor smoothly
+    const items = dd.querySelectorAll('.dropdown-item');
+    items.forEach(item => {
+      item.addEventListener('click', (e) => {
+        dd.classList.remove('open');
+        if (toggleLink) toggleLink.setAttribute('aria-expanded', 'false');
+
+        const href = item.getAttribute('href');
+        if (href && href.includes('#')) {
+          const isServicesPage = window.location.pathname.includes('services.html');
+          if (isServicesPage) {
+            const hash = href.split('#')[1];
+            if (hash && document.getElementById(hash)) {
+              e.preventDefault();
+              if (typeof scrollToAnchor === 'function') {
+                scrollToAnchor(hash, true);
+              }
+            }
+          }
+        }
+      });
+    });
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-dropdown')) {
+      dropdowns.forEach(dd => {
+        dd.classList.remove('open');
+        const toggleLink = dd.querySelector('.nav-link, .dropdown-toggle');
+        if (toggleLink) toggleLink.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
 }
 
 /* ==========================================================================
@@ -98,18 +197,29 @@ function initMobileDrawer() {
    ========================================================================== */
 function initActiveNavHighlight() {
   const currentPath = window.location.pathname.toLowerCase();
-  const navLinks = document.querySelectorAll('.nav-link, .dropdown-item, .mobile-link');
+  const cleanPath = currentPath.split('/').pop() || 'index.html';
+  const navLinks = document.querySelectorAll('.nav-link, .dropdown-item, .mobile-link, .mobile-sublink');
 
   navLinks.forEach(link => {
     const href = link.getAttribute('href');
     if (!href) return;
-    const cleanHref = href.toLowerCase().split('/').pop();
-    const cleanPath = currentPath.split('/').pop() || 'index.html';
+    const cleanHref = href.toLowerCase().split('/').pop().split('#')[0];
 
     if (cleanHref === cleanPath || (cleanPath === '' && cleanHref === 'index.html')) {
       link.classList.add('active');
     }
   });
+
+  const isServicesSection = [
+    'services.html', 'air-freight.html', 'ocean-freight.html', 
+    'road-transport.html', 'warehousing-cold-chain.html'
+  ].some(page => cleanPath === page);
+
+  if (isServicesSection) {
+    document.querySelectorAll('.dropdown-toggle, .mobile-dropdown-btn').forEach(btn => {
+      btn.classList.add('active');
+    });
+  }
 }
 
 /* ==========================================================================
@@ -148,6 +258,10 @@ function initGlobalActionButtons() {
     '/', 'index.html', './index.html', '../index.html',
     'pages/about.html', 'about.html', './about.html', '../pages/about.html',
     'pages/services.html', 'services.html', './services.html', '../pages/services.html',
+    'pages/air-freight.html', 'air-freight.html', './air-freight.html', '../pages/air-freight.html',
+    'pages/ocean-freight.html', 'ocean-freight.html', './ocean-freight.html', '../pages/ocean-freight.html',
+    'pages/road-transport.html', 'road-transport.html', './road-transport.html', '../pages/road-transport.html',
+    'pages/warehousing-cold-chain.html', 'warehousing-cold-chain.html', './warehousing-cold-chain.html', '../pages/warehousing-cold-chain.html',
     'pages/pricing.html', 'pricing.html', './pricing.html', '../pages/pricing.html',
     'pages/tracking.html', 'tracking.html', './tracking.html', '../pages/tracking.html',
     'pages/contact.html', 'contact.html', './contact.html', '../pages/contact.html',
@@ -174,7 +288,11 @@ function initGlobalActionButtons() {
         targetBtn.classList.contains('password-toggle-btn') ||
         targetBtn.classList.contains('drawer-close-btn') ||
         targetBtn.classList.contains('hamburger-btn') ||
+        targetBtn.classList.contains('dropdown-toggle') ||
+        targetBtn.classList.contains('dropdown-item') ||
+        targetBtn.closest('.nav-dropdown') ||
         targetBtn.classList.contains('mobile-dropdown-btn') ||
+        targetBtn.closest('.mobile-dropdown') ||
         targetBtn.closest('.mobile-dropdown-btn') ||
         targetBtn.classList.contains('sidebar-collapse-btn') ||
         targetBtn.id === 'sidebar-collapse-btn' ||
@@ -184,7 +302,19 @@ function initGlobalActionButtons() {
         targetBtn.classList.contains('back-to-home-link') ||
         targetBtn.id === 'logout-btn' ||
         targetBtn.classList.contains('dashboard-nav-item') ||
-        targetBtn.classList.contains('admin-toggle-status')) {
+        targetBtn.classList.contains('admin-toggle-status') ||
+        targetBtn.classList.contains('service-filter-btn') ||
+        targetBtn.classList.contains('specs-modal-btn') ||
+        targetBtn.classList.contains('specs-modal-close') ||
+        targetBtn.closest('.specs-modal-close') ||
+        targetBtn.classList.contains('calc-jump-btn') ||
+        targetBtn.id === 'modal-calc-btn' ||
+        targetBtn.classList.contains('calc-btn') ||
+        targetBtn.id === 'calc-submit-btn' ||
+        targetBtn.classList.contains('faq-accordion-header') ||
+        targetBtn.closest('.faq-accordion-header') ||
+        targetBtn.closest('#freight-calc-form') ||
+        targetBtn.closest('#services-specs-modal')) {
       return;
     }
 
@@ -193,7 +323,9 @@ function initGlobalActionButtons() {
       targetBtn.closest('#signin-form') || 
       targetBtn.closest('#signup-form') || 
       targetBtn.closest('#tracking-search-form') ||
+      targetBtn.closest('#hero-tracker-form') ||
       targetBtn.closest('#customer-ticket-form') ||
+      targetBtn.closest('#freight-calc-form') ||
       targetBtn.closest('.tracker-form')
     )) {
       return;
@@ -214,6 +346,12 @@ function initGlobalActionButtons() {
     if (targetBtn.closest('.footer-contact-item') || targetBtn.classList.contains('footer-contact-link')) {
       e.preventDefault();
       window.location.href = notFoundUrl;
+      return;
+    }
+
+    // In-page hash anchors (e.g. href="#air-freight" or href="#rate-calculator") should scroll, not redirect
+    const rawHref = targetBtn.getAttribute('href');
+    if (rawHref && rawHref.trim().startsWith('#')) {
       return;
     }
 
@@ -249,7 +387,6 @@ function initGlobalActionButtons() {
 
     // If it's a link (<a> tag)
     if (targetBtn.tagName.toLowerCase() === 'a') {
-      const rawHref = targetBtn.getAttribute('href');
       if (!rawHref) return;
 
       const href = rawHref.trim();
@@ -264,7 +401,23 @@ function initGlobalActionButtons() {
         return;
       }
 
-      const isAllowed = allowedHrefs.some(allowed => href === allowed || href.endsWith(allowed));
+      // Do not block dropdown items or mobile sublinks
+      if (targetBtn.classList.contains('dropdown-item') ||
+          targetBtn.classList.contains('mobile-sublink') ||
+          targetBtn.closest('.dropdown-menu') ||
+          targetBtn.closest('.mobile-dropdown-menu')) {
+        return;
+      }
+
+      // Strip query parameters and hash anchors before matching against allowed quick links
+      const baseHref = href.split('#')[0].split('?')[0];
+
+      const isAllowed = allowedHrefs.some(allowed => 
+        href === allowed || 
+        href.endsWith(allowed) || 
+        baseHref === allowed || 
+        baseHref.endsWith(allowed)
+      );
       
       // If it's not in allowed quick links (e.g. social icons, external, terms, etc.), redirect to 404
       if (!isAllowed) {
@@ -350,7 +503,46 @@ function initContactForm() {
   function handleTransmitMessage(e) {
     if (e) e.preventDefault();
 
-    // 1. Reset the form
+    // 0. Strict Form Validation
+    let isValid = true;
+    let firstInvalid = null;
+
+    fields.forEach(f => {
+      const input = document.getElementById(f.id);
+      const errEl = document.getElementById(`${f.id}-error`);
+      if (!input) return;
+
+      const val = input.value;
+      if (!f.test(val)) {
+        isValid = false;
+        input.classList.add('is-invalid');
+        if (errEl) {
+          errEl.textContent = f.errorMsg;
+          errEl.classList.add('show');
+        }
+        if (!firstInvalid) firstInvalid = input;
+      } else {
+        input.classList.remove('is-invalid');
+        if (errEl) {
+          errEl.textContent = '';
+          errEl.classList.remove('show');
+        }
+      }
+    });
+
+    if (!isValid) {
+      if (firstInvalid) firstInvalid.focus();
+      return;
+    }
+
+    // 1. Display success message
+    const successMsg = document.getElementById('contact-success-alert');
+    if (successMsg) {
+      successMsg.style.display = 'block';
+      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // 2. Reset the form
     contactForm.reset();
     if (counter) counter.textContent = '0';
     fields.forEach(f => {
@@ -362,13 +554,6 @@ function initContactForm() {
         errEl.classList.remove('show');
       }
     });
-
-    // 2. Display success message
-    const successMsg = document.getElementById('contact-success-alert');
-    if (successMsg) {
-      successMsg.style.display = 'block';
-      successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
 
     // 3. Within a second redirect to 404 page
     setTimeout(() => {
@@ -449,6 +634,71 @@ function initQuickTrackerTabs() {
       if (demoRouteEl) demoRouteEl.textContent = cfg.demoRoute;
     });
   });
+}
+
+/* ==========================================================================
+   10. TRACKING LOCATE BUTTONS VALIDATION & 404 REDIRECTION
+   Requirement: "Remove demo waybill details and make sure the locate button redirects to 404 page upon submitting any valid way bill number."
+   ========================================================================== */
+function initTrackingLocateForms() {
+  const isInPagesDir = window.location.pathname.includes('/pages/');
+  const notFoundUrl = isInPagesDir ? '../404.html' : '404.html';
+
+  // 1. Home page quick tracking form
+  const heroTrackerForm = document.getElementById('hero-tracker-form') || document.querySelector('.tracker-form');
+  const heroTrackerInput = document.getElementById('hero-tracker-input');
+  const heroTrackerError = document.getElementById('hero-tracker-error');
+
+  if (heroTrackerForm && heroTrackerInput) {
+    heroTrackerInput.addEventListener('input', () => {
+      heroTrackerInput.classList.remove('is-invalid');
+      if (heroTrackerError) heroTrackerError.classList.remove('show');
+    });
+
+    heroTrackerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = heroTrackerInput.value.trim();
+      if (!val || val.length < 3) {
+        heroTrackerInput.classList.add('is-invalid');
+        if (heroTrackerError) {
+          heroTrackerError.textContent = 'Please enter a valid waybill or container number (min. 3 characters).';
+          heroTrackerError.classList.add('show');
+        }
+        heroTrackerInput.focus();
+        return;
+      }
+      // Valid waybill submitted -> redirect to 404 page
+      window.location.href = notFoundUrl;
+    });
+  }
+
+  // 2. Tracking page form
+  const trackingForm = document.getElementById('tracking-search-form');
+  const trackingInput = document.getElementById('tracking-input');
+  const trackingError = document.getElementById('tracking-input-error');
+
+  if (trackingForm && trackingInput) {
+    trackingInput.addEventListener('input', () => {
+      trackingInput.classList.remove('is-invalid');
+      if (trackingError) trackingError.classList.remove('show');
+    });
+
+    trackingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = trackingInput.value.trim();
+      if (!val || val.length < 3) {
+        trackingInput.classList.add('is-invalid');
+        if (trackingError) {
+          trackingError.textContent = 'Please enter a valid waybill number (min. 3 characters).';
+          trackingError.classList.add('show');
+        }
+        trackingInput.focus();
+        return;
+      }
+      // Valid waybill submitted -> redirect to 404 page
+      window.location.href = notFoundUrl;
+    });
+  }
 }
 
 /* ==========================================================================
@@ -555,5 +805,421 @@ function initScrollAnimations() {
   } else {
     targets.forEach(target => target.classList.add('in-view'));
   }
+}
+
+/* ==========================================================================
+   13. SERVICES PAGE DYNAMIC FUNCTIONALITY & MULTIMODAL FEATURES
+   ========================================================================== */
+
+const SERVICE_SPECS = {
+  'air-freight': {
+    title: 'Air Freight Priority Charter & Scheduled Logistics',
+    subtitle: 'High-speed air cargo capacity with guaranteed tarmac turnaround and thermal telemetry.',
+    badge: 'IATA CEIV Certified',
+    calculatorPreset: 'air',
+    rows: [
+      { label: 'Primary Fleet Types', value: 'Boeing 777F, Airbus A330-200F, Boeing 747-8F Heavy Freighters' },
+      { label: 'Maximum Payload Capacity', value: 'Up to 102,000 kg (102 MT) per full-charter aircraft' },
+      { label: 'Cargo Volume Utilization', value: '650 m³ volumetric capacity across main deck and lower holds' },
+      { label: 'Key Gateways & Hubs', value: 'Chennai (MAA), Bangalore (BLR), Frankfurt (FRA), Dubai (DWC), Singapore (SIN)' },
+      { label: 'Temperature Control Bands', value: 'Active Envirotainer / CSafe containers (-20°C to +25°C)' },
+      { label: 'Transit SLA (Express / Standard)', value: '24 to 36 hours (Express Charter) / 48 to 72 hours (Scheduled Consolidation)' },
+      { label: 'Customs & Documentation', value: 'Pre-flight e-AWB manifest transmission via direct ICEGATE EDI integration' },
+      { label: 'Security & Certifications', value: 'TAPA TSR Level 1, ISO 9001:2015, IATA CEIV Pharma Certified' },
+      { label: 'Tracking & Telemetry', value: 'Real-time GPS coordinates, barometric pressure, shock & temperature sensor feed' }
+    ]
+  },
+  'ocean-freight': {
+    title: 'Ocean Container Line & Maritime Intermodal Logistics',
+    subtitle: 'Full Container Load (FCL) and Less than Container Load (LCL) global shipping corridors.',
+    badge: 'IMO 2020 Compliant',
+    calculatorPreset: 'ocean',
+    rows: [
+      { label: 'Service Coverage', value: 'FCL (Full Container Load) & LCL (Consolidated Groupage) Maritime Haulage' },
+      { label: 'Container Types Supported', value: '20ft Standard, 40ft High Cube, 45ft High Cube, 40ft Reefer, Open Top & Flat Rack' },
+      { label: 'Maximum Container Payload', value: '28,500 kg per 40ft High Cube container' },
+      { label: 'Primary Maritime Gateways', value: 'Chennai Sea Port, Tuticorin Port, Rotterdam (NLD), Singapore (SIN), New York (USA)' },
+      { label: 'Average Ocean Transit SLA', value: 'Rotterdam: 18-22 Days | Singapore: 4-6 Days | New York / US East Coast: 24-28 Days' },
+      { label: 'Reefer Monitoring', value: 'Continuous telemetry logging cold-chain temperatures (-30°C to +30°C) with backup power' },
+      { label: 'Customs Bonded Handling', value: 'Direct port drayage under customs bond to Salem Inland Container Depot' },
+      { label: 'Sailing Schedules', value: 'Weekly guaranteed carrier allocations with Tier-1 shipping alliances' },
+      { label: 'Environmental Standards', value: 'IMO 2020 low-sulfur marine gasoil compliance with optional Carbon-Offset Ledger' }
+    ]
+  },
+  'road-freight': {
+    title: 'Interstate Heavy Road Haulage & Corridor Freight',
+    subtitle: 'Dedicated road transport across the Indian National Highway network with dual-driver shifts.',
+    badge: 'Fast-Track GPS Telematics',
+    calculatorPreset: 'road',
+    rows: [
+      { label: 'Fleet Configuration', value: 'BharatBenz & Volvo Multi-Axle Prime Movers (32ft & 40ft High-Deck Trailers)' },
+      { label: 'Payload Capacity per Vehicle', value: '15 to 45 Metric Tons per truck configuration' },
+      { label: 'Operating Corridors', value: 'Chennai-Salem-Coimbatore, Bangalore-Salem-Madurai, Salem-Mumbai NH48 Expressway' },
+      { label: 'Dispatch Punctuality', value: '99.4% on-time corridor dispatch across Golden Quadrilateral routes' },
+      { label: 'Driver Protocols', value: 'Dual-driver continuous team hauling with 4-hour fatigue management rotation' },
+      { label: 'Onboard Telematics', value: 'OBD-II CANbus telemetry, ADAS blind-spot radar, and digital fuel theft sensors' },
+      { label: 'Security & Geofencing', value: 'Active route geofencing with automated unauthorized stop alert protocols' },
+      { label: 'Cross-Dock Connection', value: 'Direct roll-on roll-off ramp docking at Salem Central Terminal' }
+    ]
+  },
+  'warehousing': {
+    title: 'Cross-Dock Warehousing & High-Velocity Distribution',
+    subtitle: 'Strategic regional hub operations at Salem with rapid turnaround cross-dock bays.',
+    badge: 'AEO-T2 Bonded Facility',
+    calculatorPreset: 'road',
+    rows: [
+      { label: 'Facility Footprint', value: '185,000 sq.ft grade-A warehouse floor located at MMR Complex, Salem' },
+      { label: 'Cross-Dock Bays', value: '28 hydraulic rapid-dock bays with weather-sealed inflatable shelter aprons' },
+      { label: 'Storage Infrastructure', value: 'Very Narrow Aisle (VNA) selective pallet racking with wire-guided turret trucks' },
+      { label: 'WMS Technology', value: 'SAP-integrated Stackly WMS with 99.98% inventory cycle count accuracy' },
+      { label: 'Throughput Turnaround', value: 'Under 15-minute cross-dock turnaround from inbound de-palletization to outbound dispatch' },
+      { label: 'Fire & Facility Safety', value: 'NFPA-compliant ESFR overhead sprinkler matrix with FM Global certified fire pumps' },
+      { label: 'Customs Bonded Zone', value: '35,000 sq.ft segregated customs-bonded staging floor under 24/7 CCTV surveillance' },
+      { label: 'Security Infrastructure', value: 'Biometric multi-factor access control and 4K AI video perimeter intrusion detection' }
+    ]
+  },
+  'cold-chain': {
+    title: 'Pharma Cryogenic & Perishables Cold Chain',
+    subtitle: 'Strict temperature-governed multimodal transit complying with Good Distribution Practices (GDP).',
+    badge: 'WHO GDP / US FDA Compliant',
+    calculatorPreset: 'cold',
+    rows: [
+      { label: 'Temperature Regimes', value: 'Cryogenic (-80°C to -60°C), Deep Frozen (-20°C), Chilled (+2°C to +8°C), Controlled (+15°C to +25°C)' },
+      { label: 'Refrigeration Equipment', value: 'Dual-circuit Carrier Vector 1950 multi-temp units with redundant diesel generators' },
+      { label: 'Passive Packaging', value: 'Vacuum Insulated Panels (VIP) and Phase Change Material (PCM) thermal shipper boxes' },
+      { label: 'Regulatory Compliance', value: 'WHO TRS 961 Annex 9, US FDA 21 CFR Part 11 compliant electronic data logs' },
+      { label: 'Thermal Mapping & Validation', value: 'Annual seasonal temperature profile mapping (summer/winter) with 72-hr hold tests' },
+      { label: 'IoT Sensor Frequency', value: 'NIST-traceable calibrated wireless temperature and humidity logging every 60 seconds' },
+      { label: 'Emergency Protocol', value: 'Automated 15-minute SMS/Email escalation upon ±0.5°C temperature excursions' },
+      { label: 'Pre-Cooling Infrastructure', value: 'High-velocity blast pre-cooling staging chambers at Salem Cold Terminal' }
+    ]
+  },
+  'customs': {
+    title: 'Strategic Customs Brokerage & Trade Compliance',
+    subtitle: 'Fast-track green channel electronic clearance through direct ICEGATE EDI integration.',
+    badge: 'AEO-Tier 2 Certified Broker',
+    calculatorPreset: 'air',
+    rows: [
+      { label: 'Licensing Accreditation', value: 'Authorized Economic Operator Tier-2 (AEO-T2) Certified Customs Brokerage' },
+      { label: 'EDI Integration', value: 'Direct electronic ICEGATE gateway filing with automated duty & IGST calculations' },
+      { label: 'Standard Clearance Speed', value: 'Green channel RMS clearance within 3 to 6 hours of flight/vessel arrival' },
+      { label: 'Bonded Warehouse Facilities', value: 'Customs bonded public and private storage administration under Sections 49 & 59' },
+      { label: 'Documentation Managed', value: 'Bills of Entry, Shipping Bills, Certificates of Origin, Phytosanitary, e-BRC tracking' },
+      { label: 'Tariff & Duty Advisory', value: 'HS Code classification audits and FTA / CEPA preferential tariff optimization' },
+      { label: 'Port Coverage', value: 'Chennai Sea/Air, Tuticorin Port, Bangalore Inland Port, Coimbatore ICD, Salem Hub' },
+      { label: 'Post-Clearance Audit', value: 'Complete digital archiving of customs entries with automated 5-year audit trail' }
+    ]
+  }
+};
+
+function scrollToAnchor(targetId, pulse) {
+  const target = document.getElementById(targetId);
+  if (!target) return;
+
+  const header = document.querySelector('.site-header');
+  const headerHeight = header ? header.offsetHeight : 80;
+  const targetPos = target.getBoundingClientRect().top + window.pageYOffset - (headerHeight + 20);
+
+  window.scrollTo({
+    top: targetPos,
+    behavior: 'smooth'
+  });
+
+  if (pulse) {
+    target.classList.remove('section-highlight-pulse');
+    void target.offsetWidth; // force reflow
+    target.classList.add('section-highlight-pulse');
+    setTimeout(() => {
+      target.classList.remove('section-highlight-pulse');
+    }, 2500);
+  }
+
+  // Sync the filter bar active state if there is a matching filter button
+  const filterBtn = document.querySelector(`.service-filter-btn[data-filter="${targetId}"]`);
+  if (filterBtn) {
+    document.querySelectorAll('.service-filter-btn').forEach(b => b.classList.remove('active'));
+    filterBtn.classList.add('active');
+  }
+}
+
+function initSpecsModal() {
+  const modal = document.getElementById('services-specs-modal');
+  if (!modal) return;
+
+  const titleEl = document.getElementById('specs-modal-title');
+  const descEl = document.getElementById('specs-modal-desc');
+  const badgeEl = document.getElementById('modal-spec-badge');
+  const tbody = document.getElementById('specs-table-body');
+  const calcBtn = document.getElementById('modal-calc-btn');
+  const backdrop = document.getElementById('specs-modal-backdrop');
+  const closeBtns = modal.querySelectorAll('.specs-modal-close');
+
+  function openModal(specKey) {
+    const spec = SERVICE_SPECS[specKey];
+    if (!spec) return;
+
+    if (titleEl) titleEl.textContent = spec.title;
+    if (descEl) descEl.textContent = spec.subtitle;
+    if (badgeEl) badgeEl.textContent = spec.badge;
+
+    if (tbody) {
+      tbody.innerHTML = spec.rows.map(row => `
+        <tr>
+          <td style="padding:10px 14px; font-weight:600; color:#0f172a; border-bottom:1px solid #e2e8f0; width:35%;">${row.label}</td>
+          <td style="padding:10px 14px; color:#475569; border-bottom:1px solid #e2e8f0;">${row.value}</td>
+        </tr>
+      `).join('');
+    }
+
+    if (calcBtn) {
+      calcBtn.setAttribute('data-mode-preset', spec.calculatorPreset || 'air');
+    }
+
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.specs-modal-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const specKey = btn.getAttribute('data-spec');
+      if (specKey) openModal(specKey);
+    });
+  });
+
+  closeBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      closeModal();
+    });
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener('click', closeModal);
+  }
+
+  if (calcBtn) {
+    calcBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const mode = calcBtn.getAttribute('data-mode-preset') || 'air';
+      closeModal();
+      
+      const calcModeSelect = document.getElementById('calc-mode');
+      if (calcModeSelect) {
+        calcModeSelect.value = mode;
+      }
+      scrollToAnchor('rate-calculator', true);
+      triggerRateCalculation();
+    });
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      closeModal();
+    }
+  });
+}
+
+function initFreightCalculator() {
+  const calcForm = document.getElementById('freight-calc-form');
+  if (!calcForm) return;
+
+  calcForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    triggerRateCalculation();
+  });
+
+  // Auto-update when changing inputs
+  ['calc-mode', 'calc-origin', 'calc-destination', 'calc-weight', 'calc-commodity'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', triggerRateCalculation);
+      if (id === 'calc-weight') {
+        el.addEventListener('input', triggerRateCalculation);
+      }
+    }
+  });
+
+  // Calculate immediately on load
+  triggerRateCalculation();
+}
+
+function triggerRateCalculation() {
+  const modeSelect = document.getElementById('calc-mode');
+  const originSelect = document.getElementById('calc-origin');
+  const destSelect = document.getElementById('calc-destination');
+  const weightInput = document.getElementById('calc-weight');
+  const commoditySelect = document.getElementById('calc-commodity');
+
+  if (!modeSelect || !weightInput) return;
+
+  const mode = modeSelect.value || 'air';
+  const origin = originSelect && originSelect.selectedIndex >= 0 ? originSelect.options[originSelect.selectedIndex].text : 'Salem Central Terminal (HQ)';
+  const dest = destSelect && destSelect.selectedIndex >= 0 ? destSelect.options[destSelect.selectedIndex].text : 'Frankfurt Airport Node (FRA)';
+  const weight = Math.max(10, parseFloat(weightInput.value) || 500);
+  const commodity = commoditySelect ? commoditySelect.value : 'standard';
+
+  let ratePerKg = 4.25;
+  let slaText = '24 - 48 Hours Express';
+  let handlingFee = 120;
+
+  if (mode === 'ocean') {
+    ratePerKg = 0.48;
+    slaText = '18 - 22 Days Intermodal Sea';
+    handlingFee = 240;
+  } else if (mode === 'road') {
+    ratePerKg = 0.85;
+    slaText = '48 - 72 Hours Corridor Haulage';
+    handlingFee = 75;
+  } else if (mode === 'cold') {
+    ratePerKg = 5.90;
+    slaText = '24 - 36 Hours Cryo Monitored';
+    handlingFee = 195;
+  } else {
+    ratePerKg = 4.25;
+    slaText = '24 - 48 Hours Air Priority';
+    handlingFee = 120;
+  }
+
+  let commodityMult = 1.0;
+  if (commodity === 'pharma') commodityMult = 1.25;
+  else if (commodity === 'electronics') commodityMult = 1.15;
+  else if (commodity === 'heavy') commodityMult = 1.30;
+
+  const baseRate = Math.round(weight * ratePerKg * commodityMult);
+  const fuelRate = Math.round(baseRate * 0.15);
+  const terminalRate = handlingFee;
+  const totalTariffUSD = baseRate + fuelRate + terminalRate;
+  const inrTariff = Math.round(totalTariffUSD * 83);
+
+  const routeTitleEl = document.getElementById('res-route-title');
+  const transitSlaEl = document.getElementById('res-transit-sla');
+  const baseRateEl = document.getElementById('res-base-rate');
+  const fuelRateEl = document.getElementById('res-fuel-rate');
+  const terminalRateEl = document.getElementById('res-terminal-rate');
+  const totalTariffEl = document.getElementById('res-total-tariff');
+  const inrTariffEl = document.getElementById('res-inr-tariff');
+  const resultsBox = document.getElementById('calc-results-box');
+
+  if (routeTitleEl) routeTitleEl.textContent = `${origin} → ${dest}`;
+  if (transitSlaEl) transitSlaEl.textContent = slaText;
+  if (baseRateEl) baseRateEl.textContent = `$${baseRate.toLocaleString()}`;
+  if (fuelRateEl) fuelRateEl.textContent = `$${fuelRate.toLocaleString()}`;
+  if (terminalRateEl) terminalRateEl.textContent = `$${terminalRate.toLocaleString()}`;
+  if (totalTariffEl) totalTariffEl.textContent = `$${totalTariffUSD.toLocaleString()}`;
+  if (inrTariffEl) inrTariffEl.textContent = `(₹${inrTariff.toLocaleString('en-IN')} INR)`;
+
+  if (resultsBox) {
+    resultsBox.style.display = 'block';
+  }
+}
+
+function initFaqAccordion() {
+  const accordionItems = document.querySelectorAll('.faq-accordion-item');
+  if (!accordionItems.length) return;
+
+  accordionItems.forEach(item => {
+    const header = item.querySelector('.faq-accordion-header');
+    if (!header) return;
+
+    header.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isOpen = item.classList.contains('open');
+
+      accordionItems.forEach(other => {
+        other.classList.remove('open');
+        const otherBtn = other.querySelector('.faq-accordion-header');
+        if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        header.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+}
+
+function initServicesPage() {
+  const isServicesPage = window.location.pathname.includes('services.html');
+
+  // Jump buttons to calculator with mode preset
+  document.querySelectorAll('.calc-jump-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const mode = btn.getAttribute('data-mode-preset');
+      const calcModeSelect = document.getElementById('calc-mode');
+      if (calcModeSelect && mode) {
+        calcModeSelect.value = mode;
+      }
+      if (isServicesPage) {
+        e.preventDefault();
+        scrollToAnchor('rate-calculator', true);
+        triggerRateCalculation();
+      }
+    });
+  });
+
+  if (!isServicesPage) return;
+
+  // Filter Tabs
+  const filterBtns = document.querySelectorAll('.service-filter-btn[data-filter]');
+  const serviceCards = document.querySelectorAll('.service-card[data-service]');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const filter = btn.getAttribute('data-filter');
+      if (!filter) return;
+
+      serviceCards.forEach(card => {
+        const matches = filter === 'all' || card.getAttribute('data-service') === filter;
+        card.style.display = matches ? 'flex' : 'none';
+      });
+
+      if (filter !== 'all') {
+        const targetSection = document.getElementById(filter);
+        if (targetSection) {
+          scrollToAnchor(filter, true);
+        }
+      }
+    });
+  });
+
+  // Initialize interactive sub-components
+  initSpecsModal();
+  initFreightCalculator();
+  initFaqAccordion();
+
+  // Handle deep link anchor on page load
+  if (window.location.hash) {
+    const hash = window.location.hash.substring(1);
+    if (hash) {
+      setTimeout(() => {
+        scrollToAnchor(hash, true);
+      }, 300);
+    }
+  }
+
+  // Smooth scroll for in-page anchors
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      const href = anchor.getAttribute('href');
+      if (href && href.length > 1) {
+        const targetId = href.substring(1);
+        if (targetId && document.getElementById(targetId)) {
+          e.preventDefault();
+          scrollToAnchor(targetId, true);
+        }
+      }
+    });
+  });
 }
 
