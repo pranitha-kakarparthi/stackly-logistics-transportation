@@ -144,10 +144,10 @@
             <button class="tracker-tab-btn" id="tab-road-freight" data-mode="road-freight" type="button">Road Freight</button>
             <button class="tracker-tab-btn" id="tab-customs-bill" data-mode="customs-bill" type="button">Customs Bill</button>
           </div>
-          <form class="tracker-form" id="hero-tracker-form" action="pages/404.html" method="GET">
+          <form class="tracker-form" id="hero-tracker-form" data-current-mode="air-ocean" novalidate>
             <div class="form-group">
-              <label class="form-label" id="hero-tracker-label" style="color:#e2e8f0;">Waybill / Tracking Number</label>
-              <input type="text" class="form-input" id="hero-tracker-input" name="tracking_id" value="" placeholder="e.g. STK-88219" required>
+              <label class="form-label" id="hero-tracker-label" style="color:#e2e8f0;">Air Waybill (AWB) / Ocean Container Number</label>
+              <input type="text" class="form-input" id="hero-tracker-input" name="tracking_id" value="" placeholder="e.g. STK-88219 or MSCU-992144" required>
               <div id="hero-tracker-error" class="form-error-msg" style="color:#fca5a5; margin-top:6px;" role="alert"></div>
             </div>
             <button type="submit" id="hero-tracker-submit" class="btn btn-primary btn-full">

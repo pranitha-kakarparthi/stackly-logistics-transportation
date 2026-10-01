@@ -127,31 +127,31 @@
         </div>
 
         <nav class="dashboard-nav-list">
-          <a href="#admin-overview" class="dashboard-nav-item active">
+          <a href="admin-dashboard.html" class="dashboard-nav-item active">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             <span class="dashboard-nav-item-text">Command Center</span>
           </a>
-          <a href="#admin-dispatch-control" class="dashboard-nav-item">
+          <a href="admin-dispatch.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
             <span class="dashboard-nav-item-text">Dispatch Operations</span>
           </a>
-          <a href="#admin-fleet-roster" class="dashboard-nav-item">
+          <a href="admin-fleet.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
             <span class="dashboard-nav-item-text">Fleet Telematics</span>
           </a>
-          <a href="#admin-warehouse-capacity" class="dashboard-nav-item">
+          <a href="admin-warehouse.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             <span class="dashboard-nav-item-text">Salem Warehouse</span>
           </a>
-          <a href="#admin-customs-compliance" class="dashboard-nav-item">
+          <a href="admin-customs.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
             <span class="dashboard-nav-item-text">Customs Clearance</span>
           </a>
-          <a href="#admin-incident-feed" class="dashboard-nav-item">
+          <a href="admin-alerts.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span class="dashboard-nav-item-text">Alerts &amp; Incidents</span>
           </a>
-          <a href="#admin-driver-roster" class="dashboard-nav-item">
+          <a href="admin-drivers.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span class="dashboard-nav-item-text">Driver Roster</span>
           </a>
@@ -159,16 +159,13 @@
       </div>
 
       <div class="sidebar-user-footer">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
           <div class="user-avatar-badge" style="background:#b91c1c;" id="adm-avatar-pill">AD</div>
           <div class="user-info-text">
             <div style="color:#fff; font-weight:700; font-size:14px;" id="adm-name-pill">Operations Controller</div>
             <div style="color:#94a3b8; font-size:12px;">Admin Authority</div>
           </div>
         </div>
-        <button id="logout-btn" class="btn btn-outline btn-full btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.25);">
-          Sign Out
-        </button>
       </div>
     </aside>
 
@@ -189,13 +186,12 @@
         </div>
 
         <div class="dashboard-user-area">
-          <!-- Role Switcher Button to easily preview Customer Dashboard -->
-          <a href="customer-dashboard.html" class="role-switch-link" title="Switch to Customer Tracking Dashboard">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-            Switch to Customer View
-          </a>
           <span class="dash-badge-role-admin">Admin Role</span>
           <div class="user-avatar-badge" style="background:#b91c1c;" id="dash-user-avatar">AD</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Admin session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
         </div>
       </header>
 
@@ -203,16 +199,9 @@
         <!-- SECTION 1: ADMIN COMMAND CENTER OVERVIEW & CONTROLS -->
         <section class="dash-section" id="admin-overview">
           <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
-            <div style="display:flex; align-items:center; gap:16px;">
-              <!-- Functional Go Back Button as requested -->
-              <button class="btn-back" data-action="go-back">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Go Back
-              </button>
-              <div>
-                <strong style="color:var(--primary); font-size:15px; display:block;">Station: Stackly Central Terminal Salem (SXV-01)</strong>
-                <span style="color:#64748b; font-size:12px;">Active Shift: Global Dispatch Rotation &bull; Telemetry Gate Status: Green All Convoys</span>
-              </div>
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Station: Stackly Central Terminal Salem (SXV-01)</strong>
+              <span style="color:#64748b; font-size:12px;">Active Shift: Global Dispatch Rotation &bull; Telemetry Gate Status: Green All Convoys</span>
             </div>
             <div style="display:flex; gap:10px;">
               <a href="../404.html" class="btn btn-outline btn-sm">Generate Customs Manifest</a>
@@ -621,7 +610,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const user = window.StacklyAuth ? window.StacklyAuth.getCurrentUser() : null;
       if (!user) {
-        window.location.href = 'sign-in.html';
+        window.location.replace('sign-in.html');
         return;
       }
 

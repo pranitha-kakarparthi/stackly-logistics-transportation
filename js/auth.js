@@ -114,17 +114,33 @@
   document.addEventListener('DOMContentLoaded', () => {
     seedInitialData();
 
-    const isDashboard = window.location.pathname.includes('dashboard.html');
-    const isSignIn = window.location.pathname.includes('sign-in.html');
-    const isSignUp = window.location.pathname.includes('sign-up.html');
+    const path = window.location.pathname;
+    const isAdminPage = path.includes('admin-');
+    const isCustomerPage = path.includes('customer-');
+    const isDashboardPage = path.includes('dashboard.html') || isAdminPage || isCustomerPage;
+    const isSignIn = path.includes('sign-in.html');
+    const isSignUp = path.includes('sign-up.html');
 
     const currentUser = getCurrentUser();
 
-    // Protect Dashboard Route
-    if (isDashboard && !currentUser) {
-      const signInUrl = window.location.pathname.includes('/pages/') ? 'sign-in.html' : 'pages/sign-in.html';
-      window.location.href = signInUrl;
-      return;
+    // Protect Dashboard Routes: Unauthenticated users are bounced to sign-in
+    // Roles are strictly segregated: admin can only access admin pages, customer can only access customer pages
+    if (isDashboardPage) {
+      if (!currentUser) {
+        const signInUrl = path.includes('/pages/') ? 'sign-in.html' : 'pages/sign-in.html';
+        window.location.replace(signInUrl);
+        return;
+      }
+      if (isAdminPage && currentUser.role !== 'admin') {
+        const target = path.includes('/pages/') ? 'customer-dashboard.html' : 'pages/customer-dashboard.html';
+        window.location.replace(target);
+        return;
+      }
+      if (isCustomerPage && currentUser.role !== 'customer') {
+        const target = path.includes('/pages/') ? 'admin-dashboard.html' : 'pages/admin-dashboard.html';
+        window.location.replace(target);
+        return;
+      }
     }
 
     if (isSignIn) {
@@ -135,15 +151,28 @@
       initSignUpPage();
     }
 
-    // Logout handling
-    const logoutBtn = document.getElementById('logout-btn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', (e) => {
+    // Attach Logout handler to any logout buttons on the page
+    const logoutBtns = document.querySelectorAll('#logout-btn, .logout-btn, [data-action="logout"]');
+    logoutBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
         e.preventDefault();
         clearSession();
         const signInUrl = window.location.pathname.includes('/pages/') ? 'sign-in.html' : 'pages/sign-in.html';
-        window.location.href = signInUrl;
+        window.location.replace(signInUrl);
       });
+    });
+  });
+
+  // Prevent back-navigation / bfcache restore after logout
+  window.addEventListener('pageshow', (event) => {
+    const path = window.location.pathname;
+    const isDashboardPage = path.includes('dashboard.html') || path.includes('admin-') || path.includes('customer-');
+    if (isDashboardPage) {
+      const user = getCurrentUser();
+      if (!user) {
+        const signInUrl = path.includes('/pages/') ? 'sign-in.html' : 'pages/sign-in.html';
+        window.location.replace(signInUrl);
+      }
     }
   });
 
@@ -211,6 +240,23 @@
       });
     }
 
+    const firstNameInput = document.getElementById('signin-firstname');
+    const lastNameInput = document.getElementById('signin-lastname');
+
+    // Real-time restriction: First & Last Name ONLY accept alphabets
+    [firstNameInput, lastNameInput].forEach(inp => {
+      if (inp) {
+        inp.addEventListener('input', (e) => {
+          e.target.value = e.target.value.replace(/[^A-Za-z]/g, '');
+          inp.classList.remove('is-invalid');
+          const errEl = document.getElementById(`${inp.id}-error`);
+          if (errEl) errEl.classList.remove('show');
+          const generalAlert = document.getElementById('signin-general-alert');
+          if (generalAlert) generalAlert.style.display = 'none';
+        });
+      }
+    });
+
     // Real-time error clearance on input
     if (emailInput) {
       emailInput.addEventListener('input', () => {
@@ -232,18 +278,77 @@
 
     // Form Submit & Button Click: Redirect to role-specific dashboard
     function handleSignInAction() {
+      const firstNameVal = firstNameInput ? firstNameInput.value.trim() : '';
+      const lastNameVal = lastNameInput ? lastNameInput.value.trim() : '';
       const emailVal = emailInput ? emailInput.value.trim() : '';
       const passVal = passInput ? passInput.value : '';
       const roleVal = selectedRole || 'customer';
 
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const alphabetRegex = /^[A-Za-z]+$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       let isValid = true;
       let firstInvalid = null;
 
+      const firstError = document.getElementById('signin-firstname-error');
+      const lastError = document.getElementById('signin-lastname-error');
       const emailError = document.getElementById('signin-email-error');
       const passError = document.getElementById('signin-password-error');
 
-      // 1. Email Validation
+      // 1. First Name Validation (Alphabets only)
+      if (firstNameInput) {
+        if (!firstNameVal) {
+          firstNameInput.classList.add('is-invalid');
+          if (firstError) {
+            firstError.textContent = 'Please enter your first name.';
+            firstError.classList.add('show');
+          }
+          isValid = false;
+          if (!firstInvalid) firstInvalid = firstNameInput;
+        } else if (!alphabetRegex.test(firstNameVal)) {
+          firstNameInput.classList.add('is-invalid');
+          if (firstError) {
+            firstError.textContent = 'First name should only accept alphabetic letters.';
+            firstError.classList.add('show');
+          }
+          isValid = false;
+          if (!firstInvalid) firstInvalid = firstNameInput;
+        } else {
+          firstNameInput.classList.remove('is-invalid');
+          if (firstError) {
+            firstError.textContent = '';
+            firstError.classList.remove('show');
+          }
+        }
+      }
+
+      // 2. Last Name Validation (Alphabets only)
+      if (lastNameInput) {
+        if (!lastNameVal) {
+          lastNameInput.classList.add('is-invalid');
+          if (lastError) {
+            lastError.textContent = 'Please enter your last name.';
+            lastError.classList.add('show');
+          }
+          isValid = false;
+          if (!firstInvalid) firstInvalid = lastNameInput;
+        } else if (!alphabetRegex.test(lastNameVal)) {
+          lastNameInput.classList.add('is-invalid');
+          if (lastError) {
+            lastError.textContent = 'Last name should only accept alphabetic letters.';
+            lastError.classList.add('show');
+          }
+          isValid = false;
+          if (!firstInvalid) firstInvalid = lastNameInput;
+        } else {
+          lastNameInput.classList.remove('is-invalid');
+          if (lastError) {
+            lastError.textContent = '';
+            lastError.classList.remove('show');
+          }
+        }
+      }
+
+      // 3. Email Validation (Strict format)
       if (!emailVal) {
         if (emailInput) emailInput.classList.add('is-invalid');
         if (emailError) {
@@ -255,7 +360,7 @@
       } else if (!emailRegex.test(emailVal)) {
         if (emailInput) emailInput.classList.add('is-invalid');
         if (emailError) {
-          emailError.textContent = 'Please enter a valid email address.';
+          emailError.textContent = 'Please enter a valid email address format (e.g. name@company.com).';
           emailError.classList.add('show');
         }
         isValid = false;
@@ -464,6 +569,24 @@
 
       const users = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
 
+      // Real-time restriction: First & Last Name ONLY accept alphabets
+      [firstNameInput, lastNameInput].forEach(inp => {
+        if (inp) {
+          inp.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^A-Za-z]/g, '');
+            clearFieldError(inp, `${inp.id}-error`);
+          });
+        }
+      });
+
+      // Real-time restriction: Phone number ONLY accepts up to 10 digits
+      if (phoneInput) {
+        phoneInput.addEventListener('input', (e) => {
+          e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+          clearFieldError(phoneInput, 'signup-phone-error');
+        });
+      }
+
       // 1. Username
       if (usernameInput && usernameInput.value.trim().length > 0) {
         const uVal = usernameInput.value.trim();
@@ -480,28 +603,41 @@
         }
       }
 
-      // 2. First Name
-      if (!firstNameInput.value.trim()) {
+      const alphabetRegex = /^[A-Za-z]+$/;
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      // 2. First Name (Alphabets only)
+      const firstNameVal = firstNameInput ? firstNameInput.value.trim() : '';
+      if (!firstNameVal) {
         setFieldError(firstNameInput, 'signup-firstname-error', 'First name is required.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = firstNameInput;
+      } else if (!alphabetRegex.test(firstNameVal)) {
+        setFieldError(firstNameInput, 'signup-firstname-error', 'First name should only accept alphabetic letters.');
         isValid = false;
         if (!firstInvalid) firstInvalid = firstNameInput;
       } else {
         clearFieldError(firstNameInput, 'signup-firstname-error');
       }
 
-      // 3. Last Name
-      if (!lastNameInput.value.trim()) {
+      // 3. Last Name (Alphabets only)
+      const lastNameVal = lastNameInput ? lastNameInput.value.trim() : '';
+      if (!lastNameVal) {
         setFieldError(lastNameInput, 'signup-lastname-error', 'Last name is required.');
+        isValid = false;
+        if (!firstInvalid) firstInvalid = lastNameInput;
+      } else if (!alphabetRegex.test(lastNameVal)) {
+        setFieldError(lastNameInput, 'signup-lastname-error', 'Last name should only accept alphabetic letters.');
         isValid = false;
         if (!firstInvalid) firstInvalid = lastNameInput;
       } else {
         clearFieldError(lastNameInput, 'signup-lastname-error');
       }
 
-      // 4. Email Address
-      const emailVal = emailInput.value.trim();
-      if (!emailVal || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-        setFieldError(emailInput, 'signup-email-error', 'Please enter a valid email address.');
+      // 4. Email Address (Strict valid format)
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      if (!emailVal || !emailRegex.test(emailVal)) {
+        setFieldError(emailInput, 'signup-email-error', 'Please enter a valid email address format (e.g. name@company.com).');
         isValid = false;
         if (!firstInvalid) firstInvalid = emailInput;
       } else if (users.some(u => u.email.toLowerCase() === emailVal.toLowerCase())) {
@@ -532,10 +668,10 @@
         clearFieldError(confirmPassInput, 'signup-confirmpassword-error');
       }
 
-      // 7. Phone Number
-      const phoneVal = phoneInput.value.trim();
-      if (!phoneVal || !/^\d{7,14}$/.test(phoneVal.replace(/[\s-]/g, ''))) {
-        setFieldError(phoneInput, 'signup-phone-error', 'Please enter a valid numeric phone number (7-14 digits).');
+      // 7. Phone Number (Exactly 10 digits)
+      const phoneVal = phoneInput ? phoneInput.value.trim() : '';
+      if (!phoneVal || !/^\d{10}$/.test(phoneVal)) {
+        setFieldError(phoneInput, 'signup-phone-error', 'Mobile number must be exactly 10 digits.');
         isValid = false;
         if (!firstInvalid) firstInvalid = phoneInput;
       } else {

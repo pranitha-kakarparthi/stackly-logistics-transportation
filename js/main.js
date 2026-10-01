@@ -269,7 +269,18 @@ function initGlobalActionButtons() {
     'pages/sign-up.html', 'sign-up.html', './sign-up.html', '../pages/sign-up.html',
     'pages/dashboard.html', 'dashboard.html', './dashboard.html', '../pages/dashboard.html',
     'customer-dashboard.html', 'pages/customer-dashboard.html',
+    'customer-tracking.html', 'pages/customer-tracking.html',
+    'customer-orders.html', 'pages/customer-orders.html',
+    'customer-waybill.html', 'pages/customer-waybill.html',
+    'customer-consignees.html', 'pages/customer-consignees.html',
+    'customer-support.html', 'pages/customer-support.html',
     'admin-dashboard.html', 'pages/admin-dashboard.html',
+    'admin-dispatch.html', 'pages/admin-dispatch.html',
+    'admin-fleet.html', 'pages/admin-fleet.html',
+    'admin-warehouse.html', 'pages/admin-warehouse.html',
+    'admin-customs.html', 'pages/admin-customs.html',
+    'admin-alerts.html', 'pages/admin-alerts.html',
+    'admin-drivers.html', 'pages/admin-drivers.html',
     '404.html', '../404.html', '#', 'javascript:void(0);'
   ];
 
@@ -469,13 +480,58 @@ function initContactForm() {
     });
   }
 
+  const firstNameInput = document.getElementById('contact-firstname');
+  const lastNameInput = document.getElementById('contact-lastname');
+  const phoneInput = document.getElementById('contact-phone');
+
+  // Real-time restriction: First & Last Name ONLY accept alphabets
+  [firstNameInput, lastNameInput].forEach(inp => {
+    if (inp) {
+      inp.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^A-Za-z]/g, '');
+      });
+    }
+  });
+
+  // Real-time restriction: Mobile Number ONLY accepts 10 digits
+  if (phoneInput) {
+    phoneInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    });
+  }
+
   // Real-time validation listeners
   const fields = [
-    { id: 'contact-name', test: val => val.trim().length >= 2, errorMsg: 'Please enter your full name (minimum 2 characters).' },
-    { id: 'contact-email', test: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), errorMsg: 'Please enter a valid business email address.' },
-    { id: 'contact-phone', test: val => /^[0-9+\s\-]{8,15}$/.test(val), errorMsg: 'Please enter a valid phone number.' },
-    { id: 'contact-subject', test: val => val.trim().length >= 3, errorMsg: 'Please provide an inquiry subject.' },
-    { id: 'contact-message', test: val => val.trim().length >= 10, errorMsg: 'Please write a message with at least 10 characters.' }
+    { 
+      id: 'contact-firstname', 
+      test: val => /^[A-Za-z]+$/.test(val.trim()), 
+      errorMsg: 'First name should only accept alphabetic letters.' 
+    },
+    { 
+      id: 'contact-lastname', 
+      test: val => /^[A-Za-z]+$/.test(val.trim()), 
+      errorMsg: 'Last name should only accept alphabetic letters.' 
+    },
+    { 
+      id: 'contact-email', 
+      test: val => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val.trim()), 
+      errorMsg: 'Please enter a valid email address format (e.g. name@company.com).' 
+    },
+    { 
+      id: 'contact-phone', 
+      test: val => /^\d{10}$/.test(val.trim()), 
+      errorMsg: 'Mobile number must be exactly 10 digits.' 
+    },
+    { 
+      id: 'contact-subject', 
+      test: val => val.trim().length >= 3, 
+      errorMsg: 'Please provide an inquiry subject (minimum 3 characters).' 
+    },
+    { 
+      id: 'contact-message', 
+      test: val => val.trim().length >= 10, 
+      errorMsg: 'Please write a message with at least 10 characters.' 
+    }
   ];
 
   fields.forEach(f => {
@@ -573,7 +629,7 @@ function initContactForm() {
 
 /* ==========================================================================
    9. QUICK WAYBILL TRACKING TABS CLICK ACTION (HOME PAGE)
-   Requirement: "In Home page 'Quick Waybill Tracking' section add click action to 'Road Freight', 'Customs Bill'."
+   Requirement: Format validated according to the ID used for searching.
    ========================================================================== */
 function initQuickTrackerTabs() {
   const tabs = document.querySelectorAll('.tracker-tab-btn');
@@ -581,13 +637,13 @@ function initQuickTrackerTabs() {
 
   const labelEl = document.getElementById('hero-tracker-label');
   const inputEl = document.getElementById('hero-tracker-input');
-  const demoCodeEl = document.getElementById('hero-tracker-demo-code');
-  const demoRouteEl = document.getElementById('hero-tracker-demo-route');
+  const formEl = document.getElementById('hero-tracker-form') || document.querySelector('.tracker-form');
+  const errorEl = document.getElementById('hero-tracker-error');
 
   const configs = {
     'air-ocean': {
       label: 'Air Waybill (AWB) / Ocean Container Number',
-      placeholder: 'e.g. STK-88219',
+      placeholder: 'e.g. STK-88219 or MSCU-992144',
       value: '',
       demoCode: '#STK-88219',
       demoRoute: '(Frankfurt → Salem Hub)'
@@ -622,27 +678,47 @@ function initQuickTrackerTabs() {
         else mode = 'air-ocean';
       }
 
+      if (formEl) formEl.setAttribute('data-current-mode', mode);
+
       const cfg = configs[mode] || configs['air-ocean'];
       if (labelEl) labelEl.textContent = cfg.label;
       if (inputEl) {
         inputEl.placeholder = cfg.placeholder;
-        // REQUIREMENT: Make "Road Freight", "Customs Bill" search box empty by default
         inputEl.value = '';
+        inputEl.classList.remove('is-invalid');
+        if (errorEl) {
+          errorEl.textContent = '';
+          errorEl.classList.remove('show');
+        }
         inputEl.focus();
       }
-      if (demoCodeEl) demoCodeEl.textContent = cfg.demoCode;
-      if (demoRouteEl) demoRouteEl.textContent = cfg.demoRoute;
     });
   });
 }
 
 /* ==========================================================================
    10. TRACKING LOCATE BUTTONS VALIDATION & 404 REDIRECTION
-   Requirement: "Remove demo waybill details and make sure the locate button redirects to 404 page upon submitting any valid way bill number."
+   Requirement: Validate search option ID format according to the active mode.
    ========================================================================== */
 function initTrackingLocateForms() {
   const isInPagesDir = window.location.pathname.includes('/pages/');
   const notFoundUrl = isInPagesDir ? '../404.html' : '404.html';
+
+  // Format validation patterns according to the ID we use for searching:
+  const MODE_FORMATS = {
+    'air-ocean': {
+      regex: /^((STK|AWB)[- ]?[A-Z0-9]{4,10}|[A-Z]{4}[- ]?[0-9]{6,7}|[0-9]{3}[- ][0-9]{7,8})$/i,
+      errorMsg: 'Invalid format for Air & Ocean Cargo. Please use format like STK-88219, AWB-020-7819, or MSCU-992144.'
+    },
+    'road-freight': {
+      regex: /^(RDF[- ][A-Z0-9]{4,8}|[A-Z]{2}[- ][0-9]{2}[- ][A-Z0-9-]{3,8}|EWB[- ]?[0-9]{8,12}|[0-9]{12})$/i,
+      errorMsg: 'Invalid format for Road Freight. Please use format like RDF-99412, TN-30-HAUL, or 12-digit E-Way Bill.'
+    },
+    'customs-bill': {
+      regex: /^(CBE|BOE|IGM|IN[A-Z]{3})[- ]?[0-9]{4,10}$/i,
+      errorMsg: 'Invalid format for Customs Bill. Please use format like CBE-55210, INMAA-1092, or BOE-123456.'
+    }
+  };
 
   // 1. Home page quick tracking form
   const heroTrackerForm = document.getElementById('hero-tracker-form') || document.querySelector('.tracker-form');
@@ -658,21 +734,46 @@ function initTrackingLocateForms() {
     heroTrackerForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const val = heroTrackerInput.value.trim();
-      if (!val || val.length < 3) {
+
+      // Determine active mode from data attribute or active tab
+      let activeMode = heroTrackerForm.getAttribute('data-current-mode');
+      if (!activeMode) {
+        const activeTab = document.querySelector('.tracker-tab-btn.active');
+        if (activeTab) {
+          activeMode = activeTab.getAttribute('data-mode') || 'air-ocean';
+        } else {
+          activeMode = 'air-ocean';
+        }
+      }
+
+      const formatConfig = MODE_FORMATS[activeMode] || MODE_FORMATS['air-ocean'];
+
+      if (!val) {
         heroTrackerInput.classList.add('is-invalid');
         if (heroTrackerError) {
-          heroTrackerError.textContent = 'Please enter a valid waybill or container number (min. 3 characters).';
+          heroTrackerError.textContent = 'Please enter an ID to track.';
           heroTrackerError.classList.add('show');
         }
         heroTrackerInput.focus();
         return;
       }
-      // Valid waybill submitted -> redirect to 404 page
+
+      if (!formatConfig.regex.test(val)) {
+        heroTrackerInput.classList.add('is-invalid');
+        if (heroTrackerError) {
+          heroTrackerError.textContent = formatConfig.errorMsg;
+          heroTrackerError.classList.add('show');
+        }
+        heroTrackerInput.focus();
+        return;
+      }
+
+      // Valid ID submitted according to active mode format -> redirect to 404 page
       window.location.href = notFoundUrl;
     });
   }
 
-  // 2. Tracking page form
+  // 2. Tracking page form (Multi-Constellation Sync)
   const trackingForm = document.getElementById('tracking-search-form');
   const trackingInput = document.getElementById('tracking-input');
   const trackingError = document.getElementById('tracking-input-error');
@@ -686,15 +787,34 @@ function initTrackingLocateForms() {
     trackingForm.addEventListener('submit', (e) => {
       e.preventDefault();
       const val = trackingInput.value.trim();
-      if (!val || val.length < 3) {
+
+      // REQUIREMENT: Reset the Multi-Constellation Sync form every time upon clicking submit
+      trackingForm.reset();
+      trackingInput.value = '';
+
+      // Accepts any of the valid logistics ID formats
+      const generalTrackingRegex = /^((STK|AWB|RDF|CBE|BOE|IGM|IN[A-Z]{3}|EWB)[- ]?[A-Z0-9-]{3,12}|[A-Z]{4}[- ]?[0-9]{6,7}|[0-9]{12}|[0-9]{3}[- ][0-9]{7,8})$/i;
+
+      if (!val) {
         trackingInput.classList.add('is-invalid');
         if (trackingError) {
-          trackingError.textContent = 'Please enter a valid waybill number (min. 3 characters).';
+          trackingError.textContent = 'Please enter a waybill or container ID.';
           trackingError.classList.add('show');
         }
         trackingInput.focus();
         return;
       }
+
+      if (!generalTrackingRegex.test(val)) {
+        trackingInput.classList.add('is-invalid');
+        if (trackingError) {
+          trackingError.textContent = 'Please enter a valid format (e.g. STK-88219, MSCU-992144, RDF-99412, or CBE-55210).';
+          trackingError.classList.add('show');
+        }
+        trackingInput.focus();
+        return;
+      }
+
       // Valid waybill submitted -> redirect to 404 page
       window.location.href = notFoundUrl;
     });
@@ -713,50 +833,80 @@ function initDashboardControls() {
 
   if (!layout) return;
 
+  const updateToggleLabels = (isCollapsed) => {
+    if (collapseBtn) {
+      collapseBtn.setAttribute('title', isCollapsed ? 'Open side menu bar' : 'Close side menu bar completely');
+      collapseBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    }
+    if (mobileToggleBtn) {
+      mobileToggleBtn.setAttribute('title', isCollapsed ? 'Open side menu bar' : 'Close side menu bar');
+      mobileToggleBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    }
+  };
+
+  const closeSidebarCompletely = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (window.innerWidth <= 1024) {
+      // On tablet/mobile: close offcanvas drawer completely
+      layout.classList.remove('sidebar-open');
+      if (mobileToggleBtn) mobileToggleBtn.setAttribute('aria-expanded', 'false');
+    } else {
+      // On desktop: collapse sidebar completely
+      layout.classList.add('sidebar-collapsed');
+      updateToggleLabels(true);
+      try {
+        localStorage.setItem('stackly_sidebar_collapsed', 'true');
+      } catch (err) {}
+    }
+  };
+
   const toggleCollapse = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    const isCollapsed = layout.classList.toggle('sidebar-collapsed');
-    if (collapseBtn) {
-      collapseBtn.setAttribute('title', isCollapsed ? 'Expand sidebar' : 'Collapse sidebar');
-      collapseBtn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    if (window.innerWidth <= 1024) {
+      // On tablet/mobile: toggle drawer
+      const isOpen = layout.classList.toggle('sidebar-open');
+      if (mobileToggleBtn) mobileToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    } else {
+      // On desktop: toggle complete collapse
+      const isCollapsed = layout.classList.toggle('sidebar-collapsed');
+      updateToggleLabels(isCollapsed);
+      try {
+        localStorage.setItem('stackly_sidebar_collapsed', isCollapsed ? 'true' : 'false');
+      } catch (err) {}
     }
-    try {
-      localStorage.setItem('stackly_sidebar_collapsed', isCollapsed ? 'true' : 'false');
-    } catch (err) {}
   };
 
-  // 1. Collapse button inside sidebar
+  // 1. Collapse button inside sidebar: closes sidebar completely
   if (collapseBtn) {
-    collapseBtn.addEventListener('click', toggleCollapse);
+    collapseBtn.addEventListener('click', closeSidebarCompletely);
 
     // Restore preference on desktop
     try {
       if (window.innerWidth > 1024 && localStorage.getItem('stackly_sidebar_collapsed') === 'true') {
         layout.classList.add('sidebar-collapsed');
+        updateToggleLabels(true);
+      } else {
+        updateToggleLabels(false);
       }
     } catch (err) {}
   }
 
-  // 2. Header toggle button (handles desktop collapse & mobile offcanvas)
+  // 2. Header toggle button: re-opens or toggles sidebar
   if (mobileToggleBtn) {
-    mobileToggleBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (window.innerWidth > 1024) {
-        toggleCollapse();
-      } else {
-        layout.classList.toggle('sidebar-open');
-      }
-    });
+    mobileToggleBtn.addEventListener('click', toggleCollapse);
   }
 
   // 3. Close on overlay click
   if (overlay) {
     overlay.addEventListener('click', () => {
       layout.classList.remove('sidebar-open');
+      if (mobileToggleBtn) mobileToggleBtn.setAttribute('aria-expanded', 'false');
     });
   }
 
@@ -767,6 +917,7 @@ function initDashboardControls() {
       item.addEventListener('click', () => {
         if (window.innerWidth <= 1024) {
           layout.classList.remove('sidebar-open');
+          if (mobileToggleBtn) mobileToggleBtn.setAttribute('aria-expanded', 'false');
         }
       });
     });

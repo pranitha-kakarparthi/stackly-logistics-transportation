@@ -155,7 +155,7 @@
             <!-- Social Media Notice -->
             <div style="padding:16px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
               <strong style="display:block; color:#0b1a30; font-size:14px; margin-bottom:6px;">Connect Across Social Channels:</strong>
-              <div style="display:flex; gap:10px;">
+              <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <!-- Social media links redirect to 404 page as requested -->
                 <a href="../404.html" class="btn btn-outline btn-sm">Facebook</a>
                 <a href="../404.html" class="btn btn-outline btn-sm">LinkedIn</a>
@@ -176,10 +176,17 @@
             </div>
 
             <form id="contact-form" novalidate>
-              <div class="form-group">
-                <label class="form-label" for="contact-name">Full Name <span class="required-star">*</span></label>
-                <input type="text" id="contact-name" class="form-input" placeholder="e.g. David Vance" required>
-                <div id="contact-name-error" class="form-error-msg" role="alert"></div>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="contact-firstname">First Name <span class="required-star">*</span></label>
+                  <input type="text" id="contact-firstname" class="form-input" placeholder="e.g. David" required>
+                  <div id="contact-firstname-error" class="form-error-msg" role="alert"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="contact-lastname">Last Name <span class="required-star">*</span></label>
+                  <input type="text" id="contact-lastname" class="form-input" placeholder="e.g. Vance" required>
+                  <div id="contact-lastname-error" class="form-error-msg" role="alert"></div>
+                </div>
               </div>
 
               <div class="grid-2">
@@ -190,8 +197,8 @@
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label" for="contact-phone">Mobile Number <span class="required-star">*</span></label>
-                  <input type="tel" id="contact-phone" class="form-input" placeholder="+91 9876543210" required>
+                  <label class="form-label" for="contact-phone">Mobile Number (10 Digits) <span class="required-star">*</span></label>
+                  <input type="tel" id="contact-phone" class="form-input" placeholder="9876543210" maxlength="10" required>
                   <div id="contact-phone-error" class="form-error-msg" role="alert"></div>
                 </div>
               </div>

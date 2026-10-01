@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waybill Lookup &amp; Dossier - Customer Desk | Stackly Logistics</title>
+  <meta name="description" content="Instant waybill lookup and digital consignment dossier inspection for Stackly Logistics shipments.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-in-transit { background-color: #eff6ff; color: #2563eb; }
+    .status-delivered { background-color: #ecfdf5; color: #059669; }
+    .status-pending { background-color: #fff7ed; color: #ea580c; }
+    .status-customs { background-color: #faf5ff; color: #7c3aed; }
+
+    .dash-section { margin-bottom: 24px; }
+    .lookup-box {
+      background: #fff;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+    .quick-preset-chip {
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: #f1f5f9;
+      color: var(--primary);
+      border: 1px solid #cbd5e1;
+      font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .quick-preset-chip:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Waybill Lookup Console...</div>
+  </div>
+
+  <div class="dashboard-layout" id="dashboard-layout">
+    <div class="dashboard-overlay" id="dashboard-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" type="button" aria-label="Collapse or Expand Sidebar" title="Collapse or Expand Sidebar">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="customer-dashboard.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="dashboard-nav-item-text">Client Overview</span>
+          </a>
+          <a href="customer-tracking.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="dashboard-nav-item-text">Live GPS Tracking</span>
+          </a>
+          <a href="customer-orders.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <span class="dashboard-nav-item-text">Order Details</span>
+          </a>
+          <a href="customer-waybill.html" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="dashboard-nav-item-text">Waybill Lookup</span>
+          </a>
+          <a href="customer-consignees.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span class="dashboard-nav-item-text">Delivery Consignees</span>
+          </a>
+          <a href="customer-support.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="dashboard-nav-item-text">Support Desk</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="user-avatar-badge" id="cust-avatar-pill">CU</div>
+          <div class="user-info-text">
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="cust-name-pill">Valued Customer</div>
+            <div style="color:#94a3b8; font-size:12px;">Customer Account</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div style="display:flex; align-items:center;">
+          <button id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle-btn" type="button" aria-label="Toggle navigation menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <div class="dashboard-greeting">
+            <h1 id="dash-greeting-text">Digital Waybill Inspection Console</h1>
+            <p id="dash-session-status">Instant Verification &bull; Multi-Carrier Cross-Referencing &bull; Document Access</p>
+          </div>
+        </div>
+
+        <div class="dashboard-user-area">
+          <span class="dash-badge-role">Customer Role</span>
+          <div class="user-avatar-badge" id="dash-user-avatar">CU</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Customer session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: HERO (No Go Back button) -->
+        <section class="dash-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Waybill Electronic Dossier Verification</strong>
+              <span style="color:#64748b; font-size:12px;">Query any active or archived Air Waybill (AWB), Ocean Bill of Lading, or Interstate Road Waybill.</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Waybill Guidelines</a>
+              <a href="customer-tracking.html" class="btn btn-primary btn-sm">Live GPS Telemetry</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: LOOKUP INPUT & DOSSIER RESULT -->
+        <section class="dash-section">
+          <div class="lookup-box">
+            <h2 class="panel-title" style="margin-bottom:6px;">Instant Waybill Dossier Search</h2>
+            <p style="font-size:13px; color:#64748b; margin-bottom:18px;">
+              Enter your tracking code (format: STK-XXXXX) to pull complete dispatch details and document copies.
+            </p>
+
+            <form id="wb-search-form" style="margin-bottom:16px;">
+              <div style="display:flex; gap:12px; max-width:600px;">
+                <input type="text" id="cust-waybill-input" class="form-input" placeholder="e.g. STK-88219, STK-77104, STK-44912" value="">
+                <button type="submit" id="cust-waybill-btn" class="btn btn-primary" style="white-space:nowrap;">Inspect Dossier</button>
+              </div>
+              <div id="wb-validation-error" style="display:none; color:#dc2626; font-size:12px; margin-top:6px;">
+                Please enter a valid format: STK- followed by numbers (e.g. STK-88219).
+              </div>
+            </form>
+
+            <div style="display:flex; gap:8px; align-items:center; margin-bottom:24px;">
+              <span style="font-size:12px; color:#64748b;">Frequent Searches:</span>
+              <button class="quick-preset-chip" data-code="STK-88219">#STK-88219 (Frankfurt Air)</button>
+              <button class="quick-preset-chip" data-code="STK-77104">#STK-77104 (Shanghai Ocean)</button>
+              <button class="quick-preset-chip" data-code="STK-44912">#STK-44912 (Bangalore Road)</button>
+            </div>
+
+            <!-- Result Box -->
+            <div id="cust-waybill-result" style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:20px;">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid #e2e8f0; padding-bottom:14px; margin-bottom:14px;">
+                <div>
+                  <strong style="color:var(--primary); font-size:16px;" id="wb-res-title">Waybill #STK-88219 Verified</strong>
+                  <div style="font-size:13px; color:#475569; margin-top:3px;" id="wb-res-desc">
+                    Frankfurt Airport Cargo Port (FRA) to Stackly Salem Regional Hub (SXV)
+                  </div>
+                </div>
+                <span class="status-badge status-in-transit" id="wb-res-badge">&bull; In Flight Transit</span>
+              </div>
+
+              <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; font-size:13px;">
+                <div>
+                  <span style="color:#64748b; font-size:11px; text-transform:uppercase;">Cargo Details</span>
+                  <strong style="color:var(--primary); display:block; margin-top:2px;" id="wb-res-cargo">420.5 KG Cold-Chain Pharma Cargo</strong>
+                </div>
+                <div>
+                  <span style="color:#64748b; font-size:11px; text-transform:uppercase;">Carrier / Service</span>
+                  <strong style="color:var(--primary); display:block; margin-top:2px;" id="wb-res-carrier">Lufthansa Cargo LH-842 Priority Air</strong>
+                </div>
+                <div>
+                  <span style="color:#64748b; font-size:11px; text-transform:uppercase;">Customs Status</span>
+                  <strong style="color:#059669; display:block; margin-top:2px;" id="wb-res-customs">Pre-Cleared via Chennai Port ICEGATE</strong>
+                </div>
+              </div>
+
+              <div style="margin-top:16px; display:flex; gap:10px;">
+                <a href="../404.html" class="btn btn-outline btn-sm">Download Official e-Waybill</a>
+                <a href="customer-tracking.html" class="btn btn-outline btn-sm">View on Telemetry Map</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const wbForm = document.getElementById('wb-search-form');
+      const wbInput = document.getElementById('cust-waybill-input');
+      const wbTitle = document.getElementById('wb-res-title');
+      const wbDesc = document.getElementById('wb-res-desc');
+      const wbBadge = document.getElementById('wb-res-badge');
+      const wbCargo = document.getElementById('wb-res-cargo');
+      const wbCarrier = document.getElementById('wb-res-carrier');
+      const wbErr = document.getElementById('wb-validation-error');
+
+      function executeSearch(rawCode) {
+        const code = (rawCode || '').trim().toUpperCase();
+        if (wbErr) wbErr.style.display = 'none';
+
+        if (code.includes('77104')) {
+          wbTitle.textContent = `Waybill #${code} Verified`;
+          wbDesc.textContent = 'Shanghai Ocean Port (CN) to Chennai Marine Terminal (TN)';
+          wbBadge.className = 'status-badge status-customs';
+          wbBadge.innerHTML = '&bull; Customs Clearance';
+          wbCargo.textContent = '18,400.0 KG (40ft High Cube Container)';
+          wbCarrier.textContent = 'Maersk Mc-Kinney Moller Maritime FCL';
+        } else if (code.includes('44912')) {
+          wbTitle.textContent = `Waybill #${code} Verified`;
+          wbDesc.textContent = 'Salem Central Hub (TN) to Bangalore Electronic City (KA)';
+          wbBadge.className = 'status-badge status-delivered';
+          wbBadge.innerHTML = '&check; Delivered &amp; Signed';
+          wbCargo.textContent = '1,250.0 KG Interstate Highway Freight';
+          wbCarrier.textContent = 'BharatBenz Heavy Haulage #TN-54-A-9921';
+        } else {
+          wbTitle.textContent = `Waybill #${code || 'STK-88219'} Verified`;
+          wbDesc.textContent = 'Frankfurt Cargo City South (FRA) to Stackly Salem Regional Hub (SXV)';
+          wbBadge.className = 'status-badge status-in-transit';
+          wbBadge.innerHTML = '&bull; In Flight Transit';
+          wbCargo.textContent = '420.5 KG Cold-Chain Pharma Cargo';
+          wbCarrier.textContent = 'Lufthansa Cargo LH-842 Priority Air';
+        }
+      }
+
+      if (wbForm) {
+        wbForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          executeSearch(wbInput.value);
+        });
+      }
+
+      document.querySelectorAll('.quick-preset-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const code = chip.getAttribute('data-code');
+          if (wbInput) wbInput.value = code;
+          executeSearch(code);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

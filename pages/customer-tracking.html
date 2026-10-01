@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live GPS Tracking - Customer Control Desk | Stackly Logistics</title>
+  <meta name="description" content="Live GPS cargo tracking, interactive milestone stepper, and temperature sensor telemetry for Stackly Logistics consignments.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-in-transit { background-color: #eff6ff; color: #2563eb; }
+    .status-delivered { background-color: #ecfdf5; color: #059669; }
+    .status-pending { background-color: #fff7ed; color: #ea580c; }
+    .status-customs { background-color: #faf5ff; color: #7c3aed; }
+
+    .dash-section { margin-bottom: 24px; }
+    .tracking-stepper {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+      margin: 30px 0 20px 0;
+    }
+    .tracking-stepper::before {
+      content: '';
+      position: absolute;
+      top: 18px;
+      left: 30px;
+      right: 30px;
+      height: 4px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+    .step-node {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      flex: 1;
+    }
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #fff;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px auto;
+      font-weight: 700;
+      color: #64748b;
+      transition: var(--transition);
+    }
+    .step-node.completed .step-circle {
+      background: #059669;
+      border-color: #059669;
+      color: #fff;
+    }
+    .step-node.active .step-circle {
+      background: var(--primary);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba(255, 94, 21, 0.2);
+    }
+    .step-title { font-size: 13px; font-weight: 700; color: var(--primary); }
+    .step-time { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+    .waybill-selector-btn {
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .waybill-selector-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Live GPS Telemetry Desk...</div>
+  </div>
+
+  <div class="dashboard-layout" id="dashboard-layout">
+    <div class="dashboard-overlay" id="dashboard-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" type="button" aria-label="Collapse or Expand Sidebar" title="Collapse or Expand Sidebar">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="customer-dashboard.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="dashboard-nav-item-text">Client Overview</span>
+          </a>
+          <a href="customer-tracking.html" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="dashboard-nav-item-text">Live GPS Tracking</span>
+          </a>
+          <a href="customer-orders.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <span class="dashboard-nav-item-text">Order Details</span>
+          </a>
+          <a href="customer-waybill.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="dashboard-nav-item-text">Waybill Lookup</span>
+          </a>
+          <a href="customer-consignees.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span class="dashboard-nav-item-text">Delivery Consignees</span>
+          </a>
+          <a href="customer-support.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="dashboard-nav-item-text">Support Desk</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="user-avatar-badge" id="cust-avatar-pill">CU</div>
+          <div class="user-info-text">
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="cust-name-pill">Valued Customer</div>
+            <div style="color:#94a3b8; font-size:12px;">Customer Account</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div style="display:flex; align-items:center;">
+          <button id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle-btn" type="button" aria-label="Toggle navigation menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <div class="dashboard-greeting">
+            <h1 id="dash-greeting-text">Live GPS Consignment Tracking</h1>
+            <p id="dash-session-status">Active Session &bull; Satellite Synchronized &bull; Continuous Telemetry</p>
+          </div>
+        </div>
+
+        <div class="dashboard-user-area">
+          <span class="dash-badge-role">Customer Role</span>
+          <div class="user-avatar-badge" id="dash-user-avatar">CU</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Customer session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: HERO (No Go Back button) -->
+        <section class="dash-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Active Tracking Stream: NavIC &amp; GPS Telemetry</strong>
+              <span style="color:#64748b; font-size:12px;">Real-time location, speed, temperature, and customs status for all your consignments.</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Download Tracking PDF</a>
+              <a href="customer-waybill.html" class="btn btn-primary btn-sm">Inspect Another Waybill</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: SHIPMENT SELECTOR PILLS -->
+        <section class="dash-section">
+          <div style="display:flex; gap:10px; margin-bottom:16px;">
+            <button class="waybill-selector-btn active" data-wb="88219">Waybill #STK-88219 (Air Priority)</button>
+            <button class="waybill-selector-btn" data-wb="77104">Waybill #STK-77104 (Ocean FCL)</button>
+            <button class="waybill-selector-btn" data-wb="44912">Waybill #STK-44912 (Express Road)</button>
+          </div>
+
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title" id="track-header-title">Live Tracking Information &bull; Waybill #STK-88219</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;" id="track-header-desc">
+                  Frankfurt Cargo City South (FRA) &rarr; Stackly Salem Central Terminal (SXV)
+                </p>
+              </div>
+              <span class="status-badge status-in-transit" id="track-header-badge">&bull; In Flight Transit &bull; ETA 36 Hours</span>
+            </div>
+
+            <!-- Interactive 5-Step Visual Stepper -->
+            <div class="tracking-stepper" id="tracking-stepper">
+              <div class="step-node completed">
+                <div class="step-circle">&check;</div>
+                <div class="step-title">Order Picked Up</div>
+                <div class="step-time">Frankfurt &bull; Sep 28, 08:30</div>
+              </div>
+              <div class="step-node completed">
+                <div class="step-circle">&check;</div>
+                <div class="step-title">Export Customs</div>
+                <div class="step-time">FRA Cargo &bull; Sep 29, 14:15</div>
+              </div>
+              <div class="step-node active">
+                <div class="step-circle">3</div>
+                <div class="step-title">Air Freight Transit</div>
+                <div class="step-time">En Route to Chennai &bull; Live</div>
+              </div>
+              <div class="step-node">
+                <div class="step-circle">4</div>
+                <div class="step-title">Salem Hub Dispatch</div>
+                <div class="step-time">MMR Complex &bull; Oct 02 Expected</div>
+              </div>
+              <div class="step-node">
+                <div class="step-circle">5</div>
+                <div class="step-title">Doorstep Delivery</div>
+                <div class="step-time">Salem Facility &bull; Oct 03</div>
+              </div>
+            </div>
+
+            <!-- Telemetry Diagnostic Metrics -->
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; background:#f8fafc; padding:18px; border-radius:var(--radius-md); border:1px solid #e2e8f0; font-size:13px; margin-top:24px;">
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Carrier &amp; Flight</span>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-top:2px;" id="track-carrier">Lufthansa Cargo LH-842</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Cargo Cold Telemetry</span>
+                <strong style="color:#059669; font-size:14px; display:block; margin-top:2px;" id="track-temp">Steady at 4.2&deg;C (Pharma Standard)</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Consignment Dimensions</span>
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-top:2px;" id="track-dims">3 Standard Euro Pallets (420.5 KG)</strong>
+              </div>
+              <div>
+                <span style="color:#64748b; font-size:11px; text-transform:uppercase; font-weight:700;">Underwriting Protection</span>
+                <strong style="color:#2563eb; font-size:14px; display:block; margin-top:2px;" id="track-insurance">Tier 1 All-Risk Cargo Insured</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: CHECKPOINTS MILESTONE LOG -->
+        <section class="dash-section">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:14px;">Detailed Checkpoint Telemetry History</h2>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; gap:14px; align-items:flex-start; padding:12px; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="background:#059669; color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">&check;</div>
+                <div>
+                  <strong style="color:var(--primary); font-size:14px;">Export Customs Cleared &bull; Frankfurt Airport Hub</strong>
+                  <p style="color:#64748b; font-size:12px; margin-top:2px;">Digital seal #FRA-DE-9921 applied. Pallet temperature confirmed 4.1&deg;C.</p>
+                  <span style="font-size:11px; color:#94a3b8;">Sep 29, 2026 at 14:15 CEST</span>
+                </div>
+              </div>
+
+              <div style="display:flex; gap:14px; align-items:flex-start; padding:12px; background:#f8fafc; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <div style="background:#059669; color:#fff; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px;">&check;</div>
+                <div>
+                  <strong style="color:var(--primary); font-size:14px;">Origin Facility Pick-up Verified</strong>
+                  <p style="color:#64748b; font-size:12px; margin-top:2px;">Consignment received by Lufthansa Cargo ground handling partner.</p>
+                  <span style="font-size:11px; color:#94a3b8;">Sep 28, 2026 at 08:30 CEST</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btns = document.querySelectorAll('.waybill-selector-btn');
+      btns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          btns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const wb = btn.getAttribute('data-wb');
+          if (wb === '77104') {
+            document.getElementById('track-header-title').textContent = 'Live Tracking Information • Waybill #STK-77104';
+            document.getElementById('track-header-desc').textContent = 'Shanghai Port (CN) → Chennai Marine Terminal (TN)';
+            document.getElementById('track-header-badge').className = 'status-badge status-customs';
+            document.getElementById('track-header-badge').innerHTML = '&bull; Customs Clearance';
+            document.getElementById('track-carrier').textContent = 'Maersk Mc-Kinney Moller';
+            document.getElementById('track-temp').textContent = 'Ambient Containerized (21°C)';
+            document.getElementById('track-dims').textContent = '40ft High-Cube (18,400 KG)';
+          } else if (wb === '44912') {
+            document.getElementById('track-header-title').textContent = 'Live Tracking Information • Waybill #STK-44912';
+            document.getElementById('track-header-desc').textContent = 'Salem Central Hub (TN) → Bangalore Tech Park (KA)';
+            document.getElementById('track-header-badge').className = 'status-badge status-delivered';
+            document.getElementById('track-header-badge').innerHTML = '&check; Delivered &amp; Signed';
+            document.getElementById('track-carrier').textContent = 'Truck #TN-54-A-9921';
+            document.getElementById('track-temp').textContent = 'Ambient Dry Cargo';
+            document.getElementById('track-dims').textContent = 'Interstate Freight (1,250 KG)';
+          } else {
+            document.getElementById('track-header-title').textContent = 'Live Tracking Information • Waybill #STK-88219';
+            document.getElementById('track-header-desc').textContent = 'Frankfurt Cargo City South (FRA) → Stackly Salem Central Terminal (SXV)';
+            document.getElementById('track-header-badge').className = 'status-badge status-in-transit';
+            document.getElementById('track-header-badge').innerHTML = '&bull; In Flight Transit &bull; ETA 36 Hours';
+            document.getElementById('track-carrier').textContent = 'Lufthansa Cargo LH-842';
+            document.getElementById('track-temp').textContent = 'Steady at 4.2°C (Pharma Standard)';
+            document.getElementById('track-dims').textContent = '3 Standard Euro Pallets (420.5 KG)';
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

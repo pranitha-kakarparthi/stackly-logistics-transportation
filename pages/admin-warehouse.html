@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salem Central Hub Warehouse - Admin Operations | Stackly Logistics</title>
+  <meta name="description" content="Salem Central Hub Warehouse & Cold Chain storage capacity monitoring, bay allocations, and turnaround control for Stackly Logistics.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-in-transit { background-color: #eff6ff; color: #2563eb; }
+    .status-delivered { background-color: #ecfdf5; color: #059669; }
+    .status-pending { background-color: #fff7ed; color: #ea580c; }
+    .status-customs { background-color: #faf5ff; color: #7c3aed; }
+
+    .dash-section { margin-bottom: 24px; }
+    .progress-bar-wrap {
+      background: #e2e8f0;
+      height: 8px;
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .bay-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .bay-box {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px 6px;
+      text-align: center;
+      background: #fff;
+    }
+    .bay-box.occupied { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; font-weight: 700; }
+    .bay-box.available { background: #ecfdf5; border-color: #6ee7b7; color: #059669; font-weight: 700; }
+    .bay-box.staging { background: #fff7ed; border-color: #fed7aa; color: #c2410c; font-weight: 700; }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Salem Warehouse Systems...</div>
+  </div>
+
+  <div class="dashboard-layout" id="dashboard-layout">
+    <div class="dashboard-overlay" id="dashboard-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" type="button" aria-label="Collapse or Expand Sidebar" title="Collapse or Expand Sidebar">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="admin-dashboard.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="dashboard-nav-item-text">Command Center</span>
+          </a>
+          <a href="admin-dispatch.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+            <span class="dashboard-nav-item-text">Dispatch Operations</span>
+          </a>
+          <a href="admin-fleet.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+            <span class="dashboard-nav-item-text">Fleet Telematics</span>
+          </a>
+          <a href="admin-warehouse.html" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span class="dashboard-nav-item-text">Salem Warehouse</span>
+          </a>
+          <a href="admin-customs.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            <span class="dashboard-nav-item-text">Customs Clearance</span>
+          </a>
+          <a href="admin-alerts.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span class="dashboard-nav-item-text">Alerts &amp; Incidents</span>
+          </a>
+          <a href="admin-drivers.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span class="dashboard-nav-item-text">Driver Roster</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="user-avatar-badge" style="background:#b91c1c;" id="adm-avatar-pill">AD</div>
+          <div class="user-info-text">
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="adm-name-pill">Operations Controller</div>
+            <div style="color:#94a3b8; font-size:12px;">Admin Authority</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div style="display:flex; align-items:center;">
+          <button id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle-btn" type="button" aria-label="Toggle navigation menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <div class="dashboard-greeting">
+            <h1 id="dash-greeting-text">Salem Central Hub Warehouse &amp; Cold Storage</h1>
+            <p id="dash-session-status">MMR Complex, Chinna Thirupathi &bull; 85,000 Sq Ft Under Supervision &bull; 32 Active Docks</p>
+          </div>
+        </div>
+
+        <div class="dashboard-user-area">
+          <span class="dash-badge-role-admin">Admin Role</span>
+          <div class="user-avatar-badge" style="background:#b91c1c;" id="dash-user-avatar">AD</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Admin session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: WAREHOUSE HERO (No Go Back button) -->
+        <section class="dash-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Facility: Stackly Salem Master Terminal (Warehouse SXV-WH-01)</strong>
+              <span style="color:#64748b; font-size:12px;">Location: Chinna Thirupathi, Salem TN &bull; Climate Zones: Ambient, Cold Chain (2-8&deg;C), Deep Freeze (-20&deg;C)</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Storage Audit Report</a>
+              <a href="../404.html" class="btn btn-primary btn-sm">+ Allocate Storage Bay</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: STORAGE CAPACITY GAUGES -->
+        <section class="dash-section">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:6px;">Salem Central Logistics Terminal Capacity</h2>
+            <p style="font-size:13px; color:#64748b; margin-bottom:18px;">
+              Live telematics and occupancy data for Stackly MMR Complex, Chinna Thirupathi Warehouse &amp; Cold Storage.
+            </p>
+
+            <div class="grid-2">
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Cold-Chain Pharmaceutical Storage (2&deg;C - 8&deg;C)</span>
+                  <span style="color:#2563eb;">82% (4,100 / 5,000 cu.m)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#2563eb; width:82%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Compliant with WHO Good Distribution Practices</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">General Dry Goods Bulk Storage</span>
+                  <span style="color:#059669;">67% (13,400 / 20,000 pallets)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#059669; width:67%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Automated high-bay narrow aisle racking</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Express Cross-Dock Staging Bays</span>
+                  <span style="color:#ff5e15;">91% (29 / 32 Active Docks)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#ff5e15; width:91%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Turnaround average: 42 minutes per 40ft container</span>
+              </div>
+
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color);">
+                <div style="display:flex; justify-content:space-between; font-size:13px; font-weight:700;">
+                  <span style="color:var(--primary);">Hazardous Cargo Containment Bay</span>
+                  <span style="color:#7c3aed;">35% (350 / 1,000 cu.m)</span>
+                </div>
+                <div class="progress-bar-wrap">
+                  <div style="background:#7c3aed; width:35%; height:100%;"></div>
+                </div>
+                <span style="font-size:11px; color:#64748b; margin-top:4px; display:block;">Explosion-proof climate ventilation &bull; Class 3 Flammable</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: 32 DOCK DOORS OCCUPANCY MATRIX -->
+        <section class="dash-section">
+          <div class="dashboard-panel">
+            <div class="panel-header">
+              <div>
+                <h2 class="panel-title">Cross-Dock Door Status &amp; Real-Time Turnaround (32 Bays)</h2>
+                <p style="font-size:13px; color:#64748b; margin-top:2px;">Real-time sensor telemetry detecting vehicle presence and pallet transshipment.</p>
+              </div>
+              <div style="display:flex; gap:12px; font-size:12px;">
+                <span style="color:#b91c1c; font-weight:700;">&bull; Occupied (22)</span>
+                <span style="color:#c2410c; font-weight:700;">&bull; Staging (7)</span>
+                <span style="color:#059669; font-weight:700;">&bull; Ready / Free (3)</span>
+              </div>
+            </div>
+
+            <div class="bay-grid">
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 01</div><small>Unloading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 02</div><small>Unloading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 03</div><small>Staging</small></div>
+              <div class="bay-box available"><div style="font-size:10px;">BAY 04</div><small>OPEN</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 05</div><small>Loading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 06</div><small>Reefer</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 07</div><small>Unloading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 08</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 09</div><small>Loading</small></div>
+              <div class="bay-box available"><div style="font-size:10px;">BAY 10</div><small>OPEN</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 11</div><small>Unloading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 12</div><small>Loading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 13</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 14</div><small>Reefer</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 15</div><small>Unloading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 16</div><small>Loading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 17</div><small>Unloading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 18</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 19</div><small>Loading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 20</div><small>Unloading</small></div>
+              <div class="bay-box available"><div style="font-size:10px;">BAY 21</div><small>OPEN</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 22</div><small>Reefer</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 23</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 24</div><small>Loading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 25</div><small>Unloading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 26</div><small>Loading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 27</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 28</div><small>Unloading</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 29</div><small>Reefer</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 30</div><small>Loading</small></div>
+              <div class="bay-box staging"><div style="font-size:10px;">BAY 31</div><small>Staging</small></div>
+              <div class="bay-box occupied"><div style="font-size:10px;">BAY 32</div><small>Unloading</small></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+</body>
+</html>

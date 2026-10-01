@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Logistics Support Desk - Customer Desk | Stackly Logistics</title>
+  <meta name="description" content="Dedicated 24/7 logistics dispatch support desk, assigned account controller, and priority ticket resolution for Stackly Logistics clients.">
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .status-in-transit { background-color: #eff6ff; color: #2563eb; }
+    .status-delivered { background-color: #ecfdf5; color: #059669; }
+    .status-pending { background-color: #fff7ed; color: #ea580c; }
+    .status-customs { background-color: #faf5ff; color: #7c3aed; }
+
+    .dash-section { margin-bottom: 24px; }
+  </style>
+</head>
+<body style="background-color: #f8fafc;">
+  <!-- Pure CSS Loader -->
+  <div id="site-loader" aria-live="polite">
+    <div class="loader-brand">
+      <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="loader-logo-img">
+    </div>
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading Support Desk...</div>
+  </div>
+
+  <div class="dashboard-layout" id="dashboard-layout">
+    <div class="dashboard-overlay" id="dashboard-overlay"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+      <div>
+        <div class="dashboard-sidebar-brand">
+          <a href="../index.html" class="brand-logo" style="color:#fff;">
+            <img src="../assets/images/logo.webp" alt="Stackly Logistics Logo" class="brand-logo-img">
+          </a>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" type="button" aria-label="Collapse or Expand Sidebar" title="Collapse or Expand Sidebar">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 19l-7-7 7-7m8 14l-7-7 7-7"/>
+            </svg>
+          </button>
+        </div>
+
+        <nav class="dashboard-nav-list">
+          <a href="customer-dashboard.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <span class="dashboard-nav-item-text">Client Overview</span>
+          </a>
+          <a href="customer-tracking.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span class="dashboard-nav-item-text">Live GPS Tracking</span>
+          </a>
+          <a href="customer-orders.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+            <span class="dashboard-nav-item-text">Order Details</span>
+          </a>
+          <a href="customer-waybill.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <span class="dashboard-nav-item-text">Waybill Lookup</span>
+          </a>
+          <a href="customer-consignees.html" class="dashboard-nav-item">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            <span class="dashboard-nav-item-text">Delivery Consignees</span>
+          </a>
+          <a href="customer-support.html" class="dashboard-nav-item active">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <span class="dashboard-nav-item-text">Support Desk</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-user-footer">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="user-avatar-badge" id="cust-avatar-pill">CU</div>
+          <div class="user-info-text">
+            <div style="color:#fff; font-weight:700; font-size:14px;" id="cust-name-pill">Valued Customer</div>
+            <div style="color:#94a3b8; font-size:12px;">Customer Account</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="dashboard-main">
+      <header class="dashboard-header">
+        <div style="display:flex; align-items:center;">
+          <button id="mobile-sidebar-toggle-btn" class="mobile-sidebar-toggle-btn" type="button" aria-label="Toggle navigation menu">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="22" height="22">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+          <div class="dashboard-greeting">
+            <h1 id="dash-greeting-text">Priority Logistics Support &amp; Dispatch Desk</h1>
+            <p id="dash-session-status">24/7 Dedicated Coverage &bull; Salem Control Hub &bull; Direct Officer Assigned</p>
+          </div>
+        </div>
+
+        <div class="dashboard-user-area">
+          <span class="dash-badge-role">Customer Role</span>
+          <div class="user-avatar-badge" id="dash-user-avatar">CU</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Customer session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-body">
+        <!-- SECTION 1: HERO (No Go Back button) -->
+        <section class="dash-section">
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Enterprise Platinum Support Channel</strong>
+              <span style="color:#64748b; font-size:12px;">Average response SLA: under 15 minutes for live transit queries.</span>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <a href="../404.html" class="btn btn-outline btn-sm">Support SLA Terms</a>
+              <a href="#cust-ticket-form-sec" class="btn btn-primary btn-sm">+ Open Priority Ticket</a>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 2: ASSIGNED DISPATCH CONTROLLER & TICKET FORM -->
+        <section class="dash-section" id="cust-ticket-form-sec">
+          <div class="grid-2">
+            <div class="dashboard-panel">
+              <h2 class="panel-title" style="margin-bottom:10px;">Assigned Logistics Dispatch Officer</h2>
+              <p style="font-size:13px; color:#64748b; margin-bottom:16px;">
+                Direct point of contact for customs clearances, route modifications, and demurrage queries.
+              </p>
+              <div style="display:flex; align-items:center; gap:14px; background:#f8fafc; padding:16px; border-radius:var(--radius-md); border:1px solid var(--border-color); margin-bottom:16px;">
+                <div style="width:52px; height:52px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px;">SJ</div>
+                <div>
+                  <strong style="color:var(--primary); font-size:16px; display:block;">Sarah Jenkins</strong>
+                  <span style="color:#64748b; font-size:13px;">Senior Dispatch Controller &bull; Stackly Salem Regional Hub</span>
+                </div>
+              </div>
+              <div style="font-size:13px; color:#475569; display:flex; flex-direction:column; gap:8px;">
+                <div><strong>Direct Phone:</strong> +91 9876543210 (Ext. 402)</div>
+                <div><strong>Emergency Dispatch Line:</strong> +91 9876543211</div>
+                <div><strong>Direct Email:</strong> support@thestackly.com</div>
+                <div><strong>Shift Coverage:</strong> 24/7 Continuous Operations Desk</div>
+              </div>
+            </div>
+
+            <div class="dashboard-panel">
+              <h2 class="panel-title" style="margin-bottom:10px;">Open Priority Support Ticket</h2>
+              <form id="cust-ticket-form" novalidate>
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:12px;">Related Waybill Number</label>
+                  <input type="text" class="form-input" style="padding:8px 12px; font-size:13px;" value="" placeholder="e.g. #STK-88219">
+                </div>
+                <div class="form-group" style="margin-bottom:10px;">
+                  <label class="form-label" style="font-size:12px;">Inquiry Reason</label>
+                  <select class="form-select" style="padding:8px 12px; font-size:13px;">
+                    <option>ETA Confirmation &amp; Doorstep Delivery</option>
+                    <option>Cold Chain Telemetry Log Request</option>
+                    <option>Customs Duty &amp; Invoice Billing</option>
+                    <option>Consignee Address Change</option>
+                    <option>Urgent Route Modification</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom:12px;">
+                  <label class="form-label" style="font-size:12px;">Message Details</label>
+                  <textarea class="form-textarea" rows="3" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm btn-full">
+                  Submit Priority Dispatch Ticket
+                </button>
+                <div id="cust-ticket-alert" class="alert alert-success" style="display:none; margin-top:10px; font-size:12px;">
+                  &check; Ticket submitted! Dispatch agent Sarah Jenkins will update your dashboard shortly.
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: FREQUENT LOGISTICS QUESTIONS -->
+        <section class="dash-section">
+          <div class="dashboard-panel">
+            <h2 class="panel-title" style="margin-bottom:14px;">Frequently Asked Questions &bull; Client Operations</h2>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">How often does GPS telemetry update?</strong>
+                <p style="font-size:13px; color:#64748b;">Vehicle units and air cargo telemetry ping our central server every 60 seconds while moving on highways or in flight corridors.</p>
+              </div>
+              <div style="background:#f8fafc; padding:16px; border-radius:var(--radius-sm); border:1px solid var(--border-color);">
+                <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">Where can I access certified Bills of Lading?</strong>
+                <p style="font-size:13px; color:#64748b;">Go to the Order Details tab, locate your consignment row, and click the "Bill of Lading" or "Air Waybill" button to export certified copies.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/main.js"></script>
+  <script src="../js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const ticketForm = document.getElementById('cust-ticket-form');
+      const ticketAlert = document.getElementById('cust-ticket-alert');
+      if (ticketForm) {
+        ticketForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+          if (ticketAlert) {
+            ticketAlert.style.display = 'block';
+            ticketForm.reset();
+            setTimeout(() => { ticketAlert.style.display = 'none'; }, 4500);
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

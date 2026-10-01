@@ -118,27 +118,27 @@
         </div>
 
         <nav class="dashboard-nav-list">
-          <a href="#customer-overview" class="dashboard-nav-item active">
+          <a href="customer-dashboard.html" class="dashboard-nav-item active">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
             <span class="dashboard-nav-item-text">Client Overview</span>
           </a>
-          <a href="#customer-live-tracking" class="dashboard-nav-item">
+          <a href="customer-tracking.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span class="dashboard-nav-item-text">Live GPS Tracking</span>
           </a>
-          <a href="#customer-order-details" class="dashboard-nav-item">
+          <a href="customer-orders.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             <span class="dashboard-nav-item-text">Order Details</span>
           </a>
-          <a href="#customer-tracker-tool" class="dashboard-nav-item">
+          <a href="customer-waybill.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <span class="dashboard-nav-item-text">Waybill Lookup</span>
           </a>
-          <a href="#customer-addresses" class="dashboard-nav-item">
+          <a href="customer-consignees.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
             <span class="dashboard-nav-item-text">Delivery Consignees</span>
           </a>
-          <a href="#customer-support" class="dashboard-nav-item">
+          <a href="customer-support.html" class="dashboard-nav-item">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
             <span class="dashboard-nav-item-text">Support Desk</span>
           </a>
@@ -146,16 +146,13 @@
       </div>
 
       <div class="sidebar-user-footer">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:12px;">
           <div class="user-avatar-badge" id="cust-avatar-pill">CU</div>
           <div class="user-info-text">
             <div style="color:#fff; font-weight:700; font-size:14px;" id="cust-name-pill">Valued Customer</div>
             <div style="color:#94a3b8; font-size:12px;">Customer Account</div>
           </div>
         </div>
-        <button id="logout-btn" class="btn btn-outline btn-full btn-sm" style="color:#fff; border-color:rgba(255,255,255,0.25);">
-          Sign Out
-        </button>
       </div>
     </aside>
 
@@ -176,13 +173,12 @@
         </div>
 
         <div class="dashboard-user-area">
-          <!-- Role Switcher Button to easily preview both dashboards -->
-          <a href="admin-dashboard.html" class="role-switch-link" title="Switch to Admin Operations Dashboard">
-            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
-            Switch to Admin View
-          </a>
           <span class="dash-badge-role">Customer Role</span>
           <div class="user-avatar-badge" id="dash-user-avatar">CU</div>
+          <button id="logout-btn" class="logout-top-btn" title="Sign out of Customer session">
+            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="15" height="15"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+            Sign Out
+          </button>
         </div>
       </header>
 
@@ -190,16 +186,9 @@
         <!-- SECTION 1: CUSTOMER WELCOME & RECOVERY CONTROLS -->
         <section class="dash-section" id="customer-overview">
           <div style="display:flex; justify-content:space-between; align-items:center; background:#fff; padding:18px 24px; border-radius:var(--radius-md); border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
-            <div style="display:flex; align-items:center; gap:16px;">
-              <!-- Functional Go Back Button as requested -->
-              <button class="btn-back" data-action="go-back">
-                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Go Back
-              </button>
-              <div>
-                <strong style="color:var(--primary); font-size:15px; display:block;">Account Ref: #STK-CUST-7729</strong>
-                <span style="color:#64748b; font-size:12px;">Consignee Tier: Enterprise Platinum &bull; Dispatch Hub: Salem Regional Hub (TN)</span>
-              </div>
+            <div>
+              <strong style="color:var(--primary); font-size:15px; display:block;">Account Ref: #STK-CUST-7729</strong>
+              <span style="color:#64748b; font-size:12px;">Consignee Tier: Enterprise Platinum &bull; Dispatch Hub: Salem Regional Hub (TN)</span>
             </div>
             <div style="display:flex; gap:10px;">
               <a href="../404.html" class="btn btn-outline btn-sm">Download Monthly Statement</a>
@@ -570,7 +559,7 @@
     document.addEventListener('DOMContentLoaded', () => {
       const user = window.StacklyAuth ? window.StacklyAuth.getCurrentUser() : null;
       if (!user) {
-        window.location.href = 'sign-in.html';
+        window.location.replace('sign-in.html');
         return;
       }
 

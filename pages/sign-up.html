@@ -6,8 +6,110 @@
   <title>Create Account - Stackly Logistics &amp; Transportation Portal</title>
   <meta name="description" content="Register for Stackly Global Logistics. Gain instant access to live waybill tracking, air & ocean charter dispatch, and Salem terminal logistics.">
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* Strictly Fixed viewport layout for sign-up */
+    html, body {
+      height: 100vh;
+      max-height: 100vh;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+
+    .auth-page-fixed {
+      height: 100vh;
+      max-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+
+    .auth-form-fixed-pane {
+      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      padding: 16px 36px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: #ffffff;
+      box-sizing: border-box;
+    }
+
+    .auth-form-fixed-pane::-webkit-scrollbar {
+      width: 5px;
+    }
+    .auth-form-fixed-pane::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .auth-compact-box {
+      max-width: 500px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .form-group-compact {
+      margin-bottom: 11px;
+    }
+    .form-group-compact .form-label {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #0b1a30;
+      margin-bottom: 4px;
+      display: block;
+    }
+    .form-group-compact .form-input,
+    .form-group-compact .form-select {
+      height: 40px;
+      padding: 8px 12px;
+      font-size: 13.5px;
+      border-radius: 6px;
+    }
+
+    .role-card-compact {
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.25s ease;
+    }
+    .role-card-compact.selected {
+      border-color: var(--accent);
+      background: #fff7ed;
+    }
+
+    @media (max-width: 900px) {
+      html, body {
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+      .auth-page-fixed {
+        grid-template-columns: 1fr;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+      }
+      .auth-sidebar-hero {
+        display: none;
+      }
+      .auth-form-fixed-pane {
+        height: auto;
+        min-height: 100vh;
+        padding: 24px 18px;
+        overflow-y: visible;
+      }
+    }
+  </style>
 </head>
-<body style="background-color: #fff;">
+<body>
   <!-- Pure CSS Full Viewport Loader -->
   <div id="site-loader" aria-live="polite">
     <div class="loader-brand">
@@ -17,8 +119,8 @@
     <div class="loader-text">Preparing Registration Terminal...</div>
   </div>
 
-  <!-- AUTH WRAPPER (NO NAVBAR AS REQUIRED) -->
-  <div class="auth-page-wrapper">
+  <!-- AUTH FIXED LAYOUT -->
+  <div class="auth-page-fixed">
     <!-- Left Hero Banner -->
     <div class="auth-sidebar-hero">
       <div class="auth-header-minimal" style="display:flex; justify-content:space-between; align-items:center;">
@@ -30,193 +132,177 @@
         </a>
       </div>
 
-      <div class="auth-hero-content">
+      <div class="auth-hero-content" style="margin-block:auto;">
         <h2>Join <span>5,000+</span> Shippers &amp; Fleet Operators Worldwide</h2>
-        <p>
-          Whether shipping time-critical cold-chain pharmaceuticals or commanding regional intermodal dispatch, Stackly equips your enterprise with end-to-end logistics visibility.
+        <p style="font-size:14.5px; line-height:1.6; color:#cbd5e1; margin-bottom:20px;">
+          Whether shipping time-critical cold-chain cargo or commanding regional intermodal dispatch, Stackly equips your enterprise with sub-minute telemetry.
         </p>
 
-        <div class="auth-features-list">
-          <div class="auth-feature-item">
+        <div class="auth-features-list" style="gap:10px;">
+          <div class="auth-feature-item" style="font-size:13.5px;">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span>Live telemetry with sub-minute sensor sync across 45 ports</span>
           </div>
-          <div class="auth-feature-item">
+          <div class="auth-feature-item" style="font-size:13.5px;">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span>Automated commercial invoicing &amp; export declaration filing</span>
           </div>
-          <div class="auth-feature-item">
+          <div class="auth-feature-item" style="font-size:13.5px;">
             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             <span>Priority cross-dock bay access at Salem Central Terminal</span>
           </div>
         </div>
       </div>
 
-      <div class="auth-testimonial-pill">
-        <p style="font-style:italic; margin-bottom:6px;">"Stackly cut our freight transit dwell by 38% within the first quarter."</p>
-        <span style="color:#ff833e; font-weight:700;">&bull; Supply Chain Head, Southland Industrial</span>
+      <div class="auth-testimonial-pill" style="padding:12px 16px; margin-top:20px;">
+        <p style="font-style:italic; margin-bottom:4px; font-size:12.5px;">"Stackly cut our freight transit dwell by 38% within the first quarter."</p>
+        <span style="color:#ff833e; font-weight:700; font-size:12px;">&bull; Supply Chain Head, Southland Industrial</span>
       </div>
     </div>
 
-    <!-- Right Sign Up Form -->
-    <div class="auth-form-side" style="padding-block:40px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-        <a href="../index.html" class="back-to-home-btn" style="display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:var(--primary); text-decoration:none; padding:6px 12px; background:#f1f5f9; border-radius:6px; border:1px solid var(--border-color); transition:all 0.2s ease;">
-          <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-          </svg>
-          Back to Home
-        </a>
-        <span style="font-size:13px; color:#64748b;">Already have an account? <a href="sign-in.html" style="color:var(--accent); font-weight:700;">Sign In</a></span>
-      </div>
-
-      <h1 class="auth-form-title">Create Your Account</h1>
-      <p class="auth-form-subtitle">Choose your operational role and register to access the logistics dashboard.</p>
-
-      <!-- Success Alert Banner -->
-      <div id="signup-success-alert" class="alert alert-success" style="display:none;" role="alert">
-        &check; Account created successfully! Redirecting you to Sign In...
-      </div>
-
-      <!-- Sign Up Form (Strict Validation) -->
-      <form id="signup-form" novalidate>
-        <!-- Form-styled Role Selection Field -->
-        <div class="form-group" style="margin-bottom:20px;">
-          <label class="form-label" for="signup-role">Register As / Account Role <span class="required-star">*</span></label>
-          <div class="form-role-group" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px;">
-            <label class="form-role-card role-card-customer" style="border:2px solid var(--accent); border-radius:8px; padding:12px 14px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; background:#fff7ed; transition:all 0.2s ease;">
-              <input
-                type="radio"
-                name="signup_role_radio"
-                value="customer"
-                checked
-                style="accent-color:var(--accent); width:18px; height:18px; margin-top:2px; cursor:pointer;"
-              />
-              <div>
-                <strong style="display:block; font-size:14px; color:#0b1a30; font-weight:700;">Customer (Shipper)</strong>
-                <span style="font-size:12px; color:#64748b; line-height:1.3; display:block; margin-top:2px;">Consignee &amp; cargo waybill tracking</span>
-              </div>
-            </label>
-
-            <label class="form-role-card role-card-admin" style="border:1px solid #cbd5e1; border-radius:8px; padding:12px 14px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; background:#fff; transition:all 0.2s ease;">
-              <input
-                type="radio"
-                name="signup_role_radio"
-                value="admin"
-                style="accent-color:var(--accent); width:18px; height:18px; margin-top:2px; cursor:pointer;"
-              />
-              <div>
-                <strong style="display:block; font-size:14px; color:#0b1a30; font-weight:700;">Admin (Operations)</strong>
-                <span style="font-size:12px; color:#64748b; line-height:1.3; display:block; margin-top:2px;">Dispatch, telematics &amp; hub operations</span>
-              </div>
-            </label>
-          </div>
-          <input type="hidden" id="signup-role" value="customer">
+    <!-- Right Sign Up Form Pane -->
+    <div class="auth-form-fixed-pane">
+      <div class="auth-compact-box">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <a href="../index.html" class="back-to-home-btn" style="display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; color:var(--primary); text-decoration:none; padding:5px 10px; background:#f1f5f9; border-radius:6px; border:1px solid var(--border-color); transition:all 0.2s ease;">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+            Back to Home
+          </a>
+          <span style="font-size:13px; color:#64748b;">
+            Already have an account? <a href="sign-in.html" style="color:var(--accent); font-weight:700;">Sign In</a>
+          </span>
         </div>
 
-        <!-- Name Row -->
-        <div class="grid-2" style="gap:14px; margin-bottom:14px;">
-          <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" for="signup-firstname">First Name <span class="required-star">*</span></label>
-            <input type="text" id="signup-firstname" class="form-input" placeholder="e.g. David" required>
-            <div id="signup-firstname-error" class="form-error-msg" role="alert"></div>
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" for="signup-lastname">Last Name <span class="required-star">*</span></label>
-            <input type="text" id="signup-lastname" class="form-input" placeholder="e.g. Vance" required>
-            <div id="signup-lastname-error" class="form-error-msg" role="alert"></div>
-          </div>
+        <h1 style="font-size:22px; font-weight:800; color:#0b1a30; margin-bottom:2px;">Create Your Account</h1>
+        <p style="font-size:13px; color:#64748b; margin-bottom:14px;">Register below for your role-specific logistics desk.</p>
+
+        <!-- Success Alert Banner -->
+        <div id="signup-success-alert" class="alert alert-success" style="display:none; padding:10px 14px; font-size:13px; margin-bottom:12px;" role="alert">
+          &check; Account created successfully! Redirecting you to Sign In...
         </div>
 
-        <!-- Username & Email -->
-        <div class="grid-2" style="gap:14px; margin-bottom:14px;">
-          <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" for="signup-username">Username <span class="optional-tag">(Optional)</span></label>
-            <input type="text" id="signup-username" class="form-input" placeholder="e.g. david_vance">
-            <div id="signup-username-error" class="form-error-msg" role="alert"></div>
-          </div>
-          <div class="form-group" style="margin-bottom:0;">
-            <label class="form-label" for="signup-email">Work Email <span class="required-star">*</span></label>
-            <input type="email" id="signup-email" class="form-input" placeholder="david@company.com" required>
-            <div id="signup-email-error" class="form-error-msg" role="alert"></div>
-          </div>
-        </div>
+        <!-- Sign Up Form (Strict Validation) -->
+        <form id="signup-form" novalidate>
+          <!-- Form-styled Role Selection Field -->
+          <div class="form-group-compact">
+            <label class="form-label" for="signup-role">Register As / Account Role <span class="required-star">*</span></label>
+            <div class="form-role-group" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+              <label class="form-role-card role-card-customer role-card-compact selected" style="border:1.5px solid var(--accent); background:#fff7ed;">
+                <input
+                  type="radio"
+                  name="signup_role_radio"
+                  value="customer"
+                  checked
+                  style="accent-color:var(--accent); width:16px; height:16px; cursor:pointer;"
+                />
+                <div>
+                  <strong style="display:block; font-size:13px; color:#0b1a30; font-weight:700;">Customer</strong>
+                  <span style="font-size:11px; color:#64748b; display:block;">Consignee &amp; tracking</span>
+                </div>
+              </label>
 
-        <!-- Phone with Country Code -->
-        <div class="form-group">
-          <label class="form-label" for="signup-phone">Mobile / Contact Number <span class="required-star">*</span></label>
-          <div class="phone-input-group">
-            <select class="form-select" id="signup-countrycode" aria-label="Select Country Code">
-              <option value="+91" selected>India (+91)</option>
-              <option value="+1">USA / Canada (+1)</option>
-              <option value="+44">UK (+44)</option>
-              <option value="+971">UAE (+971)</option>
-              <option value="+49">Germany (+49)</option>
-              <option value="+65">Singapore (+65)</option>
-            </select>
-            <input type="tel" id="signup-phone" class="form-input" placeholder="9876543210" required>
-          </div>
-          <div id="signup-phone-error" class="form-error-msg" role="alert"></div>
-        </div>
-
-        <!-- Password & Strength Meter -->
-        <div class="form-group">
-          <label class="form-label" for="signup-password">Create Password <span class="required-star">*</span></label>
-          <div class="input-wrapper">
-            <input type="password" id="signup-password" class="form-input" placeholder="Min. 8 characters with mixed case, number & symbol" required autocomplete="new-password">
-            <button type="button" class="password-toggle-btn" id="toggle-signup-password-btn" aria-label="Toggle password visibility">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </button>
-          </div>
-          <div class="password-strength-container">
-            <div class="strength-bar-track">
-              <div class="strength-bar-fill" id="password-strength-fill"></div>
+              <label class="form-role-card role-card-admin role-card-compact" style="border:1.5px solid #cbd5e1; background:#fff;">
+                <input
+                  type="radio"
+                  name="signup_role_radio"
+                  value="admin"
+                  style="accent-color:var(--accent); width:16px; height:16px; cursor:pointer;"
+                />
+                <div>
+                  <strong style="display:block; font-size:13px; color:#0b1a30; font-weight:700;">Admin</strong>
+                  <span style="font-size:11px; color:#64748b; display:block;">Dispatch &amp; telemetry</span>
+                </div>
+              </label>
             </div>
-            <div class="strength-text" id="password-strength-text">Password strength indicator</div>
+            <input type="hidden" id="signup-role" value="customer">
           </div>
-          <div id="signup-password-error" class="form-error-msg" role="alert"></div>
+
+          <!-- Name Row (First & Last Name, Alphabets Only) -->
+          <div class="grid-2" style="gap:10px; margin-bottom:11px;">
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-firstname">First Name <span class="required-star">*</span></label>
+              <input type="text" id="signup-firstname" class="form-input" placeholder="e.g. David" required autocomplete="given-name">
+              <div id="signup-firstname-error" class="form-error-msg" role="alert"></div>
+            </div>
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-lastname">Last Name <span class="required-star">*</span></label>
+              <input type="text" id="signup-lastname" class="form-input" placeholder="e.g. Vance" required autocomplete="family-name">
+              <div id="signup-lastname-error" class="form-error-msg" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Contact Row (Email & 10-Digit Mobile) -->
+          <div class="grid-2" style="gap:10px; margin-bottom:11px;">
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-email">Work Email <span class="required-star">*</span></label>
+              <input type="email" id="signup-email" class="form-input" placeholder="name@company.com" required autocomplete="email">
+              <div id="signup-email-error" class="form-error-msg" role="alert"></div>
+            </div>
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-phone">Mobile (10 Digits) <span class="required-star">*</span></label>
+              <input type="tel" id="signup-phone" class="form-input" placeholder="9876543210" maxlength="10" required autocomplete="tel">
+              <div id="signup-phone-error" class="form-error-msg" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Password Row (Password & Confirm Password) -->
+          <div class="grid-2" style="gap:10px; margin-bottom:11px;">
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-password">Password <span class="required-star">*</span></label>
+              <div class="input-wrapper">
+                <input type="password" id="signup-password" class="form-input" placeholder="Min 8 chars" required autocomplete="new-password">
+                <button type="button" class="password-toggle-btn" id="toggle-signup-password-btn" aria-label="Toggle password visibility">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </button>
+              </div>
+              <div class="password-strength-container" style="margin-top:4px;">
+                <div class="strength-bar-track" style="height:3px;">
+                  <div class="strength-bar-fill" id="password-strength-fill"></div>
+                </div>
+                <div class="strength-text" id="password-strength-text" style="font-size:11px; margin-top:2px;">Strength indicator</div>
+              </div>
+              <div id="signup-password-error" class="form-error-msg" role="alert"></div>
+            </div>
+
+            <div class="form-group-compact" style="margin-bottom:0;">
+              <label class="form-label" for="signup-confirmpassword">Confirm Password <span class="required-star">*</span></label>
+              <input type="password" id="signup-confirmpassword" class="form-input" placeholder="Re-type password" required autocomplete="new-password">
+              <div id="signup-confirmpassword-error" class="form-error-msg" role="alert"></div>
+            </div>
+          </div>
+
+          <!-- Address Row -->
+          <div class="form-group-compact">
+            <label class="form-label" for="signup-address">Shipping / Office Address <span class="optional-tag" style="font-size:11px; color:#94a3b8;">(Optional)</span></label>
+            <input type="text" id="signup-address" class="form-input" placeholder="e.g. MMR Complex, Chinna Thirupathi, Salem, TN">
+            <div id="signup-address-error" class="form-error-msg" role="alert"></div>
+          </div>
+
+          <!-- Terms Checkbox -->
+          <div style="margin-bottom:12px;">
+            <label class="checkbox-group" for="signup-terms" style="font-size:12px; display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="signup-terms" required style="width:15px; height:15px; accent-color:var(--accent);">
+              <span>I agree to the <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Terms</a> and <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Privacy Policy</a>.</span>
+            </label>
+            <div id="signup-terms-error" class="form-error-msg" role="alert"></div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn btn-primary btn-full" style="height:44px; font-size:14px; font-weight:700;">
+            Complete Registration &rarr;
+          </button>
+        </form>
+
+        <div class="auth-divider" style="margin-block:12px; font-size:11px;">Or sign up with enterprise federated login</div>
+
+        <!-- Social Register (Redirects to 404) -->
+        <div class="social-login-grid" style="gap:8px; margin-bottom:0;">
+          <a href="../404.html" class="social-btn" style="padding:7px; font-size:12px;">Google</a>
+          <a href="../404.html" class="social-btn" style="padding:7px; font-size:12px;">Microsoft</a>
+          <a href="../404.html" class="social-btn" style="padding:7px; font-size:12px;">LinkedIn</a>
         </div>
-
-        <!-- Confirm Password -->
-        <div class="form-group">
-          <label class="form-label" for="signup-confirmpassword">Confirm Password <span class="required-star">*</span></label>
-          <input type="password" id="signup-confirmpassword" class="form-input" placeholder="Re-type your password" required autocomplete="new-password">
-          <div id="signup-confirmpassword-error" class="form-error-msg" role="alert"></div>
-        </div>
-
-        <!-- Address -->
-        <div class="form-group">
-          <label class="form-label" for="signup-address">Shipping / Office Address <span class="optional-tag">(Optional)</span></label>
-          <input type="text" id="signup-address" class="form-input" placeholder="e.g. MMR Complex, Chinna Thirupathi, Salem, TN">
-          <div id="signup-address-error" class="form-error-msg" role="alert"></div>
-        </div>
-
-        <!-- Terms and Conditions Checkbox (Mandatory, Links to 404) -->
-        <label class="checkbox-group" for="signup-terms">
-          <input type="checkbox" id="signup-terms" required>
-          <span>I agree to the <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Terms of Use</a> and <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Privacy Policy</a>.</span>
-        </label>
-        <div id="signup-terms-error" class="form-error-msg" style="margin-top:-10px; margin-bottom:14px;" role="alert"></div>
-
-        <!-- Newsletter Opt-in Checkbox (Optional, Link to 404) -->
-        <label class="checkbox-group" for="signup-newsletter">
-          <input type="checkbox" id="signup-newsletter">
-          <span>I would like to receive freight alerts, updates, and schedule announcements. <a href="../404.html" style="color:var(--accent); text-decoration:underline;">Read More</a></span>
-        </label>
-
-        <!-- Submit Button -->
-        <button type="submit" class="btn btn-primary btn-full btn-lg">
-          Complete Registration &rarr;
-        </button>
-      </form>
-
-      <div class="auth-divider">Or sign up with enterprise federated login</div>
-
-      <!-- Social Register (Redirects to 404 as requested) -->
-      <div class="social-login-grid">
-        <a href="../404.html" class="social-btn">Google</a>
-        <a href="../404.html" class="social-btn">Microsoft</a>
-        <a href="../404.html" class="social-btn">LinkedIn</a>
       </div>
     </div>
   </div>

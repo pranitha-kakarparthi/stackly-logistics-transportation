@@ -146,15 +146,6 @@
             <button type="submit" id="tracking-submit-btn" class="btn btn-primary" style="height:50px; padding-inline:28px; font-size:15px; font-weight:700;">Locate Cargo Now &rarr;</button>
           </form>
           <div id="tracking-input-error" class="form-error-msg" role="alert" style="margin-top:8px;"></div>
-
-          <!-- Quick Query Preset Chips -->
-          <div style="margin-top:18px; padding-top:16px; border-top:1px solid #f1f5f9; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-            <span style="font-size:12px; color:#94a3b8; font-weight:600; text-transform:uppercase;">Quick Presets:</span>
-            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="STK-88219" style="font-size:12px; padding:4px 10px; border-radius:6px;">Air: STK-88219</button>
-            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="MSCU-992144" style="font-size:12px; padding:4px 10px; border-radius:6px;">Ocean: MSCU-992144</button>
-            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="RDF-44109" style="font-size:12px; padding:4px 10px; border-radius:6px;">Road: RDF-44109</button>
-            <button type="button" class="btn btn-sm btn-outline tracking-sample-btn" data-code="CBE-55210" style="font-size:12px; padding:4px 10px; border-radius:6px;">Customs: CBE-55210</button>
-          </div>
         </div>
       </div>
     </section>
@@ -522,17 +513,5 @@
 
   <script src="../js/main.js"></script>
   <script src="../js/auth.js"></script>
-  <script>
-    // Quick preset click handler to populate input
-    document.querySelectorAll('.tracking-sample-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const input = document.getElementById('tracking-input');
-        if (input) {
-          input.value = btn.getAttribute('data-code');
-          input.focus();
-        }
-      });
-    });
-  </script>
 </body>
 </html>
