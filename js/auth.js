@@ -399,7 +399,10 @@
       }
 
       if (!isValid) {
-        if (firstInvalid) firstInvalid.focus();
+        if (firstInvalid) {
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         return;
       }
 
@@ -697,7 +700,10 @@
       }
 
       if (!isValid) {
-        if (firstInvalid) firstInvalid.focus();
+        if (firstInvalid) {
+          firstInvalid.focus();
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
         return;
       }
 

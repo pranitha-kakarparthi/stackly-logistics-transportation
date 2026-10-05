@@ -46,7 +46,11 @@
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --transition: all 0.3s ease-in-out;
-  --transition-spring: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-spring-soft: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-spring: transform 0.32s var(--ease-spring), box-shadow 0.32s var(--ease-spring);
+  --transition-card: transform 0.38s var(--ease-spring-soft), box-shadow 0.38s var(--ease-spring-soft), border-color 0.25s ease;
 }
 
 /* CSS Reset & Base */
@@ -60,6 +64,7 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -538,11 +543,16 @@ button, input, select, textarea {
   padding: 11px 22px;
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-spring), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
   border: 1px solid transparent;
   text-align: center;
   white-space: nowrap;
   user-select: none;
+  will-change: transform;
+}
+
+.btn:hover {
+  transform: translateY(-2px) scale(1.025);
 }
 
 .btn:active {
@@ -841,15 +851,16 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   padding: 30px 26px;
   border: 1px solid var(--border-color);
-  transition: var(--transition);
+  transition: var(--transition-card);
   position: relative;
   display: flex;
   flex-direction: column;
+  will-change: transform, box-shadow;
 }
 
 .service-card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 16px 32px -4px rgba(11, 26, 48, 0.12), 0 6px 16px -2px rgba(11, 26, 48, 0.06);
   border-color: rgba(255, 94, 21, 0.4);
 }
 
@@ -904,12 +915,14 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
-  transition: var(--transition);
+  transition: var(--transition-card);
+  will-change: transform, box-shadow;
 }
 
 .feature-card:hover {
-  border-color: var(--accent);
-  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 94, 21, 0.4);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 16px 32px -4px rgba(11, 26, 48, 0.12), 0 6px 16px -2px rgba(11, 26, 48, 0.06);
 }
 
 /* Testimonial Card */
@@ -922,6 +935,14 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: var(--transition-card);
+  will-change: transform, box-shadow;
+}
+
+.testimonial-card:hover {
+  border-color: rgba(255, 94, 21, 0.3);
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 16px 32px -4px rgba(11, 26, 48, 0.12), 0 6px 16px -2px rgba(11, 26, 48, 0.06);
 }
 
 .testimonial-stars {
@@ -1162,11 +1183,16 @@ button, input, select, textarea {
   background: linear-gradient(135deg, rgba(11, 26, 48, 0.94) 0%, rgba(22, 42, 77, 0.95) 100%),
               url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40"><path d="M0 0h20v20H0zm20 20h20v20H20z" fill="%23ffffff" fill-opacity="0.03"/></svg>');
   color: #fff;
-  padding: 50px 60px;
+  padding: 32px 36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: relative;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .auth-header-minimal {
@@ -1252,29 +1278,44 @@ button, input, select, textarea {
   height: 100vh;
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.05fr 1fr;
   overflow: hidden;
   background-color: var(--bg-surface);
 }
 
 .auth-form-fixed-pane {
   height: 100vh;
+  max-height: 100vh;
   overflow-y: auto;
-  padding: 24px 40px;
+  overflow-x: hidden;
+  padding: 24px 36px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   background: #ffffff;
   box-sizing: border-box;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .auth-form-fixed-pane::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .auth-form-fixed-pane::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 4px;
+}
+
+.auth-compact-box {
+  max-width: 480px;
+  width: 100%;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: 12px;
+  padding-bottom: 28px;
+  box-sizing: border-box;
 }
 
 .auth-form-title {
@@ -1972,7 +2013,7 @@ button, input, select, textarea {
 }
 
 /* ==========================================================================
-   PAGE LOAD: HERO STAGGERED FADE-IN & SLIDE-UP ANIMATIONS
+   PAGE LOAD: HERO STAGGERED FADE-IN & SLIDE-UP ANIMATIONS (SPRING CURVE)
    ========================================================================== */
 @keyframes heroFadeSlideUp {
   0% {
@@ -1986,66 +2027,81 @@ button, input, select, textarea {
 }
 
 .hero-animate-1 {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.10s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-animate-2 {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.25s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-animate-3 {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.40s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-animate-4 {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.55s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
-/* Automatic staggered hero loading across all pages */
+.hero-animate-5 {
+  animation: heroFadeSlideUp 0.75s var(--ease-spring-soft) 0.70s forwards;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Automatic staggered hero loading across all pages (100ms - 200ms increments) */
 .hero-home .hero-tag,
 .hero-subpage .subpage-nav-bar {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.08s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.10s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-home .hero-title,
 .hero-subpage h1 {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.22s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.25s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-home .hero-desc,
 .hero-subpage p {
-  animation: heroFadeSlideUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.36s forwards;
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.40s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 .hero-home .hero-actions,
-.hero-home .hero-cta-group,
-.hero-home .hero-trust-badges,
-.hero-home .hero-tracker-card {
-  animation: heroFadeSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+.hero-home .hero-cta-group {
+  animation: heroFadeSlideUp 0.7s var(--ease-spring-soft) 0.55s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
+.hero-home .hero-trust-badges,
+.hero-home .hero-tracker-card,
 .hero-home .hero-visual-card,
 .hero-home .hero-image-wrap {
-  animation: heroFadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+  animation: heroFadeSlideUp 0.75s var(--ease-spring-soft) 0.70s forwards;
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 /* ==========================================================================
-   SCROLL ENGAGEMENT: SCROLL-DRIVEN & REVEAL ANIMATIONS
+   SCROLL ENGAGEMENT: SCROLL REVEAL & BIDIRECTIONAL ENTRANCE
    ========================================================================== */
 .reveal-on-scroll {
   opacity: 0;
   transform: translateY(28px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
+  transition: opacity 0.65s var(--ease-spring-soft), transform 0.65s var(--ease-spring-soft);
+  will-change: transform, opacity;
 }
 
 .reveal-on-scroll.in-view {
@@ -2053,39 +2109,94 @@ button, input, select, textarea {
   transform: translateY(0);
 }
 
-/* Modern CSS Scroll-Driven Animations via Baseline view() */
-@supports ((animation-timeline: view()) and (animation-range: entry)) {
-  .reveal-on-scroll {
-    animation: scrollFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-timeline: view();
-    animation-range: entry 8% entry 38%;
-  }
-
-  .parallax-subtle {
-    animation: parallaxScroll linear both;
-    animation-timeline: view();
-    animation-range: entry 0% exit 100%;
-  }
+/* Staggered Entrance Delays (100ms - 200ms increments) for Cards, Lists & Grids */
+.grid-2 > .reveal-on-scroll:nth-child(1),
+.grid-3 > .reveal-on-scroll:nth-child(1),
+.grid-4 > .reveal-on-scroll:nth-child(1),
+.kpi-grid > .reveal-on-scroll:nth-child(1),
+.dash-card:nth-child(1),
+.timeline-event-item:nth-child(1),
+.faq-accordion-item:nth-child(1),
+.alert-feed-item:nth-child(1),
+.address-card:nth-child(1) {
+  transition-delay: 0.08s;
 }
 
-@keyframes scrollFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(32px) scale(0.985);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+.grid-2 > .reveal-on-scroll:nth-child(2),
+.grid-3 > .reveal-on-scroll:nth-child(2),
+.grid-4 > .reveal-on-scroll:nth-child(2),
+.kpi-grid > .reveal-on-scroll:nth-child(2),
+.dash-card:nth-child(2),
+.timeline-event-item:nth-child(2),
+.faq-accordion-item:nth-child(2),
+.alert-feed-item:nth-child(2),
+.address-card:nth-child(2) {
+  transition-delay: 0.22s;
 }
 
-@keyframes parallaxScroll {
-  from {
-    transform: translateY(18px);
-  }
-  to {
-    transform: translateY(-18px);
-  }
+.grid-2 > .reveal-on-scroll:nth-child(3),
+.grid-3 > .reveal-on-scroll:nth-child(3),
+.grid-4 > .reveal-on-scroll:nth-child(3),
+.kpi-grid > .reveal-on-scroll:nth-child(3),
+.dash-card:nth-child(3),
+.timeline-event-item:nth-child(3),
+.faq-accordion-item:nth-child(3),
+.alert-feed-item:nth-child(3),
+.address-card:nth-child(3) {
+  transition-delay: 0.36s;
+}
+
+.grid-2 > .reveal-on-scroll:nth-child(4),
+.grid-3 > .reveal-on-scroll:nth-child(4),
+.grid-4 > .reveal-on-scroll:nth-child(4),
+.kpi-grid > .reveal-on-scroll:nth-child(4),
+.dash-card:nth-child(4),
+.timeline-event-item:nth-child(4),
+.faq-accordion-item:nth-child(4),
+.alert-feed-item:nth-child(4) {
+  transition-delay: 0.50s;
+}
+
+.grid-2 > .reveal-on-scroll:nth-child(5),
+.grid-3 > .reveal-on-scroll:nth-child(5),
+.grid-4 > .reveal-on-scroll:nth-child(5),
+.kpi-grid > .reveal-on-scroll:nth-child(5),
+.dash-card:nth-child(5),
+.timeline-event-item:nth-child(5),
+.faq-accordion-item:nth-child(5),
+.alert-feed-item:nth-child(5) {
+  transition-delay: 0.64s;
+}
+
+.grid-2 > .reveal-on-scroll:nth-child(6),
+.grid-3 > .reveal-on-scroll:nth-child(6),
+.grid-4 > .reveal-on-scroll:nth-child(6),
+.kpi-grid > .reveal-on-scroll:nth-child(6),
+.dash-card:nth-child(6),
+.timeline-event-item:nth-child(6),
+.faq-accordion-item:nth-child(6),
+.alert-feed-item:nth-child(6) {
+  transition-delay: 0.78s;
+}
+
+/* Reset transition-delay immediately on hover/active so interactions are instantaneous */
+.reveal-on-scroll:hover,
+.reveal-on-scroll:active,
+.reveal-on-scroll:focus-within,
+.service-card:hover,
+.feature-card:hover,
+.pricing-card:hover,
+.kpi-card:hover,
+.dash-card:hover,
+.address-card:hover,
+.testimonial-card:hover,
+.fleet-card:hover,
+.driver-card:hover,
+.timeline-event-item:hover,
+.faq-accordion-item:hover,
+.btn:hover,
+.btn:active {
+  transition-delay: 0s !important;
 }
 
 /* ==========================================================================
@@ -2096,40 +2207,49 @@ button,
 input,
 select,
 textarea,
-.btn,
 .social-icon-btn,
 .tracker-tab-btn,
 .service-tab-btn,
 .filter-btn,
-.feature-card,
-.service-card,
-.pricing-card,
-.kpi-card,
-.dash-card,
 .status-badge,
 .role-badge,
 .mobile-link,
 .dropdown-item {
-  transition: all 0.3s ease-in-out;
+  transition: all 0.25s ease;
 }
 
-/* Card hover elevations */
+/* Card subtle shadow elevation & scale on hover */
 .feature-card,
 .service-card,
 .pricing-card,
 .kpi-card,
 .address-card,
-.dash-card {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease-in-out;
+.dash-card,
+.testimonial-card,
+.hero-tracker-card,
+.fleet-card,
+.driver-card {
+  transition: transform 0.38s var(--ease-spring-soft), box-shadow 0.38s var(--ease-spring-soft), border-color 0.25s ease;
+  will-change: transform, box-shadow;
 }
 
 .feature-card:hover,
 .service-card:hover,
 .pricing-card:hover,
-.address-card:hover {
-  transform: translateY(-5px) scale(1.01);
-  box-shadow: var(--shadow-lg);
-  border-color: #cbd5e1;
+.address-card:hover,
+.dash-card:hover,
+.testimonial-card:hover,
+.fleet-card:hover,
+.driver-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 16px 32px -4px rgba(11, 26, 48, 0.12), 0 6px 16px -2px rgba(11, 26, 48, 0.06);
+  border-color: rgba(255, 94, 21, 0.35);
+}
+
+.kpi-card:hover {
+  transform: translateY(-4px) scale(1.015);
+  box-shadow: 0 14px 28px -4px rgba(11, 26, 48, 0.10);
+  border-color: rgba(255, 94, 21, 0.35);
 }
 
 .social-icon-btn {
@@ -2142,21 +2262,22 @@ textarea,
   background-color: rgba(255, 255, 255, 0.08);
   color: var(--text-light);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease-spring), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  will-change: transform;
 }
 
 .social-icon-btn:hover {
   background-color: var(--accent);
   color: #fff;
   border-color: var(--accent);
-  transform: translateY(-3px) scale(1.12);
+  transform: translateY(-3px) scale(1.1);
   box-shadow: 0 4px 14px rgba(255, 94, 21, 0.4);
 }
 
 .form-input,
 .form-textarea,
 .form-select {
-  transition: all 0.3s ease-in-out;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .form-input:focus,
@@ -2167,11 +2288,24 @@ textarea,
   transform: translateY(-1px);
 }
 
+/* ==========================================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+
   .hero-animate-1,
   .hero-animate-2,
   .hero-animate-3,
   .hero-animate-4,
+  .hero-animate-5,
   .hero-home .hero-tag,
   .hero-subpage .subpage-nav-bar,
   .hero-home .hero-title,
@@ -2179,14 +2313,18 @@ textarea,
   .hero-home .hero-desc,
   .hero-subpage p,
   .hero-home .hero-actions,
+  .hero-home .hero-cta-group,
+  .hero-home .hero-trust-badges,
   .hero-home .hero-tracker-card,
   .hero-home .hero-visual-card,
+  .hero-home .hero-image-wrap,
   .reveal-on-scroll,
   .parallax-subtle {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
+    will-change: auto !important;
   }
 }
 
@@ -2409,9 +2547,28 @@ textarea,
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .grid-3 { grid-template-columns: repeat(2, 1fr); }
   .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
   .auth-page-wrapper { grid-template-columns: 1fr; }
-  .auth-sidebar-hero { display: none; }
+  .auth-sidebar-hero { display: none !important; }
+  .auth-page-fixed {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: 100vh !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  .auth-form-fixed-pane {
+    height: auto !important;
+    min-height: 100vh !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+    padding: 28px 20px 48px 20px !important;
+    justify-content: flex-start !important;
+  }
+  .auth-compact-box {
+    margin: 0 auto !important;
+    padding: 0 0 28px 0 !important;
+    max-width: 520px !important;
+  }
   
   /* Dashboard tablet/mobile layout */
   .dashboard-layout,
@@ -2451,8 +2608,21 @@ textarea,
 }
 
 @media (max-width: 768px) {
+  .nav-wrapper {
+    height: 64px;
+  }
+  
   .nav-menu { display: none; }
-  .hamburger-btn { display: block; }
+  .hamburger-btn { 
+    display: inline-flex !important; 
+    align-items: center; 
+    justify-content: center;
+    padding: 6px;
+  }
+  .hamburger-btn svg {
+    width: 26px;
+    height: 26px;
+  }
   
   /* Requirement 6: Ensure text is visible for sign-in button on small screens */
   .nav-actions .btn-secondary {
@@ -2475,9 +2645,7 @@ textarea,
   }
   
   .nav-actions .btn-primary {
-    font-size: 13px !important;
-    padding: 7px 14px !important;
-    white-space: nowrap !important;
+    display: none !important;
   }
   
   .nav-actions {
@@ -2681,23 +2849,22 @@ textarea,
     padding-inline: 12px;
   }
   
-  .navbar-container {
-    padding: 8px 12px;
+  .nav-wrapper {
+    padding: 0;
     gap: 8px;
   }
   
   .nav-actions {
-    gap: 6px;
+    gap: 8px;
+  }
+  
+  .nav-actions .btn-primary {
+    display: none !important;
   }
   
   .nav-actions .btn-secondary {
     font-size: 12px !important;
-    padding: 6px 10px !important;
-  }
-  
-  .nav-actions .btn-primary {
-    font-size: 12px !important;
-    padding: 6px 10px !important;
+    padding: 6px 12px !important;
   }
   
   .hero-home, .hero-inner, .hero-subpage {
@@ -2760,8 +2927,18 @@ textarea,
     gap: 6px !important;
   }
   
-  .auth-form-side {
-    padding: 20px 14px !important;
+  .auth-form-side,
+  .auth-form-fixed-pane {
+    padding: 20px 14px 44px 14px !important;
+  }
+
+  .auth-compact-box .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  .auth-compact-box .grid-2 .form-group-compact {
+    margin-bottom: 10px !important;
   }
   
   .logout-top-btn {

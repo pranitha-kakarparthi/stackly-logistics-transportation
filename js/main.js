@@ -1354,18 +1354,35 @@ function initDashboardForms() {
    12. INTERSECTION OBSERVER SCROLL ANIMATIONS
    ========================================================================== */
 function initScrollAnimations() {
+  const isReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const targets = document.querySelectorAll(
-    '.reveal-on-scroll, .feature-card, .service-card, .stat-card, .pricing-card, .kpi-card, .dash-card, .timeline-event-item'
+    '.reveal-on-scroll, .feature-card, .service-card, .stat-card, .pricing-card, .kpi-card, .dash-card, .timeline-event-item, .faq-accordion-item, .address-card, .testimonial-card, .fleet-card, .driver-card'
   );
 
   if (!targets.length) return;
 
+  if (isReduced) {
+    targets.forEach(t => t.classList.add('in-view'));
+    return;
+  }
+
+  targets.forEach(target => {
+    if (!target.classList.contains('reveal-on-scroll')) {
+      target.classList.add('reveal-on-scroll');
+    }
+  });
+
   if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries, obs) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('in-view');
-          obs.unobserve(entry.target);
+        } else {
+          // Re-arm when element scrolls out of viewport either above or below
+          const rect = entry.boundingClientRect;
+          if (rect.top > window.innerHeight || rect.bottom < 0) {
+            entry.target.classList.remove('in-view');
+          }
         }
       });
     }, {
@@ -1374,9 +1391,6 @@ function initScrollAnimations() {
     });
 
     targets.forEach(target => {
-      if (!target.classList.contains('reveal-on-scroll')) {
-        target.classList.add('reveal-on-scroll');
-      }
       observer.observe(target);
     });
   } else {
