@@ -68,15 +68,31 @@ if (!window.location.pathname.toLowerCase().includes('404.html')) {
    ========================================================================== */
 function initStickyNavbar() {
   const header = document.querySelector('.site-header');
-  if (!header) return;
+  if (header) {
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 25) {
-      header.classList.add('scrolled');
-    } else {
-      header.classList.remove('scrolled');
-    }
-  }, { passive: true });
+  const dashMain = document.querySelector('.dashboard-main');
+  const dashHeader = document.querySelector('.dashboard-header');
+  if (dashMain && dashHeader) {
+    const handleDashScroll = () => {
+      if (dashMain.scrollTop > 15) {
+        dashHeader.classList.add('scrolled');
+      } else {
+        dashHeader.classList.remove('scrolled');
+      }
+    };
+    dashMain.addEventListener('scroll', handleDashScroll, { passive: true });
+    handleDashScroll();
+  }
 }
 
 /* ==========================================================================

@@ -62,9 +62,10 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 90px;
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
@@ -72,7 +73,8 @@ body {
   background-color: var(--bg-main);
   color: var(--text-main);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
+  overflow-anchor: none;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -271,7 +273,7 @@ button, input, select, textarea {
   color: var(--text-light);
 }
 
-/* Navbar */
+/* Sticky Header - Navbar */
 .site-header {
   position: sticky;
   top: 0;
@@ -281,13 +283,27 @@ button, input, select, textarea {
   background-color: #0b1a30;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  transition: var(--transition);
+  will-change: transform, background-color, box-shadow;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .site-header.scrolled {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
   background-color: rgba(11, 26, 48, 0.98);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Explicit Sticky Persistence for Larger Screens & Desktop Viewports */
+@media (min-width: 992px) {
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
+  }
 }
 
 .nav-wrapper {
@@ -1521,7 +1537,22 @@ button, input, select, textarea {
   justify-content: space-between;
   position: sticky;
   top: 0;
-  z-index: 90;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  will-change: transform, box-shadow;
+  transition: box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+.dashboard-header.scrolled {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 992px) {
+  .dashboard-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
 }
 
 .dashboard-greeting h1 {
