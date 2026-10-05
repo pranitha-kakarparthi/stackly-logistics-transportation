@@ -1541,22 +1541,32 @@ button, input, select, textarea {
   gap: 16px;
 }
 
-.role-badge {
-  padding: 4px 10px;
+.role-badge,
+.dash-badge-role,
+.dash-badge-role-admin {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
   border-radius: var(--radius-full);
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.role-badge.admin {
+.role-badge.admin,
+.dash-badge-role-admin {
   background-color: #fee2e2;
   color: #b91c1c;
+  border: 1px solid #fca5a5;
 }
 
-.role-badge.customer {
+.role-badge.customer,
+.dash-badge-role {
   background-color: #e0f2fe;
   color: #0369a1;
+  border: 1px solid #bae6fd;
 }
 
 .user-avatar-badge {

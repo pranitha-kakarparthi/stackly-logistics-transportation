@@ -141,6 +141,9 @@
         window.location.replace(target);
         return;
       }
+
+      // Automatically sync dashboard UI with logged in user and role
+      updateDashboardUserDisplay(currentUser);
     }
 
     if (isSignIn) {
@@ -172,9 +175,95 @@
       if (!user) {
         const signInUrl = path.includes('/pages/') ? 'sign-in.html' : 'pages/sign-in.html';
         window.location.replace(signInUrl);
+      } else {
+        updateDashboardUserDisplay(user);
       }
     }
   });
+
+  /* ==========================================================================
+     DASHBOARD ROLE & USER UI SYNC ENGINE
+     ========================================================================== */
+  function updateDashboardUserDisplay(user) {
+    if (!user) return;
+
+    const isAdmin = (user.role === 'admin');
+    const roleLabel = isAdmin ? 'Admin Role' : 'Customer Role';
+    const roleAuthority = isAdmin ? 'Admin Authority' : 'Customer Account';
+    const defaultName = isAdmin ? 'Sarah Jenkins' : 'David Vance';
+    const displayName = user.fullName || user.username || defaultName;
+
+    // 1. Update all role badges in header and main content
+    const roleBadges = document.querySelectorAll(
+      '.dash-badge-role, .dash-badge-role-admin, #dash-user-role, .role-badge'
+    );
+    roleBadges.forEach(badge => {
+      badge.textContent = roleLabel;
+      badge.className = isAdmin ? 'dash-badge-role-admin' : 'dash-badge-role';
+    });
+
+    // 2. Update user name elements across headers, sidebars, and greeting areas
+    const nameEls = document.querySelectorAll(
+      '#adm-name-pill, #cust-name-pill, #dash-user-name, [data-user-name]'
+    );
+    nameEls.forEach(el => {
+      el.textContent = displayName;
+    });
+
+    // 3. Update sidebar footer role description
+    const sidebarRoleEls = document.querySelectorAll(
+      '.sidebar-user-footer .user-info-text div:last-child'
+    );
+    sidebarRoleEls.forEach(el => {
+      el.textContent = roleAuthority;
+    });
+
+    // 4. Update avatar badges with user initials and role-specific color
+    const firstInitial = user.firstName ? user.firstName[0] : (user.username ? user.username[0] : (isAdmin ? 'A' : 'C'));
+    const lastInitial = user.lastName ? user.lastName[0] : (isAdmin ? 'D' : 'U');
+    const initials = (firstInitial + lastInitial).toUpperCase();
+
+    const avatarEls = document.querySelectorAll(
+      '#dash-user-avatar, #adm-avatar-pill, #cust-avatar-pill, .user-avatar-badge'
+    );
+    avatarEls.forEach(el => {
+      el.textContent = initials;
+      el.style.backgroundColor = isAdmin ? '#b91c1c' : '#ff5e15';
+    });
+
+    // 5. Update header greeting with personalized name & time of day
+    const greetingEl = document.getElementById('dash-greeting-text');
+    if (greetingEl) {
+      const hour = new Date().getHours();
+      let timeOfDay = 'Good morning';
+      if (hour >= 12 && hour < 17) timeOfDay = 'Good afternoon';
+      else if (hour >= 17 && hour < 21) timeOfDay = 'Good evening';
+      else if (hour >= 21 || hour < 5) timeOfDay = 'Good night';
+
+      const shortName = user.firstName || displayName.split(' ')[0] || (isAdmin ? 'Commander' : 'Customer');
+      if (isAdmin) {
+        greetingEl.textContent = `${timeOfDay}, Commander ${shortName}!`;
+      } else {
+        greetingEl.textContent = `${timeOfDay}, ${shortName}!`;
+      }
+    }
+
+    // 6. Update header session status with role confirmation
+    const sessionStatusEl = document.getElementById('dash-session-status');
+    if (sessionStatusEl) {
+      if (isAdmin) {
+        sessionStatusEl.innerHTML = `Active Session &bull; Role: <strong>ADMIN</strong> &bull; Salem Operations Hub &bull; Fleet Telematics: 142 Units Online`;
+      } else {
+        sessionStatusEl.innerHTML = `Active Session &bull; Role: <strong>CUSTOMER</strong> &bull; Stackly Salem Client Node &bull; Live Telemetry Connected`;
+      }
+    }
+
+    // 7. Update logout button title with active role
+    const logoutBtns = document.querySelectorAll('#logout-btn, .logout-top-btn');
+    logoutBtns.forEach(btn => {
+      btn.title = `Sign out of ${roleLabel} (${user.email || user.username})`;
+    });
+  }
 
   /* ==========================================================================
      SIGN IN LOGIC
@@ -184,25 +273,34 @@
     if (!form) return;
 
     // Form-styled role selection
-    const roleRadios = document.querySelectorAll('input[name="auth_role"]');
-    const roleCards = document.querySelectorAll('.form-role-card');
-    const rolePills = document.querySelectorAll('.role-pill-btn');
-    let selectedRole = 'customer';
+    const roleRadios = form.querySelectorAll('input[name="auth_role"]');
+    const roleCards = form.querySelectorAll('.form-role-card');
+    const roleInput = document.getElementById('signin-role');
+
+    function getSelectedSignInRole() {
+      const checkedRadio = form.querySelector('input[name="auth_role"]:checked');
+      if (checkedRadio && checkedRadio.value) return checkedRadio.value;
+      if (roleInput && roleInput.value) return roleInput.value;
+      return 'customer';
+    }
 
     function updateRoleSelection(role) {
-      selectedRole = role;
-      const roleInput = document.getElementById('signin-role');
       if (roleInput) roleInput.value = role;
+
+      roleRadios.forEach(radio => {
+        radio.checked = (radio.value === role);
+      });
 
       roleCards.forEach(card => {
         const input = card.querySelector('input[type="radio"]');
         if (input && input.value === role) {
           card.style.borderColor = 'var(--accent)';
           card.style.backgroundColor = '#fff7ed';
-          input.checked = true;
+          card.classList.add('selected');
         } else if (input) {
           card.style.borderColor = '#cbd5e1';
           card.style.backgroundColor = '#fff';
+          card.classList.remove('selected');
         }
       });
     }
@@ -214,19 +312,17 @@
     });
 
     roleCards.forEach(card => {
-      card.addEventListener('click', () => {
+      card.addEventListener('click', (e) => {
         const input = card.querySelector('input[type="radio"]');
-        if (input) updateRoleSelection(input.value);
+        if (input) {
+          input.checked = true;
+          updateRoleSelection(input.value);
+        }
       });
     });
 
-    rolePills.forEach(btn => {
-      btn.addEventListener('click', () => {
-        rolePills.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        updateRoleSelection(btn.getAttribute('data-role'));
-      });
-    });
+    // Initialize from checked radio in DOM
+    updateRoleSelection(getSelectedSignInRole());
 
     // Password Show/Hide Toggle
     const toggleBtn = document.getElementById('toggle-password-btn');
@@ -240,23 +336,6 @@
       });
     }
 
-    const firstNameInput = document.getElementById('signin-firstname');
-    const lastNameInput = document.getElementById('signin-lastname');
-
-    // Real-time restriction: First & Last Name ONLY accept alphabets
-    [firstNameInput, lastNameInput].forEach(inp => {
-      if (inp) {
-        inp.addEventListener('input', (e) => {
-          e.target.value = e.target.value.replace(/[^A-Za-z]/g, '');
-          inp.classList.remove('is-invalid');
-          const errEl = document.getElementById(`${inp.id}-error`);
-          if (errEl) errEl.classList.remove('show');
-          const generalAlert = document.getElementById('signin-general-alert');
-          if (generalAlert) generalAlert.style.display = 'none';
-        });
-      }
-    });
-
     // Real-time error clearance on input
     if (emailInput) {
       emailInput.addEventListener('input', () => {
@@ -268,85 +347,28 @@
       });
     }
 
-    passInput.addEventListener('input', () => {
-      passInput.classList.remove('is-invalid');
-      const passError = document.getElementById('signin-password-error');
-      if (passError) passError.classList.remove('show');
-      const generalAlert = document.getElementById('signin-general-alert');
-      if (generalAlert) generalAlert.style.display = 'none';
-    });
+    if (passInput) {
+      passInput.addEventListener('input', () => {
+        passInput.classList.remove('is-invalid');
+        const passError = document.getElementById('signin-password-error');
+        if (passError) passError.classList.remove('show');
+        const generalAlert = document.getElementById('signin-general-alert');
+        if (generalAlert) generalAlert.style.display = 'none';
+      });
+    }
 
     // Form Submit & Button Click: Redirect to role-specific dashboard
     function handleSignInAction() {
-      const firstNameVal = firstNameInput ? firstNameInput.value.trim() : '';
-      const lastNameVal = lastNameInput ? lastNameInput.value.trim() : '';
       const emailVal = emailInput ? emailInput.value.trim() : '';
       const passVal = passInput ? passInput.value : '';
-      const roleVal = selectedRole || 'customer';
+      const roleVal = getSelectedSignInRole();
 
-      const alphabetRegex = /^[A-Za-z]+$/;
       const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       let isValid = true;
       let firstInvalid = null;
 
-      const firstError = document.getElementById('signin-firstname-error');
-      const lastError = document.getElementById('signin-lastname-error');
       const emailError = document.getElementById('signin-email-error');
       const passError = document.getElementById('signin-password-error');
-
-      // 1. First Name Validation (Alphabets only)
-      if (firstNameInput) {
-        if (!firstNameVal) {
-          firstNameInput.classList.add('is-invalid');
-          if (firstError) {
-            firstError.textContent = 'Please enter your first name.';
-            firstError.classList.add('show');
-          }
-          isValid = false;
-          if (!firstInvalid) firstInvalid = firstNameInput;
-        } else if (!alphabetRegex.test(firstNameVal)) {
-          firstNameInput.classList.add('is-invalid');
-          if (firstError) {
-            firstError.textContent = 'First name should only accept alphabetic letters.';
-            firstError.classList.add('show');
-          }
-          isValid = false;
-          if (!firstInvalid) firstInvalid = firstNameInput;
-        } else {
-          firstNameInput.classList.remove('is-invalid');
-          if (firstError) {
-            firstError.textContent = '';
-            firstError.classList.remove('show');
-          }
-        }
-      }
-
-      // 2. Last Name Validation (Alphabets only)
-      if (lastNameInput) {
-        if (!lastNameVal) {
-          lastNameInput.classList.add('is-invalid');
-          if (lastError) {
-            lastError.textContent = 'Please enter your last name.';
-            lastError.classList.add('show');
-          }
-          isValid = false;
-          if (!firstInvalid) firstInvalid = lastNameInput;
-        } else if (!alphabetRegex.test(lastNameVal)) {
-          lastNameInput.classList.add('is-invalid');
-          if (lastError) {
-            lastError.textContent = 'Last name should only accept alphabetic letters.';
-            lastError.classList.add('show');
-          }
-          isValid = false;
-          if (!firstInvalid) firstInvalid = lastNameInput;
-        } else {
-          lastNameInput.classList.remove('is-invalid');
-          if (lastError) {
-            lastError.textContent = '';
-            lastError.classList.remove('show');
-          }
-        }
-      }
 
       // 3. Email Validation (Strict format)
       if (!emailVal) {
