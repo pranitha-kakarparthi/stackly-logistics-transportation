@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initQuickTrackerTabs();
   initTrackingLocateForms();
   initDashboardControls();
+  initDashboardForms();
   initScrollAnimations();
   initServicesPage();
 });
@@ -29,14 +30,37 @@ function initLoader() {
 
   const dismissLoader = () => {
     loader.classList.add('loader-hidden');
-    setTimeout(() => {
-      if (loader.parentNode) loader.parentNode.removeChild(loader);
-    }, 500);
   };
 
   // Immediate dismiss on load with fallback timeout
-  window.addEventListener('load', dismissLoader);
-  setTimeout(dismissLoader, 1200); // Fail-safe
+  if (document.readyState === 'complete') {
+    dismissLoader();
+  } else {
+    window.addEventListener('load', dismissLoader);
+  }
+
+  // Handle BFCache (Back/Forward navigation) where DOMContentLoaded doesn't re-fire
+  window.addEventListener('pageshow', () => {
+    dismissLoader();
+  });
+
+  // Handle tab visibility restoration
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      dismissLoader();
+    }
+  });
+
+  setTimeout(dismissLoader, 900); // Fail-safe
+}
+
+// Track last visited non-404 page for reliable 404 "Go Back" redirection
+if (!window.location.pathname.toLowerCase().includes('404.html')) {
+  try {
+    sessionStorage.setItem('stackly_last_valid_page', window.location.href);
+  } catch (err) {
+    // Ignore storage restrictions if any
+  }
 }
 
 /* ==========================================================================
@@ -233,8 +257,15 @@ function initGoBackButton() {
   backButtons.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      // Check if browser history has previous page within same origin
-      if (window.history.length > 1 && document.referrer && document.referrer.includes(window.location.host)) {
+      e.stopPropagation();
+
+      const loader = document.getElementById('site-loader');
+      if (loader) loader.classList.add('loader-hidden');
+
+      const lastPage = sessionStorage.getItem('stackly_last_valid_page');
+      if (lastPage && lastPage !== window.location.href) {
+        window.location.href = lastPage;
+      } else if (window.history.length > 1) {
         window.history.back();
       } else {
         window.location.href = defaultFallback;
@@ -251,7 +282,23 @@ function initGoBackButton() {
 function initGlobalActionButtons() {
   const isInPagesDir = window.location.pathname.includes('/pages/');
   const notFoundUrl = isInPagesDir ? '../404.html' : '404.html';
+  const indexUrl = isInPagesDir ? '../index.html' : 'index.html';
   const isContactPage = window.location.pathname.includes('contact.html');
+
+  const triggerRedirectWithSpinner = (targetUrl) => {
+    const loader = document.getElementById('site-loader');
+    if (loader) {
+      loader.classList.remove('loader-hidden');
+    }
+    // Prevent BFCache from persisting the loader state
+    window.addEventListener('pagehide', () => {
+      if (loader) loader.classList.add('loader-hidden');
+    }, { once: true });
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 280);
+  };
 
   // Allowed quick links for legitimate site navigation
   const allowedHrefs = [
@@ -285,155 +332,181 @@ function initGlobalActionButtons() {
   ];
 
   document.addEventListener('click', (e) => {
-    const targetBtn = e.target.closest('button, .btn, a, .btn-back');
-    if (!targetBtn) return;
+    const targetEl = e.target.closest('button, .btn, a, .btn-back');
+    if (!targetEl) return;
 
-    // Do NOT intercept the Go Back button
-    if (targetBtn.classList.contains('btn-back') || targetBtn.getAttribute('data-action') === 'go-back') {
+    // Do NOT intercept if modifier keys pressed (user opened in new tab/window)
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (targetEl.target === '_blank') return;
+
+    // 1. Stackly brand logo click -> redirect to index.html using same link after spinner
+    if (targetEl.classList.contains('brand-logo') || targetEl.closest('.brand-logo')) {
+      e.preventDefault();
+      triggerRedirectWithSpinner(indexUrl);
       return;
     }
 
-    // Do NOT redirect authentication / UI controls
-    if (targetBtn.classList.contains('role-pill-btn') || 
-        targetBtn.classList.contains('tracker-tab-btn') || 
-        targetBtn.classList.contains('password-toggle-btn') ||
-        targetBtn.classList.contains('drawer-close-btn') ||
-        targetBtn.classList.contains('hamburger-btn') ||
-        targetBtn.classList.contains('dropdown-toggle') ||
-        targetBtn.classList.contains('dropdown-item') ||
-        targetBtn.closest('.nav-dropdown') ||
-        targetBtn.classList.contains('mobile-dropdown-btn') ||
-        targetBtn.closest('.mobile-dropdown') ||
-        targetBtn.closest('.mobile-dropdown-btn') ||
-        targetBtn.classList.contains('sidebar-collapse-btn') ||
-        targetBtn.id === 'sidebar-collapse-btn' ||
-        targetBtn.classList.contains('mobile-sidebar-toggle-btn') ||
-        targetBtn.id === 'mobile-sidebar-toggle-btn' ||
-        targetBtn.classList.contains('back-to-home-btn') ||
-        targetBtn.classList.contains('back-to-home-link') ||
-        targetBtn.id === 'logout-btn' ||
-        targetBtn.classList.contains('dashboard-nav-item') ||
-        targetBtn.classList.contains('admin-toggle-status') ||
-        targetBtn.classList.contains('service-filter-btn') ||
-        targetBtn.classList.contains('specs-modal-btn') ||
-        targetBtn.classList.contains('specs-modal-close') ||
-        targetBtn.closest('.specs-modal-close') ||
-        targetBtn.classList.contains('calc-jump-btn') ||
-        targetBtn.id === 'modal-calc-btn' ||
-        targetBtn.classList.contains('calc-btn') ||
-        targetBtn.id === 'calc-submit-btn' ||
-        targetBtn.classList.contains('faq-accordion-header') ||
-        targetBtn.closest('.faq-accordion-header') ||
-        targetBtn.closest('#freight-calc-form') ||
-        targetBtn.closest('#services-specs-modal')) {
+    // 2. Go Back button is handled by initGoBackButton
+    if (targetEl.classList.contains('btn-back') || targetEl.getAttribute('data-action') === 'go-back') {
       return;
     }
 
-    // Do NOT redirect form submit buttons inside active working forms
-    if (targetBtn.type === 'submit' && (
-      targetBtn.closest('#signin-form') || 
-      targetBtn.closest('#signup-form') || 
-      targetBtn.closest('#tracking-search-form') ||
-      targetBtn.closest('#hero-tracker-form') ||
-      targetBtn.closest('#customer-ticket-form') ||
-      targetBtn.closest('#freight-calc-form') ||
-      targetBtn.closest('.tracker-form')
+    // 3. UI Controls that stay on the current page (tabs, toggles, accordion, drawer buttons, close buttons)
+    if (targetEl.classList.contains('role-pill-btn') || 
+        targetEl.classList.contains('tracker-tab-btn') || 
+        targetEl.classList.contains('password-toggle-btn') ||
+        targetEl.classList.contains('drawer-close-btn') ||
+        targetEl.classList.contains('hamburger-btn') ||
+        targetEl.classList.contains('dropdown-toggle') ||
+        targetEl.classList.contains('mobile-dropdown-btn') ||
+        targetEl.closest('.mobile-dropdown-btn') ||
+        targetEl.classList.contains('sidebar-collapse-btn') ||
+        targetEl.id === 'sidebar-collapse-btn' ||
+        targetEl.classList.contains('mobile-sidebar-toggle-btn') ||
+        targetEl.id === 'mobile-sidebar-toggle-btn' ||
+        targetEl.id === 'logout-btn' ||
+        targetEl.classList.contains('filter-pill') ||
+        targetEl.classList.contains('waybill-selector-btn') ||
+        targetEl.classList.contains('quick-preset-chip') ||
+        (targetEl.classList.contains('service-filter-btn') && targetEl.hasAttribute('data-filter')) ||
+        targetEl.classList.contains('specs-modal-btn') ||
+        targetEl.classList.contains('specs-modal-close') ||
+        targetEl.classList.contains('specs-modal-close-icon') ||
+        targetEl.classList.contains('specs-modal-close-btn') ||
+        targetEl.closest('.specs-modal-close') ||
+        targetEl.closest('.specs-modal-close-icon') ||
+        targetEl.classList.contains('faq-accordion-header') ||
+        targetEl.closest('.faq-accordion-header')) {
+      return;
+    }
+
+    // 4. Modal action button -> redirect to 404 page after spinner
+    if (targetEl.id === 'modal-calc-btn' || targetEl.closest('#modal-calc-btn')) {
+      e.preventDefault();
+      const modal = document.getElementById('services-specs-modal');
+      if (modal) modal.classList.remove('open');
+      document.body.style.overflow = '';
+      triggerRedirectWithSpinner(notFoundUrl);
+      return;
+    }
+
+    // 5. Form submit buttons
+    if (targetEl.type === 'submit' && (
+      targetEl.closest('#signin-form') || 
+      targetEl.closest('#signup-form') || 
+      targetEl.closest('#tracking-search-form') ||
+      targetEl.closest('#hero-tracker-form') ||
+      targetEl.closest('#customer-ticket-form') ||
+      targetEl.closest('#contact-form') ||
+      targetEl.closest('.tracker-form') ||
+      targetEl.closest('#new-consignee-form') ||
+      targetEl.closest('#cust-ticket-form') ||
+      targetEl.closest('#wb-search-form')
     )) {
       return;
     }
 
-    // Transmit button on contact page has its own dedicated sequence in initContactForm()
-    if (targetBtn.id === 'contact-submit-btn' || 
-       (targetBtn.type === 'submit' && targetBtn.closest('#contact-form'))) {
+    if (targetEl.id === 'cust-waybill-btn') {
       return;
     }
 
-    // Customer waybill lookup button in dashboard has dedicated handler
-    if (targetBtn.id === 'cust-waybill-btn') {
-      return;
-    }
-
-    // SPECIAL REQUIREMENT 3: "In footer section redirect the contact information to 404 page."
-    if (targetBtn.closest('.footer-contact-item') || targetBtn.classList.contains('footer-contact-link')) {
+    // 6. Rate Estimator button in services page -> redirect to 404
+    const btnText = (targetEl.textContent || '').trim().toLowerCase();
+    const isRateEstimator = btnText.includes('rate estimator') || 
+                            btnText.includes('freight tariff') || 
+                            btnText.includes('calculate air freight') || 
+                            btnText.includes('calculate ocean') || 
+                            btnText.includes('calculate haulage') ||
+                            targetEl.id === 'calc-submit-btn' ||
+                            targetEl.classList.contains('calc-jump-btn');
+    if (isRateEstimator) {
       e.preventDefault();
-      window.location.href = notFoundUrl;
+      triggerRedirectWithSpinner(notFoundUrl);
       return;
     }
 
-    // In-page hash anchors (e.g. href="#air-freight" or href="#rate-calculator") should scroll, not redirect
-    const rawHref = targetBtn.getAttribute('href');
+    // 7. Footer contact information -> redirect to 404
+    if (targetEl.closest('.footer-contact-item') || targetEl.classList.contains('footer-contact-link')) {
+      e.preventDefault();
+      triggerRedirectWithSpinner(notFoundUrl);
+      return;
+    }
+
+    // 8. In-page hash anchors (e.g. href="#air-freight")
+    const rawHref = targetEl.getAttribute('href');
     if (rawHref && rawHref.trim().startsWith('#')) {
       return;
     }
 
-    // SPECIAL REQUIREMENT: "In every page redirect every action button to 404 page."
-    if (targetBtn.classList.contains('btn') || targetBtn.tagName.toLowerCase() === 'button') {
-      // Allow top-level site navigation actions in header (Sign In / Sign Up)
-      if (targetBtn.closest('.nav-actions') || targetBtn.closest('.mobile-drawer')) {
+    // 9. Top-level action buttons: redirect to 404 unless in nav-actions / drawer (Sign In / Sign Up)
+    if (targetEl.classList.contains('btn') || targetEl.tagName.toLowerCase() === 'button') {
+      if (targetEl.closest('.nav-actions') || targetEl.closest('.mobile-drawer')) {
+        // Sign In / Sign Up in header: allow navigation with spinner
+        if (rawHref && (rawHref.endsWith('.html') || rawHref.includes('.html'))) {
+          e.preventDefault();
+          triggerRedirectWithSpinner(rawHref.trim());
+          return;
+        }
         return;
       }
-
       e.preventDefault();
-      window.location.href = notFoundUrl;
+      triggerRedirectWithSpinner(notFoundUrl);
       return;
     }
 
-    // SPECIAL REQUIREMENT: In footer section other than quick links every action button/link should get redirected to the 404 page.
-    const inFooter = targetBtn.closest('.site-footer');
+    // 10. Footer non-quick-links: redirect to 404
+    const inFooter = targetEl.closest('.site-footer');
     if (inFooter) {
-      const inQuickLinks = targetBtn.closest('.footer-col-quicklinks');
+      const inQuickLinks = targetEl.closest('.footer-col-quicklinks');
       if (!inQuickLinks) {
         e.preventDefault();
-        window.location.href = notFoundUrl;
+        triggerRedirectWithSpinner(notFoundUrl);
         return;
       }
     }
 
-    // If it's explicitly marked as action-404, redirect
-    if (targetBtn.classList.contains('btn-action-404') || targetBtn.getAttribute('data-action') === '404') {
+    // 11. Explicit 404 button
+    if (targetEl.classList.contains('btn-action-404') || targetEl.getAttribute('data-action') === '404') {
       e.preventDefault();
-      window.location.href = notFoundUrl;
+      triggerRedirectWithSpinner(notFoundUrl);
       return;
     }
 
-    // If it's a link (<a> tag)
-    if (targetBtn.tagName.toLowerCase() === 'a') {
+    // 12. Anchor tag navigation
+    if (targetEl.tagName.toLowerCase() === 'a') {
       if (!rawHref) return;
-
       const href = rawHref.trim();
 
-      // Check if it's telephone or email link
       if (href.startsWith('tel:') || href.startsWith('mailto:')) {
         if (inFooter || isContactPage) {
           e.preventDefault();
-          window.location.href = notFoundUrl;
+          triggerRedirectWithSpinner(notFoundUrl);
           return;
         }
         return;
       }
 
-      // Do not block dropdown items or mobile sublinks
-      if (targetBtn.classList.contains('dropdown-item') ||
-          targetBtn.classList.contains('mobile-sublink') ||
-          targetBtn.closest('.dropdown-menu') ||
-          targetBtn.closest('.mobile-dropdown-menu')) {
-        return;
-      }
+      if (href.startsWith('javascript:')) return;
 
-      // Strip query parameters and hash anchors before matching against allowed quick links
       const baseHref = href.split('#')[0].split('?')[0];
-
       const isAllowed = allowedHrefs.some(allowed => 
         href === allowed || 
         href.endsWith(allowed) || 
         baseHref === allowed || 
         baseHref.endsWith(allowed)
       );
-      
-      // If it's not in allowed quick links (e.g. social icons, external, terms, etc.), redirect to 404
+
       if (!isAllowed) {
         e.preventDefault();
-        window.location.href = notFoundUrl;
+        triggerRedirectWithSpinner(notFoundUrl);
+        return;
+      }
+
+      // Allowed page navigation: use same link to redirect after loading spinner!
+      if (href.endsWith('.html') || href.includes('.html') || href === '/' || href === './' || href === '../') {
+        e.preventDefault();
+        triggerRedirectWithSpinner(href);
+        return;
       }
     }
   });
@@ -529,8 +602,8 @@ function initContactForm() {
     },
     { 
       id: 'contact-message', 
-      test: val => val.trim().length >= 10, 
-      errorMsg: 'Please write a message with at least 10 characters.' 
+      test: () => true, 
+      errorMsg: '' 
     }
   ];
 
@@ -925,6 +998,359 @@ function initDashboardControls() {
 }
 
 /* ==========================================================================
+   11B. DASHBOARD FORM VALIDATION ENGINE
+   ========================================================================== */
+function initDashboardForms() {
+  // 1. Customer Support Ticket Form (#cust-ticket-form on customer-dashboard.html and customer-support.html)
+  const ticketForms = document.querySelectorAll('#cust-ticket-form');
+  ticketForms.forEach(form => {
+    const waybillInput = form.querySelector('#ticket-waybill, input[placeholder*="STK-"]');
+    const reasonSelect = form.querySelector('#ticket-reason, select');
+    const msgTextarea = form.querySelector('#ticket-message, textarea');
+    const alertEl = form.querySelector('#cust-ticket-alert, .alert-success');
+
+    if (waybillInput) {
+      waybillInput.addEventListener('input', (e) => {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9#-]/g, '');
+        waybillInput.classList.remove('is-invalid');
+        const errEl = form.querySelector('#ticket-waybill-error');
+        if (errEl) errEl.classList.remove('show');
+      });
+    }
+
+    if (msgTextarea) {
+      msgTextarea.addEventListener('input', () => {
+        msgTextarea.classList.remove('is-invalid');
+        const errEl = form.querySelector('#ticket-message-error');
+        if (errEl) errEl.classList.remove('show');
+      });
+    }
+
+    if (reasonSelect) {
+      reasonSelect.addEventListener('change', () => {
+        reasonSelect.classList.remove('is-invalid');
+        const errEl = form.querySelector('#ticket-reason-error');
+        if (errEl) errEl.classList.remove('show');
+      });
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      let firstInvalid = null;
+
+      // Validate Waybill Number (format: STK- followed by numbers)
+      if (waybillInput) {
+        const wbVal = waybillInput.value.trim().toUpperCase();
+        const wbErr = form.querySelector('#ticket-waybill-error');
+        if (!/^#?STK-\d{4,6}$/.test(wbVal)) {
+          isValid = false;
+          waybillInput.classList.add('is-invalid');
+          if (wbErr) {
+            wbErr.textContent = 'Please enter a valid Waybill format: STK- followed by numbers (e.g. STK-88219).';
+            wbErr.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = waybillInput;
+        } else {
+          waybillInput.classList.remove('is-invalid');
+          if (wbErr) wbErr.classList.remove('show');
+        }
+      }
+
+      // Validate Inquiry Reason
+      if (reasonSelect) {
+        const reasonErr = form.querySelector('#ticket-reason-error');
+        if (!reasonSelect.value || reasonSelect.value.trim() === '') {
+          isValid = false;
+          reasonSelect.classList.add('is-invalid');
+          if (reasonErr) {
+            reasonErr.textContent = 'Please select a valid inquiry category.';
+            reasonErr.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = reasonSelect;
+        } else {
+          reasonSelect.classList.remove('is-invalid');
+          if (reasonErr) reasonErr.classList.remove('show');
+        }
+      }
+
+      // Validate Message / Details (min 10 characters)
+      if (msgTextarea) {
+        const msgErr = form.querySelector('#ticket-message-error');
+        if (msgTextarea.value.trim().length < 10) {
+          isValid = false;
+          msgTextarea.classList.add('is-invalid');
+          if (msgErr) {
+            msgErr.textContent = 'Please describe your dispatch inquiry (minimum 10 characters).';
+            msgErr.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = msgTextarea;
+        } else {
+          msgTextarea.classList.remove('is-invalid');
+          if (msgErr) msgErr.classList.remove('show');
+        }
+      }
+
+      if (!isValid) {
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      // Success feedback
+      if (alertEl) {
+        alertEl.style.display = 'block';
+        alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        form.reset();
+        setTimeout(() => {
+          alertEl.style.display = 'none';
+        }, 5000);
+      }
+    });
+  });
+
+  // 2. New Consignee Address Form (#new-consignee-form on customer-consignees.html)
+  const consigneeForm = document.getElementById('new-consignee-form');
+  if (consigneeForm) {
+    const nameInp = consigneeForm.querySelector('#consignee-name, input[placeholder*="Coimbatore"]');
+    const gstinInp = consigneeForm.querySelector('#consignee-gstin, input[placeholder*="33AAACS"]');
+    const officerInp = consigneeForm.querySelector('#consignee-officer, input[placeholder*="Murugesan"]');
+    const phoneInp = consigneeForm.querySelector('#consignee-phone, input[type="tel"]');
+    const addressInp = consigneeForm.querySelector('#consignee-address, textarea');
+    const alertEl = document.getElementById('consignee-success-alert');
+
+    // Real-time restrictions:
+    // Officer Name: ONLY alphabets and spaces
+    if (officerInp) {
+      officerInp.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/[^A-Za-z\s.]/g, '');
+        officerInp.classList.remove('is-invalid');
+        const err = document.getElementById('consignee-officer-error');
+        if (err) err.classList.remove('show');
+      });
+    }
+
+    // Phone: ONLY 10 digits
+    if (phoneInp) {
+      phoneInp.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+        phoneInp.classList.remove('is-invalid');
+        const err = document.getElementById('consignee-phone-error');
+        if (err) err.classList.remove('show');
+      });
+    }
+
+    // GSTIN: Alphanumeric uppercase (15 chars)
+    if (gstinInp) {
+      gstinInp.addEventListener('input', (e) => {
+        e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15);
+        gstinInp.classList.remove('is-invalid');
+        const err = document.getElementById('consignee-gstin-error');
+        if (err) err.classList.remove('show');
+      });
+    }
+
+    [nameInp, addressInp].forEach(inp => {
+      if (inp) {
+        inp.addEventListener('input', () => {
+          inp.classList.remove('is-invalid');
+          const err = document.getElementById(`${inp.id}-error`);
+          if (err) err.classList.remove('show');
+        });
+      }
+    });
+
+    consigneeForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let isValid = true;
+      let firstInvalid = null;
+
+      // Validate Entity Name (min 3 chars)
+      if (nameInp) {
+        const err = document.getElementById('consignee-name-error');
+        if (nameInp.value.trim().length < 3) {
+          isValid = false;
+          nameInp.classList.add('is-invalid');
+          if (err) {
+            err.textContent = 'Consignee entity name must be at least 3 characters.';
+            err.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = nameInp;
+        } else {
+          nameInp.classList.remove('is-invalid');
+          if (err) err.classList.remove('show');
+        }
+      }
+
+      // Validate GSTIN (10 to 15 chars)
+      if (gstinInp) {
+        const err = document.getElementById('consignee-gstin-error');
+        const gstinVal = gstinInp.value.trim();
+        if (gstinVal.length < 10 || !/^[A-Z0-9]{10,15}$/.test(gstinVal)) {
+          isValid = false;
+          gstinInp.classList.add('is-invalid');
+          if (err) {
+            err.textContent = 'Please enter a valid GSTIN or Corporate Tax ID (e.g. 33AAACS7729K1Z9).';
+            err.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = gstinInp;
+        } else {
+          gstinInp.classList.remove('is-invalid');
+          if (err) err.classList.remove('show');
+        }
+      }
+
+      // Validate Officer Name (alphabets only, min 2 chars)
+      if (officerInp) {
+        const err = document.getElementById('consignee-officer-error');
+        const officerVal = officerInp.value.trim();
+        if (!/^[A-Za-z\s.]+$/.test(officerVal) || officerVal.length < 2) {
+          isValid = false;
+          officerInp.classList.add('is-invalid');
+          if (err) {
+            err.textContent = 'Receiving officer name should only accept alphabetic characters.';
+            err.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = officerInp;
+        } else {
+          officerInp.classList.remove('is-invalid');
+          if (err) err.classList.remove('show');
+        }
+      }
+
+      // Validate Phone (10 digits)
+      if (phoneInp) {
+        const err = document.getElementById('consignee-phone-error');
+        if (!/^\d{10}$/.test(phoneInp.value.trim())) {
+          isValid = false;
+          phoneInp.classList.add('is-invalid');
+          if (err) {
+            err.textContent = 'Receiving officer phone must be exactly 10 digits.';
+            err.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = phoneInp;
+        } else {
+          phoneInp.classList.remove('is-invalid');
+          if (err) err.classList.remove('show');
+        }
+      }
+
+      // Validate Address (min 8 chars)
+      if (addressInp) {
+        const err = document.getElementById('consignee-address-error');
+        if (addressInp.value.trim().length < 8) {
+          isValid = false;
+          addressInp.classList.add('is-invalid');
+          if (err) {
+            err.textContent = 'Please enter complete street address and postal code (minimum 8 characters).';
+            err.classList.add('show');
+          }
+          if (!firstInvalid) firstInvalid = addressInp;
+        } else {
+          addressInp.classList.remove('is-invalid');
+          if (err) err.classList.remove('show');
+        }
+      }
+
+      if (!isValid) {
+        if (firstInvalid) firstInvalid.focus();
+        return;
+      }
+
+      // Valid: show alert and prepend new card to the list if present
+      if (alertEl) {
+        alertEl.style.display = 'block';
+        alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      const grid = document.querySelector('#customer-consignees-list, .grid-3');
+      if (grid && nameInp && officerInp && phoneInp && gstinInp && addressInp) {
+        const card = document.createElement('div');
+        card.className = 'address-card';
+        card.style.animation = 'fadeInUp 0.4s ease forwards';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+            <span class="status-badge status-delivered" style="font-size:11px;">Verified Node</span>
+            <span style="font-size:12px; color:#94a3b8;">Active Node</span>
+          </div>
+          <strong style="color:var(--primary); font-size:14px; display:block; margin-bottom:4px;">${nameInp.value.trim()}</strong>
+          <p style="font-size:13px; color:#64748b; line-height:1.5;">${addressInp.value.trim()}</p>
+          <div style="font-size:12px; color:#475569; margin-top:8px;">
+            <strong>Recipient:</strong> ${officerInp.value.trim()} (+91 ${phoneInp.value.trim()})<br>
+            <strong>GSTIN:</strong> ${gstinInp.value.trim()}
+          </div>
+        `;
+        grid.prepend(card);
+      }
+
+      consigneeForm.reset();
+      setTimeout(() => {
+        if (alertEl) alertEl.style.display = 'none';
+      }, 5000);
+    });
+  }
+
+  // 3. Customer Waybill Lookup Form Validation (#wb-search-form and #cust-waybill-btn)
+  const wbInputs = document.querySelectorAll('#cust-waybill-input');
+  wbInputs.forEach(input => {
+    const parentContainer = input.closest('form') || input.parentElement;
+    const btn = parentContainer ? parentContainer.querySelector('#cust-waybill-btn') : null;
+    let errEl = parentContainer ? (parentContainer.querySelector('#wb-validation-error') || parentContainer.parentElement.querySelector('#wb-validation-error')) : null;
+
+    if (!errEl && parentContainer) {
+      errEl = document.createElement('div');
+      errEl.id = 'wb-validation-error';
+      errEl.className = 'form-error-msg';
+      errEl.style.cssText = 'color:#dc2626; font-size:12px; margin-top:6px; display:none;';
+      errEl.textContent = 'Please enter a valid format: STK- followed by numbers (e.g. STK-88219).';
+      if (parentContainer.tagName.toLowerCase() === 'form') {
+        parentContainer.appendChild(errEl);
+      } else {
+        parentContainer.parentElement.insertBefore(errEl, parentContainer.nextSibling);
+      }
+    }
+
+    input.addEventListener('input', (e) => {
+      e.target.value = e.target.value.toUpperCase();
+      input.classList.remove('is-invalid');
+      if (errEl) errEl.style.display = 'none';
+    });
+
+    const validateAndSearch = (e) => {
+      const val = input.value.trim().toUpperCase();
+      if (!/^#?STK-\d{4,6}$/.test(val)) {
+        if (e) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+        }
+        input.classList.add('is-invalid');
+        if (errEl) {
+          errEl.style.display = 'block';
+          errEl.textContent = 'Please enter a valid format: STK- followed by numbers (e.g. STK-88219).';
+        }
+        input.focus();
+        return false;
+      }
+      input.classList.remove('is-invalid');
+      if (errEl) errEl.style.display = 'none';
+      return true;
+    };
+
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        validateAndSearch(e);
+      });
+    }
+
+    const form = input.closest('form');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        validateAndSearch(e);
+      });
+    }
+  });
+}
+
+/* ==========================================================================
    12. INTERSECTION OBSERVER SCROLL ANIMATIONS
    ========================================================================== */
 function initScrollAnimations() {
@@ -1103,7 +1529,7 @@ function initSpecsModal() {
   const tbody = document.getElementById('specs-table-body');
   const calcBtn = document.getElementById('modal-calc-btn');
   const backdrop = document.getElementById('specs-modal-backdrop');
-  const closeBtns = modal.querySelectorAll('.specs-modal-close');
+  const closeBtns = modal.querySelectorAll('.specs-modal-close, .specs-modal-close-icon, .specs-modal-close-btn, [data-action="close-modal"]');
 
   function openModal(specKey) {
     const spec = SERVICE_SPECS[specKey];
@@ -1154,18 +1580,16 @@ function initSpecsModal() {
     backdrop.addEventListener('click', closeModal);
   }
 
+  // Action button inside the modal redirects to 404 page with spinner
   if (calcBtn) {
     calcBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const mode = calcBtn.getAttribute('data-mode-preset') || 'air';
       closeModal();
-      
-      const calcModeSelect = document.getElementById('calc-mode');
-      if (calcModeSelect) {
-        calcModeSelect.value = mode;
-      }
-      scrollToAnchor('rate-calculator', true);
-      triggerRateCalculation();
+      const loader = document.getElementById('site-loader');
+      if (loader) loader.classList.remove('loader-hidden');
+      setTimeout(() => {
+        window.location.href = '../404.html';
+      }, 280);
     });
   }
 

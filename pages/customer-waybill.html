@@ -145,8 +145,8 @@
               <span style="color:#64748b; font-size:12px;">Query any active or archived Air Waybill (AWB), Ocean Bill of Lading, or Interstate Road Waybill.</span>
             </div>
             <div style="display:flex; gap:10px;">
-              <a href="../404.html" class="btn btn-outline btn-sm">Waybill Guidelines</a>
-              <a href="customer-tracking.html" class="btn btn-primary btn-sm">Live GPS Telemetry</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Waybill Guidelines</a>
+              <a href="../404.html" class="btn btn-primary btn-sm btn-action-404">Live GPS Telemetry</a>
             </div>
           </div>
         </section>
@@ -204,8 +204,8 @@
               </div>
 
               <div style="margin-top:16px; display:flex; gap:10px;">
-                <a href="../404.html" class="btn btn-outline btn-sm">Download Official e-Waybill</a>
-                <a href="customer-tracking.html" class="btn btn-outline btn-sm">View on Telemetry Map</a>
+                <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Download Official e-Waybill</a>
+                <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">View on Telemetry Map</a>
               </div>
             </div>
           </div>
@@ -229,7 +229,17 @@
 
       function executeSearch(rawCode) {
         const code = (rawCode || '').trim().toUpperCase();
+        if (!/^#?STK-\d{4,6}$/.test(code)) {
+          if (wbErr) {
+            wbErr.style.display = 'block';
+            wbErr.textContent = 'Please enter a valid format: STK- followed by numbers (e.g. STK-88219).';
+          }
+          if (wbInput) wbInput.classList.add('is-invalid');
+          return;
+        }
+
         if (wbErr) wbErr.style.display = 'none';
+        if (wbInput) wbInput.classList.remove('is-invalid');
 
         if (code.includes('77104')) {
           wbTitle.textContent = `Waybill #${code} Verified`;
@@ -246,7 +256,7 @@
           wbCargo.textContent = '1,250.0 KG Interstate Highway Freight';
           wbCarrier.textContent = 'BharatBenz Heavy Haulage #TN-54-A-9921';
         } else {
-          wbTitle.textContent = `Waybill #${code || 'STK-88219'} Verified`;
+          wbTitle.textContent = `Waybill #${code} Verified`;
           wbDesc.textContent = 'Frankfurt Cargo City South (FRA) to Stackly Salem Regional Hub (SXV)';
           wbBadge.className = 'status-badge status-in-transit';
           wbBadge.innerHTML = '&bull; In Flight Transit';

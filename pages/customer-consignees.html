@@ -135,7 +135,7 @@
               <span style="color:#64748b; font-size:12px;">Addresses pre-verified with Indian Customs and Regional Transport Offices for instant e-Waybill dispatch.</span>
             </div>
             <div style="display:flex; gap:10px;">
-              <a href="../404.html" class="btn btn-outline btn-sm">Download Address Cert</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Download Address Cert</a>
               <a href="#new-consignee-form-sec" class="btn btn-primary btn-sm">+ Add New Address</a>
             </div>
           </div>
@@ -196,29 +196,34 @@
             <form id="new-consignee-form" novalidate>
               <div class="grid-2" style="margin-bottom:14px;">
                 <div class="form-group">
-                  <label class="form-label" style="font-size:12px;">Consignee Entity Name</label>
-                  <input type="text" class="form-input" placeholder="e.g. Coimbatore Regional Distribution Center" required>
+                  <label class="form-label" for="consignee-name" style="font-size:12px;">Consignee Entity Name <span class="required-star">*</span></label>
+                  <input type="text" id="consignee-name" class="form-input" placeholder="e.g. Coimbatore Regional Distribution Center" required>
+                  <div id="consignee-name-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" style="font-size:12px;">GSTIN / Corporate Tax ID</label>
-                  <input type="text" class="form-input" placeholder="e.g. 33AAACS7729K1Z9" required>
+                  <label class="form-label" for="consignee-gstin" style="font-size:12px;">GSTIN / Corporate Tax ID <span class="required-star">*</span></label>
+                  <input type="text" id="consignee-gstin" class="form-input" placeholder="e.g. 33AAACS7729K1Z9" maxlength="15" required>
+                  <div id="consignee-gstin-error" class="form-error-msg"></div>
                 </div>
               </div>
 
               <div class="grid-2" style="margin-bottom:14px;">
                 <div class="form-group">
-                  <label class="form-label" style="font-size:12px;">Receiving Officer Name</label>
-                  <input type="text" class="form-input" placeholder="e.g. S. Murugesan" required>
+                  <label class="form-label" for="consignee-officer" style="font-size:12px;">Receiving Officer Name <span class="required-star">*</span></label>
+                  <input type="text" id="consignee-officer" class="form-input" placeholder="e.g. S. Murugesan" required>
+                  <div id="consignee-officer-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label" style="font-size:12px;">Receiving Officer Phone (10 digits)</label>
-                  <input type="tel" class="form-input" placeholder="e.g. 9876543210" maxlength="10" required>
+                  <label class="form-label" for="consignee-phone" style="font-size:12px;">Receiving Officer Phone (10 digits) <span class="required-star">*</span></label>
+                  <input type="tel" id="consignee-phone" class="form-input" placeholder="e.g. 9876543210" maxlength="10" required>
+                  <div id="consignee-phone-error" class="form-error-msg"></div>
                 </div>
               </div>
 
               <div class="form-group" style="margin-bottom:16px;">
-                <label class="form-label" style="font-size:12px;">Complete Street Address &amp; Gate Pass Instructions</label>
-                <textarea class="form-textarea" rows="2" placeholder="Full street address, postal pin code, and warehouse dock instructions..." required></textarea>
+                <label class="form-label" for="consignee-address" style="font-size:12px;">Complete Street Address &amp; Gate Pass Instructions <span class="required-star">*</span></label>
+                <textarea id="consignee-address" class="form-textarea" rows="2" placeholder="Full street address, postal pin code, and warehouse dock instructions..." required></textarea>
+                <div id="consignee-address-error" class="form-error-msg"></div>
               </div>
 
               <button type="submit" class="btn btn-primary">
@@ -236,21 +241,5 @@
 
   <script src="../js/main.js"></script>
   <script src="../js/auth.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('new-consignee-form');
-      const alertBox = document.getElementById('consignee-success-alert');
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
-          if (alertBox) {
-            alertBox.style.display = 'block';
-            form.reset();
-            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
-          }
-        });
-      }
-    });
-  </script>
 </body>
 </html>

@@ -124,7 +124,7 @@
               <span style="color:#64748b; font-size:12px;">Average response SLA: under 15 minutes for live transit queries.</span>
             </div>
             <div style="display:flex; gap:10px;">
-              <a href="../404.html" class="btn btn-outline btn-sm">Support SLA Terms</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Support SLA Terms</a>
               <a href="#cust-ticket-form-sec" class="btn btn-primary btn-sm">+ Open Priority Ticket</a>
             </div>
           </div>
@@ -157,22 +157,26 @@
               <h2 class="panel-title" style="margin-bottom:10px;">Open Priority Support Ticket</h2>
               <form id="cust-ticket-form" novalidate>
                 <div class="form-group" style="margin-bottom:10px;">
-                  <label class="form-label" style="font-size:12px;">Related Waybill Number</label>
-                  <input type="text" class="form-input" style="padding:8px 12px; font-size:13px;" value="" placeholder="e.g. #STK-88219">
+                  <label class="form-label" for="ticket-waybill" style="font-size:12px;">Related Waybill Number <span class="required-star">*</span></label>
+                  <input type="text" id="ticket-waybill" class="form-input" style="padding:8px 12px; font-size:13px;" placeholder="e.g. STK-88219" required>
+                  <div id="ticket-waybill-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
-                  <label class="form-label" style="font-size:12px;">Inquiry Reason</label>
-                  <select class="form-select" style="padding:8px 12px; font-size:13px;">
-                    <option>ETA Confirmation &amp; Doorstep Delivery</option>
-                    <option>Cold Chain Telemetry Log Request</option>
-                    <option>Customs Duty &amp; Invoice Billing</option>
-                    <option>Consignee Address Change</option>
-                    <option>Urgent Route Modification</option>
+                  <label class="form-label" for="ticket-reason" style="font-size:12px;">Inquiry Reason <span class="required-star">*</span></label>
+                  <select id="ticket-reason" class="form-select" style="padding:8px 12px; font-size:13px;" required>
+                    <option value="">-- Select Inquiry Category --</option>
+                    <option value="ETA Confirmation &amp; Doorstep Delivery">ETA Confirmation &amp; Doorstep Delivery</option>
+                    <option value="Cold Chain Telemetry Log Request">Cold Chain Telemetry Log Request</option>
+                    <option value="Customs Duty &amp; Invoice Billing">Customs Duty &amp; Invoice Billing</option>
+                    <option value="Consignee Address Change">Consignee Address Change</option>
+                    <option value="Urgent Route Modification">Urgent Route Modification</option>
                   </select>
+                  <div id="ticket-reason-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group" style="margin-bottom:12px;">
-                  <label class="form-label" style="font-size:12px;">Message Details</label>
-                  <textarea class="form-textarea" rows="3" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request..." required></textarea>
+                  <label class="form-label" for="ticket-message" style="font-size:12px;">Message Details <span class="required-star">*</span></label>
+                  <textarea id="ticket-message" class="form-textarea" rows="3" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request (minimum 10 characters)..." required></textarea>
+                  <div id="ticket-message-error" class="form-error-msg"></div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm btn-full">
                   Submit Priority Dispatch Ticket
@@ -207,21 +211,5 @@
 
   <script src="../js/main.js"></script>
   <script src="../js/auth.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const ticketForm = document.getElementById('cust-ticket-form');
-      const ticketAlert = document.getElementById('cust-ticket-alert');
-      if (ticketForm) {
-        ticketForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          if (ticketAlert) {
-            ticketAlert.style.display = 'block';
-            ticketForm.reset();
-            setTimeout(() => { ticketAlert.style.display = 'none'; }, 4500);
-          }
-        });
-      }
-    });
-  </script>
 </body>
 </html>

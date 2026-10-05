@@ -191,8 +191,8 @@
               <span style="color:#64748b; font-size:12px;">Consignee Tier: Enterprise Platinum &bull; Dispatch Hub: Salem Regional Hub (TN)</span>
             </div>
             <div style="display:flex; gap:10px;">
-              <a href="../404.html" class="btn btn-outline btn-sm">Download Monthly Statement</a>
-              <a href="../404.html" class="btn btn-primary btn-sm">+ Book New Shipment</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Download Monthly Statement</a>
+              <a href="../404.html" class="btn btn-primary btn-sm btn-action-404">+ Book New Shipment</a>
             </div>
           </div>
         </section>
@@ -316,7 +316,7 @@
                 <h2 class="panel-title">Customer Order Details &amp; Historic Waybills</h2>
                 <p style="font-size:13px; color:#64748b; margin-top:2px;">Complete record of your international consignments, bills of lading, and signed deliveries.</p>
               </div>
-              <a href="../404.html" class="btn btn-outline btn-sm">Export CSV</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">Export CSV</a>
             </div>
 
             <div class="data-table-wrapper">
@@ -340,7 +340,7 @@
                     <td>Priority Air Express</td>
                     <td>420.5 KG</td>
                     <td><span class="status-badge status-in-transit">&bull; In Transit</span></td>
-                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Air Waybill</a></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm btn-action-404" style="padding:4px 10px; font-size:12px;">Air Waybill</a></td>
                   </tr>
                   <tr>
                     <td><strong>#STK-77104</strong></td>
@@ -349,7 +349,7 @@
                     <td>FCL Ocean Freight</td>
                     <td>18,400.0 KG</td>
                     <td><span class="status-badge status-customs">&bull; Customs Clearance</span></td>
-                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Bill of Lading</a></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm btn-action-404" style="padding:4px 10px; font-size:12px;">Bill of Lading</a></td>
                   </tr>
                   <tr>
                     <td><strong>#STK-44912</strong></td>
@@ -358,7 +358,7 @@
                     <td>Interstate Express Road</td>
                     <td>1,250.0 KG</td>
                     <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
-                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Signed e-POD</a></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm btn-action-404" style="padding:4px 10px; font-size:12px;">Signed e-POD</a></td>
                   </tr>
                   <tr>
                     <td><strong>#STK-33821</strong></td>
@@ -367,7 +367,7 @@
                     <td>Air Freight Express</td>
                     <td>680.0 KG</td>
                     <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
-                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Customs Receipt</a></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm btn-action-404" style="padding:4px 10px; font-size:12px;">Customs Receipt</a></td>
                   </tr>
                   <tr>
                     <td><strong>#STK-19402</strong></td>
@@ -376,7 +376,7 @@
                     <td>Express Road Haulage</td>
                     <td>950.0 KG</td>
                     <td><span class="status-badge status-delivered">&check; Delivered &amp; Signed</span></td>
-                    <td><a href="../404.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:12px;">Consignment Note</a></td>
+                    <td><a href="../404.html" class="btn btn-outline btn-sm btn-action-404" style="padding:4px 10px; font-size:12px;">Consignment Note</a></td>
                   </tr>
                 </tbody>
               </table>
@@ -395,6 +395,7 @@
               <input type="text" id="cust-waybill-input" class="form-input" placeholder="e.g. STK-88219 or STK-77104" value="">
               <button type="button" id="cust-waybill-btn" class="btn btn-primary" style="white-space:nowrap;">Inspect Waybill</button>
             </div>
+            <div id="wb-validation-error" class="form-error-msg" style="display:none; color:#dc2626; font-size:12px; margin-top:-10px; margin-bottom:12px;"></div>
 
             <!-- Result Box -->
             <div id="cust-waybill-result" style="background:#f1f5f9; border:1px solid #cbd5e1; border-radius:var(--radius-md); padding:16px;">
@@ -419,7 +420,7 @@
                 <h2 class="panel-title">Saved Delivery Addresses &amp; Consignee Directory</h2>
                 <p style="font-size:13px; color:#64748b; margin-top:2px;">Pre-approved delivery addresses for automated gate-pass dispatch.</p>
               </div>
-              <a href="../404.html" class="btn btn-outline btn-sm">+ Add New Address</a>
+              <a href="../404.html" class="btn btn-outline btn-sm btn-action-404">+ Add New Address</a>
             </div>
 
             <div class="grid-3">
@@ -523,21 +524,25 @@
               <h2 class="panel-title" style="margin-bottom:10px;">Quick Support Inquiry Ticket</h2>
               <form id="cust-ticket-form" novalidate>
                 <div class="form-group" style="margin-bottom:10px;">
-                  <label class="form-label" style="font-size:12px;">Related Waybill Number</label>
-                  <input type="text" class="form-input" style="padding:8px 12px; font-size:13px;" value="" placeholder="e.g. #STK-88219">
+                  <label class="form-label" for="ticket-waybill" style="font-size:12px;">Related Waybill Number <span class="required-star">*</span></label>
+                  <input type="text" id="ticket-waybill" class="form-input" style="padding:8px 12px; font-size:13px;" value="" placeholder="e.g. STK-88219" required>
+                  <div id="ticket-waybill-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group" style="margin-bottom:10px;">
-                  <label class="form-label" style="font-size:12px;">Inquiry Reason</label>
-                  <select class="form-select" style="padding:8px 12px; font-size:13px;">
-                    <option>ETA Confirmation &amp; Doorstep Delivery</option>
-                    <option>Cold Chain Telemetry Log Request</option>
-                    <option>Customs Duty &amp; Invoice Billing</option>
-                    <option>Consignee Address Change</option>
+                  <label class="form-label" for="ticket-reason" style="font-size:12px;">Inquiry Reason <span class="required-star">*</span></label>
+                  <select id="ticket-reason" class="form-select" style="padding:8px 12px; font-size:13px;" required>
+                    <option value="" disabled selected>Select an inquiry reason</option>
+                    <option value="eta">ETA Confirmation &amp; Doorstep Delivery</option>
+                    <option value="cold-chain">Cold Chain Telemetry Log Request</option>
+                    <option value="customs">Customs Duty &amp; Invoice Billing</option>
+                    <option value="consignee">Consignee Address Change</option>
                   </select>
+                  <div id="ticket-reason-error" class="form-error-msg"></div>
                 </div>
                 <div class="form-group" style="margin-bottom:12px;">
-                  <label class="form-label" style="font-size:12px;">Message</label>
-                  <textarea class="form-textarea" rows="2" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request..."></textarea>
+                  <label class="form-label" for="ticket-message" style="font-size:12px;">Message <span class="required-star">*</span></label>
+                  <textarea id="ticket-message" class="form-textarea" rows="2" style="padding:8px 12px; font-size:13px;" placeholder="Describe your question or dispatch request..." required></textarea>
+                  <div id="ticket-message-error" class="form-error-msg"></div>
                 </div>
                 <button type="submit" class="btn btn-primary btn-sm btn-full">
                   Submit Priority Dispatch Ticket
@@ -593,6 +598,9 @@
       if (wbBtn && wbInput) {
         wbBtn.addEventListener('click', () => {
           const code = wbInput.value.trim().toUpperCase();
+          if (!/^#?STK-\d{4,6}$/.test(code)) {
+            return;
+          }
           if (code.includes('77104')) {
             wbTitle.textContent = `Waybill #${code} Verified`;
             wbDesc.textContent = 'Shanghai Ocean Port to Chennai Marine Terminal • 18,400 KG Ocean FCL';
@@ -604,23 +612,10 @@
             wbBadge.className = 'status-badge status-delivered';
             wbBadge.innerHTML = '&check; Delivered &amp; Signed';
           } else {
-            wbTitle.textContent = `Waybill #${code || 'STK-88219'} Verified`;
+            wbTitle.textContent = `Waybill #${code} Verified`;
             wbDesc.textContent = 'Frankfurt Airport to Salem Regional Hub • 420.5 KG Air Priority';
             wbBadge.className = 'status-badge status-in-transit';
             wbBadge.innerHTML = '&bull; In Flight Transit';
-          }
-        });
-      }
-
-      // Ticket form handler
-      const ticketForm = document.getElementById('cust-ticket-form');
-      const ticketAlert = document.getElementById('cust-ticket-alert');
-      if (ticketForm) {
-        ticketForm.addEventListener('submit', (e) => {
-          e.preventDefault();
-          if (ticketAlert) {
-            ticketAlert.style.display = 'block';
-            setTimeout(() => { ticketAlert.style.display = 'none'; }, 4000);
           }
         });
       }
